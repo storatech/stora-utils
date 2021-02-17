@@ -3,18 +3,18 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/storatech"
   },
-  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com:storatech/stora-utils.git",
+    "directory": "@storatech/stora-utils"
+  },
+  "version": "1.0.1",
   "description": "stora common utils",
   "scripts": {
-    "build": "rm -rf ./dist && tsc -p ."
+    "build": "rm -rf ./dist && tsc -p . && cp package.json ./dist"
   },
   "types": "dist/index.d.ts",
   "main": "dist/index.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/storatech/stora-utils.git",
-    "directory": "@storatech/stora-utils"
-  },
   "devDependencies": {
     "@types/express": "^4.17.9",
     "@types/mongodb": "^3.5.33",
@@ -28,6 +28,12 @@
     "moment": "^2.29.1"
   },
   "optionalDependencies": {
+    "mongodb": "^3.6.4",
+    "express": "^4.17.1",
+    "validate.js": "^0.13.1",
+    "aws-sdk": "^2.845.0"
+  },
+  "peerDependencies": {
     "mongodb": "^3.6.4",
     "express": "^4.17.1",
     "validate.js": "^0.13.1",
