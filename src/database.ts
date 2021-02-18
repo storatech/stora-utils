@@ -3,13 +3,13 @@ import { ClientSession, Collection, Db, Logger, MongoClient, MongoClientCommonOp
 
 export interface IMongo {
   connect: () => void
-  database: (dbname: string, options?: MongoClientCommonOption) => Promise<Db>
+  database: (dbname?: string, options?: MongoClientCommonOption) => Promise<Db>
   session: (options?: SessionOptions) => Promise<ClientSession>
 }
 
 const logger = getLogger('db')
 
-export const Mongo = (url: string): IMongo => {
+export const Mongo = (url: string, db: string): IMongo => {
   const client = new MongoClient(url, {
     useUnifiedTopology: true
   })
@@ -24,7 +24,7 @@ export const Mongo = (url: string): IMongo => {
       logger.info('🔗 Connected to Mongo')
     },
     database: async (dbname, options) => {
-      return client.db(dbname, options)
+      return client.db(dbname ?? db, options)
     },
     session: async (options) => {
       return client.startSession(options)

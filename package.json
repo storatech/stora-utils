@@ -8,10 +8,11 @@
     "url": "ssh://git@github.com:storatech/stora-utils.git",
     "directory": "@storatech/stora-utils"
   },
-  "version": "1.0.1",
+  "version": "1.0.2.1",
   "description": "stora common utils",
   "scripts": {
-    "build": "rm -rf ./dist && tsc -p . && cp package.json ./dist"
+    "build": "rm -rf ./dist && tsc -p . && cp package.json ./dist",
+    "publish": "cd dist && npm publish"
   },
   "types": "dist/index.d.ts",
   "main": "dist/index.js",
