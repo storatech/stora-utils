@@ -1,0 +1,23 @@
+name: Publish Package
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2
+      with:
+        registry-url: 'https://npm.pkg.github.com/storatech'
+    - name: Install Dependencies
+      run: npm install
+    - name: Build Packagenpm
+      run: npm run build
+    - name: Publish Package
+      run: npm run publish
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
