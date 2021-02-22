@@ -1,10 +1,14 @@
+import { AsyncLocalStorage } from 'async_hooks'
 import { getLogger } from 'log4js'
 import { ClientSession, Collection, Db, Logger, MongoClient, MongoClientCommonOption, SessionOptions } from 'mongodb'
+
+const sessionStorage = new AsyncLocalStorage<ClientSession>()
 
 export interface IMongo {
   connect: () => void
   database: (dbname?: string, options?: MongoClientCommonOption) => Promise<Db>
   session: (options?: SessionOptions) => Promise<ClientSession>
+  withTransaction: <T>(callback: () => Promise<T>, options?: SessionOptions) => Promise<T>
 }
 
 const logger = getLogger('db')
@@ -28,6 +32,30 @@ export const Mongo = (url: string, db: string): IMongo => {
     },
     session: async (options) => {
       return client.startSession(options)
+    },
+    withTransaction: async<T> (callback: () => Promise<T>, options?: SessionOptions): Promise<T> => {
+      const parentSession = sessionStorage.getStore()
+      if (parentSession !== undefined) {
+        const session = client.startSession(options)
+        logger.debug('starting session')
+        return await sessionStorage.run<Promise<T>>(session, async () => {
+          session.startTransaction()
+          logger.debug('starting transaction')
+          try {
+            const ret = await callback()
+            await session.commitTransaction()
+            logger.debug('commit transaction')
+            return ret
+          } catch (e) {
+            await session.abortTransaction()
+            logger.debug('rollback transaction')
+            throw e
+          }
+        })
+      } else {
+        const ret = await callback()
+        return ret
+      }
     }
   }
 }
