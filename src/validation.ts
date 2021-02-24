@@ -21,6 +21,7 @@ interface Validator<T> {
     maximum?: number
   }
   element?: Validator<T>
+  date?: boolean
 }
 
 export type Constraint<T> = {
