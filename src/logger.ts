@@ -1,21 +1,22 @@
-import log4js, { ConsoleAppender, getLogger } from 'log4js'
+import log4js, { ConsoleAppender, getLogger, DateFileAppender, PatternLayout, LogLevelFilterAppender } from 'log4js'
 import { AsyncLocalStorage } from 'async_hooks'
 import { Request, Response, NextFunction } from 'express'
 
-const pattern = '%[[%d{hh:mm:ss.SSS}][%p][%c][%f{2}:%l][%x{reqId}]%] %m'
+const {
+  LOG4JS_LEVEL = 'trace',
+  LOG4JS_PATTERN = '%[[%d{hh:mm:ss.SSS}][%p][%c][%f{2}:%l][%x{reqId}]%] %m',
+  LOG4JS_FILE = 'logs/api'
+} = process.env
 
-const reqIdStorage = new AsyncLocalStorage()
+const reqIdStorage = new AsyncLocalStorage<string>()
 
-const layout = {
-  pattern,
+const layout: PatternLayout = {
+  pattern: LOG4JS_PATTERN,
   type: 'pattern',
   tokens: {
-    reqId: (event: any) => {
-      const reqId = reqIdStorage.getStore()
-      if (reqId !== null && reqId !== undefined) {
-        return reqId
-      }
-      return ''
+    reqId: (event): string => {
+      const reqId = reqIdStorage.getStore() ?? ''
+      return reqId
     }
   }
 }
@@ -25,24 +26,48 @@ const consoleAppender: ConsoleAppender = {
   layout
 }
 
-const fileAppender = {
+const logFileAppender: DateFileAppender = {
   type: 'dateFile',
   encoding: 'utf-8',
-  filename: `${process.env.LOG_PATH ?? 'logs/'}/api.log`,
+  filename: `${LOG4JS_FILE}.log`,
+  daysToKeep: 30,
+  layout,
+  keepFileExt: true
+}
+
+const debugFileAppender: DateFileAppender = {
+  type: 'dateFile',
+  encoding: 'utf-8',
+  filename: `${LOG4JS_FILE}.deb`,
   daysToKeep: 7,
   layout,
   keepFileExt: true
 }
 
+const logAppender: LogLevelFilterAppender = {
+  type: 'logLevelFilter',
+  appender: 'logFileAppender',
+  level: 'INFO'
+}
+
+const debugAppender: LogLevelFilterAppender = {
+  type: 'logLevelFilter',
+  appender: 'debugFileAppender',
+  level: 'ALL'
+}
+
 log4js.configure({
   appenders: {
-    console: consoleAppender,
-    file: fileAppender
+    consoleAppender,
+    logFileAppender,
+    debugFileAppender,
+    logAppender,
+    debugAppender
   },
   categories: {
     default: {
-      appenders: ['console'],
-      level: 'trace',
+      appenders: ['console', 'logAppender', 'debugAppender'],
+      level: LOG4JS_LEVEL,
       enableCallStack: true
     }
   }
@@ -58,8 +83,8 @@ export const loggerMiddleware = (req: Request, res: Response, next: NextFunction
     // @ts-expect-error
     oldEnd.apply(res, arguments)
   }
-  res.setHeader('X-Request-Id', reqId)
-  reqIdStorage.run(reqId, () => {
+  res.setHeader('X-Request-Id', `${reqId}`)
+  reqIdStorage.run(`${reqId}`, () => {
     logger.info(req.method, req.originalUrl)
     next()
   })
