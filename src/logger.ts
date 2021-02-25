@@ -66,7 +66,7 @@ log4js.configure({
   },
   categories: {
     default: {
-      appenders: ['console', 'logAppender', 'debugAppender'],
+      appenders: ['consoleAppender', 'logAppender', 'debugAppender'],
       level: LOG4JS_LEVEL,
       enableCallStack: true
     }
