@@ -12,8 +12,8 @@ export interface IMessage<T> {
 }
 
 export interface IMessageQueue<T> {
-  produce: (message: IMessage<T>) => Promise<void>
-  consume: (callback: (message: IMessage<T>) => Promise<void>) => Promise<void>
+  produce: (message: IMessage<T>, delaySec?: number) => Promise<void>
+  consume: (callback: (message: IMessage<T>, waitSec?: number) => Promise<void>) => Promise<void>
 }
 
 export interface IMessageTopic<T> {
@@ -86,10 +86,11 @@ export async function MessageQueue<T> (queueName: string): Promise<IMessageQueue
         }
       }
     },
-    produce: async (message) => {
+    produce: async (message, delaySec = 0) => {
       const { type, event } = message
-      const req = {
+      const req: AWS.SQS.Types.SendMessageRequest = {
         QueueUrl,
+        DelaySeconds: delaySec,
         MessageBody: JSON.stringify(message),
         MessageAttributes: {
           type: {
