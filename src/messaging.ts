@@ -98,7 +98,7 @@ export async function MessageQueue<T> (queueName: string): Promise<IMessageQueue
             StringValue: type
           },
           event: {
-            DataType: 'string',
+            DataType: 'String',
             StringValue: event
           }
         }
@@ -112,7 +112,7 @@ export async function MessageQueue<T> (queueName: string): Promise<IMessageQueue
 export async function MessageTopic<T> (TopicArn: string): Promise<IMessageTopic<T>> {
   return {
     publish: async (message) => {
-      const { type } = message
+      const { type, event } = message
       const json = JSON.stringify(message)
       const req: AWS.SNS.PublishInput = {
         TopicArn,
@@ -121,6 +121,10 @@ export async function MessageTopic<T> (TopicArn: string): Promise<IMessageTopic<
           type: {
             DataType: 'String',
             StringValue: type
+          },
+          event: {
+            DataType: 'String',
+            StringValue: event
           }
         },
         MessageStructure: 'json'
