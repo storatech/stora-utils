@@ -13,7 +13,7 @@ export interface IMessage<T> {
 
 export interface IMessageQueue<T> {
   produce: (message: IMessage<T>, delaySec?: number) => Promise<void>
-  consume: (callback: (message: IMessage<T>, waitSec?: number) => Promise<void>) => Promise<void>
+  consume: (callback: (message: IMessage<T>) => Promise<void>, waitSec?: number) => Promise<void>
 }
 
 export interface IMessageTopic<T> {

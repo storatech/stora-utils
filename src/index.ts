@@ -1,9 +1,3 @@
-import { Mongo, MongoCollection } from './database'
-import { MessageTopic, MessageQueue } from './messaging'
-
-export default {
-  Mongo,
-  MongoCollection,
-  MessageTopic,
-  MessageQueue
-}
+export { loggerMiddleware } from './logger'
+export { Mongo, MongoCollection, IMongo } from './database'
+export { MessageQueue, MessageTopic, IMessage, IMessageQueue, IMessageTopic } from './messaging'
