@@ -26,7 +26,7 @@ interface IAttribute {
 type IStringFilter = string | {exists: boolean} | {'anything-but': string[]} | {prefix: string}
 type INumberFilter = {'numberic': ['>' | '=' | '<=' | '>=', number]} | {exists: boolean}
 
-export interface ISubscriptionFilter {
+export interface IMessageFilter {
   stringFilters?: Record<string, IStringFilter[]>
   numberFilters?: Record<string, INumberFilter[]>
 }
@@ -38,7 +38,7 @@ export interface IMessageQueue<T> {
 
 export interface IMessageTopic<T> {
   publish: (message: IMessage<T>) => Promise<void>
-  subscribe: (name: string, filter: ISubscriptionFilter) => Promise<void>
+  subscribe: (name: string, filter: IMessageFilter) => Promise<void>
 }
 
 const getQueue = async (queueName: string): Promise<{QueueUrl: string, QueueArn: string, Policy: string}> => {
