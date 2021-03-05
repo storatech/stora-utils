@@ -225,21 +225,19 @@ export async function MessageTopic<T> (TopicArn: string): Promise<IMessageTopic<
           await sqs.setQueueAttributes(req).promise()
         }
       }
-      {
-        const { stringFilters, numberFilters } = filter
-        const FilterPolicy = JSON.stringify({ ...stringFilters, ...numberFilters })
-        const req = {
-          Protocol: 'sqs',
-          TopicArn,
-          Attributes: {
-            FilterPolicy,
-            RawMessageDelivery: 'true'
-          },
-          Endpoint: QueueArn
-        }
-        logger.trace('SQS.subscribe', req)
-        await sns.subscribe(req).promise()
+      const { stringFilters, numberFilters } = filter
+      const FilterPolicy = JSON.stringify({ ...stringFilters, ...numberFilters })
+      const req = {
+        Protocol: 'sqs',
+        TopicArn,
+        Attributes: {
+          FilterPolicy,
+          RawMessageDelivery: 'true'
+        },
+        Endpoint: QueueArn
       }
+      logger.trace('SQS.subscribe', req)
+      await sns.subscribe(req).promise()
     }
   }
 }
