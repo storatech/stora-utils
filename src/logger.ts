@@ -1,6 +1,7 @@
 import log4js, { ConsoleAppender, getLogger, DateFileAppender, PatternLayout, LogLevelFilterAppender } from 'log4js'
 import { AsyncLocalStorage } from 'async_hooks'
 import { Request, Response, NextFunction } from 'express'
+import axios from 'axios'
 
 const {
   LOG4JS_LEVEL = 'trace',
@@ -89,3 +90,14 @@ export const loggerMiddleware = (req: Request, res: Response, next: NextFunction
     next()
   })
 }
+
+const axiosLogger = getLogger('axios')
+axios.interceptors.request.use((req) => {
+  axiosLogger.info('>>', req.method?.toUpperCase(), req.baseURL, req.url)
+  return req
+})
+
+axios.interceptors.response.use((res) => {
+  axiosLogger.info('<<', res.status, res.statusText)
+  return res
+})
