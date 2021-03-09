@@ -92,8 +92,8 @@ export async function MessageQueue<T> (queueName: string): Promise<IMessageQueue
                 const attributes: Record<string, any> = {}
                 if (MessageAttributes !== undefined) {
                   for (const key in MessageAttributes) {
-                    const attr = attributes[key]
-                    const { Type, Value } = attr
+                    const Attribute = MessageAttributes[key]
+                    const { Type, Value } = Attribute
                     try {
                       if (Type === 'String') {
                         attributes[key] = Value
