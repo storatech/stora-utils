@@ -33,7 +33,7 @@ export interface IMessageFilter {
 
 export interface IMessageQueue<T> {
   produce: (message: T, delaySec?: number) => Promise<void>
-  consume: (callback: (message: T) => Promise<void>, waitSec?: number) => Promise<void>
+  consume: (callback: (message: T, attributes?: Record<string, any>) => Promise<void>, waitSec?: number) => Promise<void>
 }
 
 export interface IMessageTopic<T> {
@@ -85,11 +85,30 @@ export async function MessageQueue<T> (queueName: string): Promise<IMessageQueue
             try {
               const body = JSON.parse(Body)
               if (body.TopicArn !== undefined) {
-                const { Message, Timestamp, TopicArn } = body as { Message: string, Timestamp: string, TopicArn: string}
+                const { Message, Timestamp, TopicArn, MessageAttributes } = body as { Message: string, Timestamp: string, TopicArn: string, MessageAttributes?: Record<string, {Type: String, Value: string}>}
                 const diff = new Date().getTime() - new Date(Timestamp).getTime()
                 logger.debug(`message received from ${TopicArn}, diff: ${diff}`)
                 const message = JSON.parse(Message)
-                await callback(message)
+                const attributes: Record<string, any> = {}
+                if (MessageAttributes !== undefined) {
+                  for (const key in MessageAttributes) {
+                    const attr = attributes[key]
+                    const { Type, Value } = attr
+                    try {
+                      if (Type === 'String') {
+                        attributes[key] = Value
+                      }
+                      if (Type === 'Number') {
+                        attributes[key] = parseInt(Value, 10)
+                      }
+                      if (Type === 'String.Array') {
+                        attributes[key] = JSON.parse(Value)
+                      }
+                    } catch (e) {
+                    }
+                  }
+                }
+                await callback(message, attributes)
               } else {
                 const message = body
                 await callback(message)
@@ -231,8 +250,7 @@ export async function MessageTopic<T> (TopicArn: string): Promise<IMessageTopic<
         Protocol: 'sqs',
         TopicArn,
         Attributes: {
-          FilterPolicy,
-          RawMessageDelivery: 'true'
+          FilterPolicy
         },
         Endpoint: QueueArn
       }
