@@ -29,22 +29,22 @@ export type Constraint<T> = {
 }
 
 validate.validators.element = (value: any, options: any, key: string, attributes: any): string | null => {
-  if (value != null) {
-    if (typeof value[Symbol.iterator] === 'function') {
+  if (value !== null && value !== undefined) {
+    if (Array.isArray(value)) {
       for (const e of value) {
         const res = validate.single(e, options)
-        if (res !== null && res.length > 0) return 'element ' + String(res[0])
+        if (res !== null && res !== undefined && res.length > 0) return 'element ' + String(res[0])
       }
     } else {
       const res = validate.single(value, options)
-      if (res !== null && res.length > 0) return res[0]
+      if (res !== null && res !== undefined && res.length > 0) return res[0]
     }
   }
   return null
 }
 
 validate.validators.object = (value: any, options: any, key: string, attributes: any): string | null => {
-  if (value != null) {
+  if (value != null && value !== undefined) {
     const res = validate(value, options)
     return res
   }
@@ -52,7 +52,7 @@ validate.validators.object = (value: any, options: any, key: string, attributes:
 }
 
 validate.validators.date = (value: any, options: any, key: string, attributes: any): string | null => {
-  if (value != null) {
+  if (value != null && value !== undefined) {
     try {
       moment(value, true)
     } catch (e) {
