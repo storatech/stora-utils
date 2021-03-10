@@ -45,6 +45,9 @@ validate.validators.element = (value: any, options: any, key: string, attributes
 
 validate.validators.object = (value: any, options: any, key: string, attributes: any): string | null => {
   if (value != null && value !== undefined) {
+    if (typeof value !== 'object' || Array.isArray(value)) {
+      return 'must be object'
+    }
     const res = validate(value, options)
     return res
   }
