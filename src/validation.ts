@@ -49,7 +49,7 @@ validate.validators.object = (value: any, options: any, key: string, attributes:
       return 'must be object'
     }
     const res = validate(value, options)
-    return res
+    return res[0]
   }
   return null
 }

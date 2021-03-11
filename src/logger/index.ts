@@ -1,7 +1,5 @@
-import log4js, { ConsoleAppender, getLogger, DateFileAppender, PatternLayout, LogLevelFilterAppender } from 'log4js'
+import log4js, { ConsoleAppender, DateFileAppender, PatternLayout, LogLevelFilterAppender } from 'log4js'
 import { AsyncLocalStorage } from 'async_hooks'
-import { Request, Response, NextFunction } from 'express'
-import axios from 'axios'
 
 const {
   LOG4JS_LEVEL = 'trace',
@@ -9,7 +7,7 @@ const {
   LOG4JS_FILE = 'logs/api'
 } = process.env
 
-const reqIdStorage = new AsyncLocalStorage<string>()
+export const reqIdStorage = new AsyncLocalStorage<string>()
 
 const layout: PatternLayout = {
   pattern: LOG4JS_PATTERN,
@@ -72,32 +70,4 @@ log4js.configure({
       enableCallStack: true
     }
   }
-})
-
-export const loggerMiddleware = (req: Request, res: Response, next: NextFunction): void => {
-  const logger = getLogger('http')
-  const reqId = Math.random()
-  const oldEnd = res.end
-  const ts = new Date().getTime()
-  res.end = (): void => {
-    logger.info(res.statusCode, new Date().getTime() - ts, 'ms')
-    // @ts-expect-error
-    oldEnd.apply(res, arguments)
-  }
-  res.setHeader('X-Request-Id', `${reqId}`)
-  reqIdStorage.run(`${reqId}`, () => {
-    logger.info(req.method, req.originalUrl)
-    next()
-  })
-}
-
-const axiosLogger = getLogger('axios')
-axios.interceptors.request.use((req) => {
-  axiosLogger.info('>>', req.method?.toUpperCase(), req.baseURL, req.url)
-  return req
-})
-
-axios.interceptors.response.use((res) => {
-  axiosLogger.info('<<', res.status, res.statusText)
-  return res
 })
