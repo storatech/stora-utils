@@ -1,4 +1,5 @@
-export { loggerMiddleware } from './logger'
+import './logger/axios'
+export { loggerMiddleware } from './logger/express'
 export { Mongo, MongoCollection, IMongo } from './database'
 export { MessageQueue, MessageTopic, IMessage, IMessageQueue, IMessageTopic, IMessageFilter } from './messaging'
 export { Constraint } from './validation'
