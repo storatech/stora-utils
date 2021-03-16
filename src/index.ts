@@ -1,4 +1,5 @@
 import './logger/axios'
+import './logger/mongo'
 export { loggerMiddleware } from './logger/express'
 export { Mongo, MongoCollection, IMongo } from './database'
 export { MessageQueue, MessageTopic, IMessage, IMessageQueue, IMessageTopic, IMessageFilter } from './messaging'
