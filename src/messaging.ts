@@ -64,8 +64,8 @@ const getQueue = async (queueName: string): Promise<{QueueUrl: string, QueueArn:
   throw new Error('cant get queue ANR')
 }
 
-export async function MessageQueue<T> (queueName: string): Promise<IMessageQueue<T>> {
-  const { QueueUrl } = await getQueue(queueName)
+export async function MessageQueue<T> (queueNameOrUrl: string): Promise<IMessageQueue<T>> {
+  const { QueueUrl } = queueNameOrUrl.startsWith('http') ? { QueueUrl: queueNameOrUrl } : await getQueue(queueNameOrUrl)
   return {
     consume: async (callback, waitSec: number = 10) => {
       const req = {
