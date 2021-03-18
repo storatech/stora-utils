@@ -25,7 +25,7 @@ export const Mongo = (url: string, db: string, options: MongoClientOptions = { u
   return {
     connect: async () => {
       await client.connect()
-      console.debug('🔗 Connected to Mongo')
+      logger.debug('🔗 Connected to Mongo')
       return client
     },
     database: async (dbname, options) => {
@@ -38,7 +38,7 @@ export const Mongo = (url: string, db: string, options: MongoClientOptions = { u
       const parentSession = sessionStorage.getStore()
       if (parentSession === undefined) {
         const session = client.startSession(options)
-        console.debug('starting session')
+        logger.debug('starting session')
         return await sessionStorage.run<Promise<T>>(session, async () => {
           session.startTransaction()
           logger.debug('starting transaction')
