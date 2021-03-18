@@ -1,7 +1,6 @@
 import { getLogger } from 'log4js'
 import { Mongo, MongoCollection } from './database'
 import './logger'
-import './logger/mongo'
 
 const mongo = Mongo('mongodb://localhost:27017', 'test')
 
@@ -15,6 +14,7 @@ const Test = MongoCollection<ITest>('test')
 
 const test = async (deep: number): Promise<void> => {
   const conn = await mongo.database()
+  await Test(conn).findOne({})
   await mongo.withTransaction<any>(async (session) => {
     const insertRes = await Test(conn).insertOne({
       a: 1

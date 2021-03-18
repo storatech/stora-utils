@@ -1,5 +1,6 @@
 import { AsyncLocalStorage } from 'async_hooks'
-import { ClientSession, Collection, Db, MongoClient, MongoClientCommonOption, MongoClientOptions, SessionOptions } from 'mongodb'
+import { getLogger } from 'log4js'
+import { ClientSession, Collection, Db, Logger, MongoClient, MongoClientCommonOption, MongoClientOptions, SessionOptions } from 'mongodb'
 
 const sessionStorage = new AsyncLocalStorage<ClientSession>()
 
@@ -9,6 +10,15 @@ export interface IMongo {
   session: (options?: SessionOptions) => Promise<ClientSession>
   withTransaction: <T>(callback: (session: ClientSession) => Promise<T>, options?: SessionOptions) => Promise<T>
 }
+
+const logger = getLogger('db')
+
+Logger.setLevel('debug')
+Logger.filter('class', ['Cursor', 'Db'])
+Logger.setCurrentLogger(function (msg, state) {
+  const session = sessionStorage.getStore()
+  logger.debug(state?.className, state?.pid, state?.message, session !== undefined ? 'session' : '')
+})
 
 export const Mongo = (url: string, db: string, options: MongoClientOptions = { useUnifiedTopology: true }): IMongo => {
   const client = new MongoClient(url, options)
@@ -31,18 +41,19 @@ export const Mongo = (url: string, db: string, options: MongoClientOptions = { u
         console.debug('starting session')
         return await sessionStorage.run<Promise<T>>(session, async () => {
           session.startTransaction()
-          console.debug('starting transaction')
+          logger.debug('starting transaction')
           try {
             const ret = await callback(session)
             await session.commitTransaction()
-            console.debug('commit transaction')
+            logger.debug('commit transaction')
             return ret
           } catch (e) {
             await session.abortTransaction()
-            console.debug('rollback transaction')
+            logger.debug('rollback transaction')
             throw e
           } finally {
             await session.endSession()
+            logger.debug('end session')
           }
         })
       } else {
