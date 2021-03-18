@@ -41,6 +41,8 @@ export const Mongo = (url: string, db: string, options: MongoClientOptions = { u
             await session.abortTransaction()
             console.debug('rollback transaction')
             throw e
+          } finally {
+            await session.endSession()
           }
         })
       } else {
