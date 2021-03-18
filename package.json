@@ -12,7 +12,8 @@
   "description": "stora common utils",
   "scripts": {
     "build": "rm -rf ./dist && tsc -p . && cp package.json ./dist",
-    "package": "cd dist && npm publish"
+    "package": "cd dist && npm publish",
+    "test": "ts-node src/test.ts"
   },
   "types": "dist/index.d.ts",
   "main": "dist/index.js",

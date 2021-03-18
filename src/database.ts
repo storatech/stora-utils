@@ -7,7 +7,7 @@ export interface IMongo {
   connect: () => Promise<MongoClient>
   database: (dbname?: string, options?: MongoClientCommonOption) => Promise<Db>
   session: (options?: SessionOptions) => Promise<ClientSession>
-  withTransaction: <T>(callback: () => Promise<T>, options?: SessionOptions) => Promise<T>
+  withTransaction: <T>(callback: (session: ClientSession) => Promise<T>, options?: SessionOptions) => Promise<T>
 }
 
 export const Mongo = (url: string, db: string, options: MongoClientOptions = { useUnifiedTopology: true }): IMongo => {
