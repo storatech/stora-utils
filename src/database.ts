@@ -24,16 +24,16 @@ export const Mongo = (url: string, db: string, options: MongoClientOptions = { u
     session: async (options) => {
       return client.startSession(options)
     },
-    withTransaction: async<T> (callback: () => Promise<T>, options?: SessionOptions): Promise<T> => {
+    withTransaction: async<T> (callback: (session: ClientSession) => Promise<T>, options?: SessionOptions): Promise<T> => {
       const parentSession = sessionStorage.getStore()
-      if (parentSession !== undefined) {
+      if (parentSession === undefined) {
         const session = client.startSession(options)
         console.debug('starting session')
         return await sessionStorage.run<Promise<T>>(session, async () => {
           session.startTransaction()
           console.debug('starting transaction')
           try {
-            const ret = await callback()
+            const ret = await callback(session)
             await session.commitTransaction()
             console.debug('commit transaction')
             return ret
@@ -44,7 +44,7 @@ export const Mongo = (url: string, db: string, options: MongoClientOptions = { u
           }
         })
       } else {
-        const ret = await callback()
+        const ret = await callback(parentSession)
         return ret
       }
     }
