@@ -24,7 +24,7 @@ interface IAttribute {
 }
 
 type IStringFilter = string | {exists: boolean} | {'anything-but': string[]} | {prefix: string}
-type INumberFilter = {'numberic': ['>' | '=' | '<=' | '>=', number]} | {exists: boolean}
+type INumberFilter = number | {'numberic': ['>' | '=' | '<=' | '>=', number]} | {exists: boolean} | {'anything-but': number[]}
 
 export interface IMessageFilter {
   stringFilters?: Record<string, IStringFilter[]>
