@@ -20,12 +20,12 @@ interface Validator<T> {
     minimum?: number
     maximum?: number
   }
-  element?: Validator<T>
+  element?: T extends any[] ? Validator<T[number]> : undefined
   date?: boolean
 }
 
 export type Constraint<T> = {
-  [Z in keyof T]: T extends any[] ? Validator<T[number]> : Validator<T[Z]>
+  [Z in keyof T]: T extends [] ? Validator<T[number]> : Validator<T[Z]>
 }
 
 validate.validators.element = (value: any, options: any, key: string, attributes: any): string | null => {
