@@ -1,12 +1,12 @@
-import validate from 'validate.js'
 import moment from 'moment'
+import validate from 'validate.js'
 
 interface Validator<T> {
   object?: Constraint<T>
-  presence?: boolean
-  string?: boolean | {
+  presence?: boolean | {
     allowEmpty?: boolean
   }
+  string?: boolean
   numericality?: boolean
   type?: 'string' | 'number' | 'boolean' | 'array' | 'integer'
   url?: boolean | {
@@ -22,6 +22,7 @@ interface Validator<T> {
   }
   element?: T extends any[] ? Validator<T[number]> : undefined
   date?: boolean
+  format?: RegExp
 }
 
 export type Constraint<T> = {
