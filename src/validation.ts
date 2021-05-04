@@ -34,7 +34,7 @@ validate.validators.element = (value: any, options: any, key: string, attributes
     if (Array.isArray(value)) {
       for (const e of value) {
         const res = validate.single(e, options)
-        if (res !== null && res !== undefined && res.length > 0) return 'element ' + String(res[0])
+        if (res !== null && res !== undefined && res.length > 0) return res[0]
       }
     } else {
       const res = validate.single(value, options)
@@ -73,3 +73,16 @@ validate.validators.date = (value: any, options: any, key: string, attributes: a
   }
   return null
 }
+
+// console.log(validate.single([{
+//   a: '1', b: 2
+// }, {}], {
+//   type: 'array',
+//   element: {
+//     object: {
+//       a: {
+//         type: 'string'
+//       }
+//     }
+//   }
+// }))
