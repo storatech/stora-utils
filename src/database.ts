@@ -6,6 +6,8 @@ export const sessionStorage = new AsyncLocalStorage<ClientSession>()
 
 export interface IMongo {
   connect: () => Promise<MongoClient>
+  isConnected: (options?: MongoClientCommonOption) => boolean
+  disconnect: (force?: boolean) => Promise<void>
   database: (dbname?: string, options?: MongoClientCommonOption) => Promise<Db>
   session: (options?: SessionOptions) => Promise<ClientSession>
   withTransaction: <T>(callback: (session: ClientSession) => Promise<T>, options?: TransactionOptions) => Promise<T>
@@ -27,6 +29,12 @@ export const Mongo = (url: string, db: string, options: MongoClientOptions = { u
       await client.connect()
       logger.debug('🔗 Connected to Mongo')
       return client
+    },
+    isConnected: (options) => {
+      return client.isConnected(options)
+    },
+    disconnect: async (force) => {
+      await client.close(force)
     },
     database: async (dbname, options) => {
       return client.db(dbname ?? db, options)
