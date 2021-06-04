@@ -6,7 +6,7 @@ export interface IStringMoney {
 }
 
 export interface IMoney extends Omit<IStringMoney, 'amount'> {
-  amount: number
+  amount: number | string
 }
 
 export interface IMoneyCalculator {
@@ -44,6 +44,13 @@ export const CURRENCIES: Record<ICurrency, { name: string, symbol: string, curre
 }
 
 export const MoneyCalculator = (currencyRates: Record<string, ICurrencyRate>, base: ICurrency = 'MNT'): IMoneyCalculator => {
+  const fix = (a: string | number): number => {
+    if (typeof a === 'number') {
+      return a
+    } else {
+      return parseFloat(a)
+    }
+  }
   const calculator: IMoneyCalculator = {
     new: (a, currency = base) => {
       const { precision } = CURRENCIES[currency]
@@ -67,7 +74,7 @@ export const MoneyCalculator = (currencyRates: Record<string, ICurrencyRate>, ba
         }
         const { sellRate } = currencyRate
         const precisionAdj = Math.pow(10, precision)
-        const amount = Math.round(sellRate * a.amount * precisionAdj) / precisionAdj
+        const amount = Math.round(sellRate * fix(a.amount) * precisionAdj) / precisionAdj
         return {
           amount,
           currency
@@ -80,14 +87,14 @@ export const MoneyCalculator = (currencyRates: Record<string, ICurrencyRate>, ba
       }
       if (a.currency === b.currency) {
         return {
-          amount: a.amount + b.amount,
+          amount: fix(a.amount) + fix(b.amount),
           currency: a.currency
         }
       } else {
         const x = calculator.convert(a)
         const y = calculator.convert(b)
         return {
-          amount: x.amount + y.amount,
+          amount: fix(x.amount) + fix(y.amount),
           currency: x.currency
         }
       }
@@ -101,21 +108,21 @@ export const MoneyCalculator = (currencyRates: Record<string, ICurrencyRate>, ba
     sub: (a, b) => {
       if (a.currency === b.currency) {
         return {
-          amount: a.amount - b.amount,
+          amount: fix(a.amount) - fix(b.amount),
           currency: a.currency
         }
       } else {
         const x = calculator.convert(a)
         const y = calculator.convert(b)
         return {
-          amount: x.amount - y.amount,
+          amount: fix(x.amount) - fix(y.amount),
           currency: x.currency
         }
       }
     },
     multi: (a, b) => {
       return {
-        amount: a.amount * b,
+        amount: fix(a.amount) * b,
         currency: a.currency
       }
     },
@@ -149,7 +156,10 @@ export const MoneyCalculator = (currencyRates: Record<string, ICurrencyRate>, ba
 //     }
 //   }
 //   const money = MoneyCalculator(rates, 'MNT')
-//   const res = money.sum()
+//   const res = money.sum({
+//     amount: '1.321321321',
+//     currency: 'MNT'
+//   }, money.new(0))
 //   console.log(money.format(res))
 // }
 
