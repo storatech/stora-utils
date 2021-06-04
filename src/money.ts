@@ -194,7 +194,7 @@ export const MoneyCalculator = (currencyRates: Record<string, ICurrencyRate>, ba
       }
     },
     parse: (money, currency) => {
-      const currencies = currency == undefined ? Object.values(CURRENCIES) : [CURRENCIES[currency]]
+      const currencies = currency === undefined ? Object.values(CURRENCIES) : [CURRENCIES[currency]]
       for (const def of currencies) {
         if (def !== undefined) {
           try {
