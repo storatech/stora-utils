@@ -43,7 +43,7 @@ export const CURRENCIES: Record<ICurrency, { name: string, symbol: string, curre
   }
 }
 
-const MoneyCalculator = (currencyRates: Record<string, ICurrencyRate>, base: ICurrency = 'MNT'): IMoneyCalculator => {
+export const MoneyCalculator = (currencyRates: Record<string, ICurrencyRate>, base: ICurrency = 'MNT'): IMoneyCalculator => {
   const calculator: IMoneyCalculator = {
     new: (a, currency = base) => {
       const { precision } = CURRENCIES[currency]
