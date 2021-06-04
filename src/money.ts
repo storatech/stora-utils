@@ -1,4 +1,4 @@
-export type ICurrency = 'USD' | 'MNT'
+export type ICurrency = 'USD' | 'MNT' | 'USc'
 
 export interface IStringMoney {
   amount: string
@@ -10,8 +10,7 @@ export interface IMoney extends Omit<IStringMoney, 'amount'> {
 }
 
 export interface IMoneyCalculator {
-
-  new: (a: number, currency?: ICurrency) => IMoney
+  new: (a: number | string, currency?: ICurrency) => IMoney
   convert: (a: IMoney, currency?: ICurrency) => IMoney
   add: (a: IMoney | undefined, b: IMoney | undefined) => IMoney
   sum: (...a: Array<IMoney | undefined>) => IMoney
@@ -28,34 +27,102 @@ export interface ICurrencyRate {
   sellRate: number
 }
 
-export const CURRENCIES: Record<ICurrency, { name: string, symbol: string, currency: ICurrency, precision: number }> = {
+interface ICurrencyTransformer {
+  format: (money: IMoney) => string
+  parse: (money: string) => IMoney
+}
+
+interface ICurrencyDefinition {
+  name: string
+  symbol: string
+  currency: ICurrency
+  precision: number
+  transformer: ICurrencyTransformer
+}
+
+const toNumber = (a: string | number): number => {
+  if (typeof a === 'number') {
+    return a
+  } else {
+    return parseFloat(a)
+  }
+}
+
+export const CURRENCIES: Record<ICurrency, ICurrencyDefinition> = {
   USD: {
     name: 'U.S. Dollar',
     currency: 'USD',
     symbol: '$',
-    precision: 2
+    precision: 2,
+    transformer: {
+      format: (money) => {
+        return toNumber(money.amount).toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: CURRENCIES.USD.precision, maximumFractionDigits: CURRENCIES.USD.precision })
+      },
+      parse: (money) => {
+        const def = CURRENCIES.USD
+        const symbol = money.replace(/[\d.,'\s]+/gi, ' ').trim()
+        if (symbol === def.symbol || symbol === def.currency) {
+          const amount = money.replace(/[^\d.]/gi, '')
+          if (amount.match(/^\d+(.\d+)?$/gi) !== null) {
+            return MoneyCalculator({}, def.currency).new(amount)
+          }
+        }
+        throw new Error('parse error')
+      }
+    }
   },
   MNT: {
     name: 'Mongolian Tugrik',
     currency: 'MNT',
     symbol: '₮',
-    precision: 0
+    precision: 0,
+    transformer: {
+      format: (money) => {
+        return toNumber(money.amount).toLocaleString('mn-MN', { style: 'currency', currency: 'MNT', minimumFractionDigits: CURRENCIES.MNT.precision, maximumFractionDigits: CURRENCIES.MNT.precision }).replace(/\s/g, '')
+      },
+      parse: (money) => {
+        const def = CURRENCIES.MNT
+        const symbol = money.replace(/[\d.,'\s]+/gi, ' ').trim()
+        if (symbol === def.symbol || symbol === def.currency) {
+          const amount = money.replace(/[^\d.]/gi, '')
+          if (amount.match(/^\d+(.\d+)?$/gi) !== null) {
+            return MoneyCalculator({}, def.currency).new(amount)
+          }
+        }
+        throw new Error('parse error')
+      }
+    }
+  },
+  USc: {
+    name: 'U.S. Cent',
+    currency: 'USc',
+    symbol: '¢',
+    precision: 0,
+    transformer: {
+      format: (money) => {
+        return (toNumber(money.amount) / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: CURRENCIES.USD.precision, maximumFractionDigits: CURRENCIES.USD.precision })
+      },
+      parse: (money) => {
+        const def = CURRENCIES.USc
+        const symbol = money.replace(/[\d.,'\s]+/gi, ' ').trim()
+        if (symbol === def.symbol || symbol === def.currency) {
+          const amount = money.replace(/[^\d.]/gi, '')
+          if (amount.match(/^\d+(.\d+)?$/gi) !== null) {
+            return MoneyCalculator({}, 'USD').new(toNumber(amount) / 100)
+          }
+        }
+        throw new Error('parse error')
+      }
+    }
   }
 }
 
 export const MoneyCalculator = (currencyRates: Record<string, ICurrencyRate>, base: ICurrency = 'MNT'): IMoneyCalculator => {
-  const fix = (a: string | number): number => {
-    if (typeof a === 'number') {
-      return a
-    } else {
-      return parseFloat(a)
-    }
-  }
   const calculator: IMoneyCalculator = {
     new: (a, currency = base) => {
       const { precision } = CURRENCIES[currency]
       const precisionAdj = Math.pow(10, precision)
-      const amount = Math.round(a * precisionAdj) / precisionAdj
+      const amount = Math.round(toNumber(a) * precisionAdj) / precisionAdj
       return {
         amount,
         currency
@@ -74,7 +141,7 @@ export const MoneyCalculator = (currencyRates: Record<string, ICurrencyRate>, ba
         }
         const { sellRate } = currencyRate
         const precisionAdj = Math.pow(10, precision)
-        const amount = Math.round(sellRate * fix(a.amount) * precisionAdj) / precisionAdj
+        const amount = Math.round(sellRate * toNumber(a.amount) * precisionAdj) / precisionAdj
         return {
           amount,
           currency
@@ -87,14 +154,14 @@ export const MoneyCalculator = (currencyRates: Record<string, ICurrencyRate>, ba
       }
       if (a.currency === b.currency) {
         return {
-          amount: fix(a.amount) + fix(b.amount),
+          amount: toNumber(a.amount) + toNumber(b.amount),
           currency: a.currency
         }
       } else {
         const x = calculator.convert(a)
         const y = calculator.convert(b)
         return {
-          amount: fix(x.amount) + fix(y.amount),
+          amount: toNumber(x.amount) + toNumber(y.amount),
           currency: x.currency
         }
       }
@@ -108,59 +175,65 @@ export const MoneyCalculator = (currencyRates: Record<string, ICurrencyRate>, ba
     sub: (a, b) => {
       if (a.currency === b.currency) {
         return {
-          amount: fix(a.amount) - fix(b.amount),
+          amount: toNumber(a.amount) - toNumber(b.amount),
           currency: a.currency
         }
       } else {
         const x = calculator.convert(a)
         const y = calculator.convert(b)
         return {
-          amount: fix(x.amount) - fix(y.amount),
+          amount: toNumber(x.amount) - toNumber(y.amount),
           currency: x.currency
         }
       }
     },
     multi: (a, b) => {
       return {
-        amount: fix(a.amount) * b,
+        amount: toNumber(a.amount) * b,
         currency: a.currency
       }
     },
-    parse: (a, currency = base) => {
-      throw new Error('unsupported')
+    parse: (money, currency) => {
+      const currencies = currency == undefined ? Object.values(CURRENCIES) : [CURRENCIES[currency]]
+      for (const def of currencies) {
+        if (def !== undefined) {
+          try {
+            return def.transformer.parse(money)
+          } catch (e) {
+          }
+        }
+      }
+      throw new Error('cant parse')
     },
     format: (money, currency) => {
       if (currency !== undefined && money.currency !== currency) {
         money = calculator.convert(money, currency)
       }
-      if (money.currency === 'USD') {
-        return money.amount.toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: CURRENCIES.USD.precision, maximumFractionDigits: CURRENCIES.USD.precision })
-      } else if (money.currency === 'MNT') {
-        return money.amount.toLocaleString('mn-MN', { style: 'currency', currency: 'MNT', minimumFractionDigits: CURRENCIES.MNT.precision, maximumFractionDigits: CURRENCIES.MNT.precision }).replace(/\s/g, '')
-      }
-      throw new Error(`unsupported currency ${money.currency}`)
+      const def = CURRENCIES[money.currency]
+      return def.transformer.format(money)
     }
   }
   return calculator
 }
 
-// const test = (): void => {
-//   const rates = {
-//     MNT_USD: {
-//       _id: 'USD_MNT',
-//       adjustmentCoeff: 1,
-//       buyRate: 2844,
-//       fetchedAt: new Date(),
-//       rate: 2849.04,
-//       sellRate: 2851
-//     }
-//   }
-//   const money = MoneyCalculator(rates, 'MNT')
-//   const res = money.sum({
-//     amount: '1.321321321',
-//     currency: 'MNT'
-//   }, money.new(0))
-//   console.log(money.format(res))
-// }
+const test = (): void => {
+  const rates = {
+    MNT_USD: {
+      _id: 'USD_MNT',
+      adjustmentCoeff: 1,
+      buyRate: 2844,
+      fetchedAt: new Date(),
+      rate: 2849.04,
+      sellRate: 2851
+    }
+  }
+  const money = MoneyCalculator(rates, 'MNT')
+  console.log(MoneyCalculator({}).parse('$100,000.001'))
+  const res = money.sum({
+    amount: '1.321321321',
+    currency: 'MNT'
+  }, money.new(0))
+  console.log(money.format(res))
+}
 
-// test()
+test()
