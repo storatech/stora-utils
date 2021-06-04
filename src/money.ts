@@ -216,24 +216,24 @@ export const MoneyCalculator = (currencyRates: Record<string, ICurrencyRate>, ba
   return calculator
 }
 
-const test = (): void => {
-  const rates = {
-    MNT_USD: {
-      _id: 'USD_MNT',
-      adjustmentCoeff: 1,
-      buyRate: 2844,
-      fetchedAt: new Date(),
-      rate: 2849.04,
-      sellRate: 2851
-    }
-  }
-  const money = MoneyCalculator(rates, 'MNT')
-  console.log(MoneyCalculator({}).parse('$100,000.001'))
-  const res = money.sum({
-    amount: '1.321321321',
-    currency: 'MNT'
-  }, money.new(0))
-  console.log(money.format(res))
-}
+// const test = (): void => {
+//   const rates = {
+//     MNT_USD: {
+//       _id: 'USD_MNT',
+//       adjustmentCoeff: 1,
+//       buyRate: 2844,
+//       fetchedAt: new Date(),
+//       rate: 2849.04,
+//       sellRate: 2851
+//     }
+//   }
+//   const money = MoneyCalculator(rates, 'MNT')
+//   console.log(MoneyCalculator({}).parse('$100,000.001'))
+//   const res = money.sum({
+//     amount: '1.321321321',
+//     currency: 'MNT'
+//   }, money.new(0))
+//   console.log(money.format(res))
+// }
 
-test()
+// test()
