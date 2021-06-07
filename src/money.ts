@@ -10,6 +10,7 @@ export interface IMoney extends Omit<IStringMoney, 'amount'> {
 }
 
 export interface IMoneyCalculator {
+  amount: (a: IMoney) => number
   new: (a: number | string, currency?: ICurrency) => IMoney
   convert: (a: IMoney, currency?: ICurrency) => IMoney
   add: (a: IMoney | undefined, b: IMoney | undefined) => IMoney
@@ -124,6 +125,9 @@ export const CURRENCIES: Record<ICurrency, ICurrencyDefinition> = {
 
 export const MoneyCalculator = (currencyRates: Record<string, ICurrencyRate>, base: ICurrency = 'MNT'): IMoneyCalculator => {
   const calculator: IMoneyCalculator = {
+    amount: (a) => {
+      return toNumber(a.amount)
+    },
     new: (a, currency = base) => {
       const { precision } = CURRENCIES[currency]
       const precisionAdj = Math.pow(10, precision)
