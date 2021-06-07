@@ -142,7 +142,7 @@ export const MoneyCalculator = (currencyRates: Record<string, ICurrencyRate>, ba
       if (a.currency === currency) {
         return b
       } else {
-        const rate = `${currency}_${a.currency}`
+        const rate = `${a.currency}_${currency}`
         const currencyRate = currencyRates[rate]
         const { precision } = CURRENCIES[currency]
         if (currencyRate === undefined) {
