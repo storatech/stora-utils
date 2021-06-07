@@ -78,7 +78,12 @@ export const CURRENCIES: Record<ICurrency, ICurrencyDefinition> = {
     precision: 0,
     transformer: {
       format: (money) => {
-        return toNumber(money.amount).toLocaleString('mn-MN', { style: 'currency', currency: 'MNT', minimumFractionDigits: CURRENCIES.MNT.precision, maximumFractionDigits: CURRENCIES.MNT.precision }).replace(/\s/g, '')
+        if (typeof money.amount === 'string') {
+          return `₮${parseFloat(money.amount).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
+        } else if (typeof money.amount === 'number') {
+          return `₮${money.amount.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
+        }
+        throw new Error('unknown amount')
       },
       parse: (money) => {
         const def = CURRENCIES.MNT
