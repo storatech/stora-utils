@@ -7,7 +7,19 @@ interface Validator<T> {
     allowEmpty?: boolean
   }
   string?: boolean
-  numericality?: boolean
+  numericality?: boolean | {
+    onlyInteger?: boolean
+    strict?: boolean
+    greaterThan?: number
+    greaterThanOrEqualTo?: number
+    equalTo?: number
+    lessThanOrEqualTo?: number
+    lessThan?: number
+    divisibleBy?: number
+    odd?: boolean
+    even?: boolean
+  }
+  inclusion: T[]
   type?: 'string' | 'number' | 'boolean' | 'array' | 'integer'
   url?: boolean | {
     schemes?: string[]
