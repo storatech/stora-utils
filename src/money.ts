@@ -45,7 +45,7 @@ const toNumber = (a: string | number): number => {
   if (typeof a === 'number') {
     return a
   } else {
-    return parseFloat(a)
+    return parseFloat(a.replace(/[^\d.]/gi, ''))
   }
 }
 
