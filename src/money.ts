@@ -13,8 +13,8 @@ export interface IMoneyCalculator {
   amount: (a: IMoney) => number
   new: (a: number | string, currency?: ICurrency) => IMoney
   convert: (a: IMoney, currency?: ICurrency) => IMoney
-  add: (a: IMoney | undefined, b: IMoney | undefined) => IMoney
-  sum: (...a: Array<IMoney | undefined>) => IMoney
+  add: (a: IMoney | undefined | null, b: IMoney | undefined | null) => IMoney
+  sum: (...a: Array<IMoney | undefined | null>) => IMoney
   sub: (a: IMoney, b: IMoney) => IMoney
   multi: (a: IMoney, b: number) => IMoney
   parse: (a: string, currency?: ICurrency) => IMoney
@@ -158,7 +158,7 @@ export const MoneyCalculator = (currencyRates: Record<string, ICurrencyRate>, ba
       }
     },
     add: (a, b) => {
-      if (a === undefined || b === undefined) {
+      if (a === undefined || b === undefined || a == null || b == null) {
         return a ?? b ?? calculator.new(0)
       }
       if (a.currency === b.currency) {
