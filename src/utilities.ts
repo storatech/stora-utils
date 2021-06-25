@@ -7,17 +7,22 @@ export const combineUrls = (baseUrl: string, ...urlParts: string[]): string => {
   return combineUrls(baseUrl, ...urlParts)
 }
 
-// T[key] must be string | number | symbol
-export const keyBy = <T extends { [key: string]: any }>(values: T[], key: keyof T | ((val: T) => string)): Record<string, T> => {
-  return values.reduce<Record<string, T>>((map, cur) => {
-    map[key instanceof Function ? key(cur) : cur[key]] = cur
+export function keyBy<T extends Record<K, string>, K extends keyof T> (values: T[], key: K): Record<string, T>
+export function keyBy<T extends Record<K, number>, K extends keyof T> (values: T[], key: K): Record<number, T>
+export function keyBy<T extends Record<K, string | number>, K extends keyof T> (values: T[], key: K): Record<string | number, T> {
+  return values.reduce<Record<string | number, T>>((map, cur) => {
+    map[cur[key]] = cur
     return map
   }, {})
 }
 
-// T[key] must be string | number | symbol
-export const uniqBy = <T extends { [key: string]: any }>(values: T[], key: keyof T | ((val: T) => string)): T[] => {
-  const map = keyBy(values, key)
+export function uniqBy<T extends Record<K, string>, K extends keyof T> (values: T[], key: K): T[]
+export function uniqBy<T extends Record<K, number>, K extends keyof T> (values: T[], key: K): T[]
+export function uniqBy<T extends Record<K, string | number>, K extends keyof T> (values: T[], key: K): T[] {
+  const map = values.reduce<Record<string | number, T>>((map, cur) => {
+    map[cur[key]] = cur
+    return map
+  }, {})
   return Object.values(map)
 }
 
