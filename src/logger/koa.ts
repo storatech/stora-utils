@@ -1,16 +1,14 @@
 import Koa from 'koa'
 import { getLogger } from 'log4js'
-import { reqIdStorage } from '.'
+import { getReqId } from '.'
 
 export const koaLogger: Koa.Middleware = async (ctx, next) => {
   const logger = getLogger('http')
-  const reqId = Math.random()
   const ts = new Date().getTime()
-  ctx.set('X-Request-Id', `${reqId}`)
-  reqIdStorage.run(`${reqId}`, () => {
+  await getReqId(async (reqId) => {
+    ctx.set('X-Request-Id', `${reqId}`)
     logger.info(ctx.method, ctx.originalUrl)
-    next().then(() => {
-      logger.info(ctx.status, new Date().getTime() - ts, 'ms')
-    })
+    await next()
+    logger.info(ctx.status, new Date().getTime() - ts, 'ms')
   })
 }

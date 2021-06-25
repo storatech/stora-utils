@@ -1,5 +1,5 @@
-import log4js, { ConsoleAppender, DateFileAppender, PatternLayout, LogLevelFilterAppender } from 'log4js'
 import { AsyncLocalStorage } from 'async_hooks'
+import log4js, { ConsoleAppender, DateFileAppender, LogLevelFilterAppender, PatternLayout } from 'log4js'
 
 const {
   LOG4JS_LEVEL = 'trace',
@@ -8,6 +8,19 @@ const {
 } = process.env
 
 export const reqIdStorage = new AsyncLocalStorage<string>()
+
+export const getReqId = async (callback: (reqId: string) => Promise<any>): Promise<void> => {
+  return await new Promise((resolve, reject) => {
+    const reqId = `${Math.random()}`
+    reqIdStorage.run(reqId, () => {
+      callback(reqId).then(() => {
+        resolve()
+      }).catch(e => {
+        reject(e)
+      })
+    })
+  })
+}
 
 const layout: PatternLayout = {
   pattern: LOG4JS_PATTERN,
