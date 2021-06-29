@@ -1,5 +1,5 @@
 import { getLogger } from 'log4js'
-import Mongo, { MongoCollection } from './database'
+import { Mongo, MongoCollection } from './database'
 import './logger'
 
 const mongo = Mongo('mongodb://localhost:27017', 'test')

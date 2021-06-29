@@ -111,7 +111,7 @@ export const CURRENCIES: Record<Currency, CurrencyDefinition> = {
   }
 }
 
-export type MoneyCalculator = (currencyRates: Record<string, CurrencyRate>, base?: Currency) => {
+type MoneyCalculator = (currencyRates: Record<string, CurrencyRate>, base?: Currency) => {
   amount: (a: Money) => number
   new: (a: number | string, currency?: Currency) => Money
   convert: (a: Money, currency?: Currency) => Money
@@ -122,7 +122,6 @@ export type MoneyCalculator = (currencyRates: Record<string, CurrencyRate>, base
   parse: (a: string, currency?: Currency) => Money
   format: (a: Money, currency?: Currency) => string
 }
-
 const MoneyCalculatorImpl: MoneyCalculator = (currencyRates, base = 'MNT') => {
   const calculator: ReturnType<MoneyCalculator> = {
     amount: (a) => {
