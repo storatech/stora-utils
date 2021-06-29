@@ -2,18 +2,9 @@ import { AsyncLocalStorage } from 'async_hooks'
 import { getLogger } from 'log4js'
 import { ClientSession, Collection, Db, Logger, MongoClient, MongoClientCommonOption, MongoClientOptions, SessionOptions, TransactionOptions } from 'mongodb'
 
-export const sessionStorage = new AsyncLocalStorage<ClientSession>()
-
-export interface IMongo {
-  connect: () => Promise<MongoClient>
-  isConnected: (options?: MongoClientCommonOption) => boolean
-  disconnect: (force?: boolean) => Promise<void>
-  database: (dbname?: string, options?: MongoClientCommonOption) => Promise<Db>
-  session: (options?: SessionOptions) => Promise<ClientSession>
-  withTransaction: <T>(callback: (session: ClientSession) => Promise<T>, options?: TransactionOptions) => Promise<T>
-}
-
 const logger = getLogger('db')
+
+const sessionStorage = new AsyncLocalStorage<ClientSession>()
 
 Logger.setLevel('debug')
 Logger.filter('class', ['Cursor', 'Db'])
@@ -22,7 +13,22 @@ Logger.setCurrentLogger(function (msg, state) {
   logger.debug(state?.className, state?.pid, state?.message, session !== undefined ? 'session' : '')
 })
 
-export const Mongo = (url: string, db: string, options: MongoClientOptions = { useUnifiedTopology: true }): IMongo => {
+export function MongoCollection<T> (name: string): (conn: Db) => Collection<T> {
+  return (conn) => {
+    return conn.collection(name)
+  }
+}
+
+export type Mongo = (url: string, db: string, options?: MongoClientOptions) => {
+  connect: () => Promise<MongoClient>
+  isConnected: (options?: MongoClientCommonOption) => boolean
+  disconnect: (force?: boolean) => Promise<void>
+  database: (dbname?: string, options?: MongoClientCommonOption) => Promise<Db>
+  session: (options?: SessionOptions) => Promise<ClientSession>
+  withTransaction: <T>(callback: (session: ClientSession) => Promise<T>, options?: TransactionOptions) => Promise<T>
+}
+
+const MongoImpl: Mongo = (url, db, options = { useUnifiedTopology: true }) => {
   const client = new MongoClient(url, options)
   return {
     connect: async () => {
@@ -74,8 +80,4 @@ export const Mongo = (url: string, db: string, options: MongoClientOptions = { u
   }
 }
 
-export function MongoCollection<T> (name: string): (conn: Db) => Collection<T> {
-  return (conn) => {
-    return conn.collection(name)
-  }
-}
+export default MongoImpl

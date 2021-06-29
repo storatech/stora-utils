@@ -9,7 +9,8 @@ const {
 
 export const reqIdStorage = new AsyncLocalStorage<string>()
 
-export const getReqId = async (callback: (reqId: string) => Promise<any>): Promise<void> => {
+type GetReqId = (callback: (reqId: string) => Promise<any>) => Promise<void>
+export const getReqId: GetReqId = async (callback) => {
   return await new Promise((resolve, reject) => {
     const reqId = `${Math.random()}`
     reqIdStorage.run(reqId, () => {

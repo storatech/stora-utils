@@ -1,22 +1,22 @@
 import { getLogger } from 'log4js'
-import { Mongo, MongoCollection } from './database'
+import Mongo, { MongoCollection } from './database'
 import './logger'
 
 const mongo = Mongo('mongodb://localhost:27017', 'test')
 
 const logger = getLogger('db-test')
 
-interface ITest {
+interface Test {
   a: number
 }
 
-const Test = MongoCollection<ITest>('test')
+const testCollection = MongoCollection<Test>('test')
 
 const test = async (deep: number): Promise<void> => {
   const conn = await mongo.database()
-  await Test(conn).findOne({})
+  await testCollection(conn).findOne({})
   await mongo.withTransaction<any>(async (session) => {
-    const insertRes = await Test(conn).insertOne({
+    const insertRes = await testCollection(conn).insertOne({
       a: 1
     }, {
       session
@@ -25,7 +25,7 @@ const test = async (deep: number): Promise<void> => {
     if (deep > 3) {
       throw new Error('test error')
     }
-    const updateRes = await Test(conn).findOneAndUpdate({
+    const updateRes = await testCollection(conn).findOneAndUpdate({
       _id: insertRes.insertedId
     }, {
       $inc: { a: 1 }
