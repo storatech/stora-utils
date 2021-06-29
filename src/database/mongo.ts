@@ -13,13 +13,14 @@ Logger.setCurrentLogger(function (msg, state) {
   logger.debug(state?.className, state?.pid, state?.message, session !== undefined ? 'session' : '')
 })
 
-export function MongoCollection<T> (name: string): (conn: Db) => Collection<T> {
+type MongoCollection = <T> (name: string) => ((conn: Db) => Collection<T>)
+export const MongoCollectionImpl: MongoCollection = (name) => {
   return (conn) => {
     return conn.collection(name)
   }
 }
 
-export type Mongo = (url: string, db: string, options?: MongoClientOptions) => {
+type Mongo = (url: string, db: string, options?: MongoClientOptions) => {
   connect: () => Promise<MongoClient>
   isConnected: (options?: MongoClientCommonOption) => boolean
   disconnect: (force?: boolean) => Promise<void>
@@ -28,7 +29,7 @@ export type Mongo = (url: string, db: string, options?: MongoClientOptions) => {
   withTransaction: <T>(callback: (session: ClientSession) => Promise<T>, options?: TransactionOptions) => Promise<T>
 }
 
-const MongoImpl: Mongo = (url, db, options = { useUnifiedTopology: true }) => {
+export const MongoImpl: Mongo = (url, db, options = { useUnifiedTopology: true }) => {
   const client = new MongoClient(url, options)
   return {
     connect: async () => {
