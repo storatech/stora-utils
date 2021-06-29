@@ -1,44 +1,32 @@
-export type ICurrency = 'USD' | 'MNT' | 'USc'
+export type Currency = 'USD' | 'MNT' | 'USc'
 
-export interface IStringMoney {
+export interface StringMoney {
   amount: string
-  currency: ICurrency
+  currency: Currency
 }
 
-export interface IMoney extends Omit<IStringMoney, 'amount'> {
+export interface Money extends Omit<StringMoney, 'amount'> {
   amount: number | string
 }
 
-export interface IMoneyCalculator {
-  amount: (a: IMoney) => number
-  new: (a: number | string, currency?: ICurrency) => IMoney
-  convert: (a: IMoney, currency?: ICurrency) => IMoney
-  add: (a: IMoney | undefined | null, b: IMoney | undefined | null) => IMoney
-  sum: (...a: Array<IMoney | undefined | null>) => IMoney
-  sub: (a: IMoney, b: IMoney) => IMoney
-  multi: (a: IMoney, b: number) => IMoney
-  parse: (a: string, currency?: ICurrency) => IMoney
-  format: (a: IMoney, currency?: ICurrency) => string
-}
-
-export interface ICurrencyRate {
+export interface CurrencyRate {
   /** MNT_USD => 1MNT = XUSD */
   rate: number
   buyRate: number
   sellRate: number
 }
 
-interface ICurrencyTransformer {
-  format: (money: IMoney) => string
-  parse: (money: string) => IMoney
+interface CurrencyTransformer {
+  format: (money: Money) => string
+  parse: (money: string) => Money
 }
 
-interface ICurrencyDefinition {
+interface CurrencyDefinition {
   name: string
   symbol: string
-  currency: ICurrency
+  currency: Currency
   precision: number
-  transformer: ICurrencyTransformer
+  transformer: CurrencyTransformer
 }
 
 const toNumber = (a: string | number): number => {
@@ -49,7 +37,7 @@ const toNumber = (a: string | number): number => {
   }
 }
 
-export const CURRENCIES: Record<ICurrency, ICurrencyDefinition> = {
+export const CURRENCIES: Record<Currency, CurrencyDefinition> = {
   USD: {
     name: 'U.S. Dollar',
     currency: 'USD',
@@ -65,7 +53,7 @@ export const CURRENCIES: Record<ICurrency, ICurrencyDefinition> = {
         if (symbol === def.symbol || symbol === def.currency) {
           const amount = money.replace(/[^\d.]/gi, '')
           if (amount.match(/^\d+(.\d+)?$/gi) !== null) {
-            return MoneyCalculator({}, def.currency).new(amount)
+            return MoneyCalculatorImpl({}, def.currency).new(amount)
           }
         }
         throw new Error('parse error')
@@ -92,7 +80,7 @@ export const CURRENCIES: Record<ICurrency, ICurrencyDefinition> = {
         if (symbol === def.symbol || symbol === def.currency) {
           const amount = money.replace(/[^\d.]/gi, '')
           if (amount.match(/^\d+(.\d+)?$/gi) !== null) {
-            return MoneyCalculator({}, def.currency).new(amount)
+            return MoneyCalculatorImpl({}, def.currency).new(amount)
           }
         }
         throw new Error('parse error')
@@ -114,7 +102,7 @@ export const CURRENCIES: Record<ICurrency, ICurrencyDefinition> = {
         if (symbol === def.symbol || symbol === def.currency) {
           const amount = money.replace(/[^\d.]/gi, '')
           if (amount.match(/^\d+(.\d+)?$/gi) !== null) {
-            return MoneyCalculator({}, 'USD').new(toNumber(amount) / 100)
+            return MoneyCalculatorImpl({}, 'USD').new(toNumber(amount) / 100)
           }
         }
         throw new Error('parse error')
@@ -123,8 +111,20 @@ export const CURRENCIES: Record<ICurrency, ICurrencyDefinition> = {
   }
 }
 
-export const MoneyCalculator = (currencyRates: Record<string, ICurrencyRate>, base: ICurrency = 'MNT'): IMoneyCalculator => {
-  const calculator: IMoneyCalculator = {
+export type MoneyCalculator = (currencyRates: Record<string, CurrencyRate>, base?: Currency) => {
+  amount: (a: Money) => number
+  new: (a: number | string, currency?: Currency) => Money
+  convert: (a: Money, currency?: Currency) => Money
+  add: (a: Money | undefined | null, b: Money | undefined | null) => Money
+  sum: (...a: Array<Money | undefined | null>) => Money
+  sub: (a: Money, b: Money) => Money
+  multi: (a: Money, b: number) => Money
+  parse: (a: string, currency?: Currency) => Money
+  format: (a: Money, currency?: Currency) => string
+}
+
+const MoneyCalculatorImpl: MoneyCalculator = (currencyRates, base = 'MNT') => {
+  const calculator: ReturnType<MoneyCalculator> = {
     amount: (a) => {
       return toNumber(a.amount)
     },
@@ -225,24 +225,4 @@ export const MoneyCalculator = (currencyRates: Record<string, ICurrencyRate>, ba
   return calculator
 }
 
-// const test = (): void => {
-//   const rates = {
-//     MNT_USD: {
-//       _id: 'USD_MNT',
-//       adjustmentCoeff: 1,
-//       buyRate: 2844,
-//       fetchedAt: new Date(),
-//       rate: 2849.04,
-//       sellRate: 2851
-//     }
-//   }
-//   const money = MoneyCalculator(rates, 'MNT')
-//   console.log(MoneyCalculator({}).parse('$100,000.001'))
-//   const res = money.sum({
-//     amount: '1.321321321',
-//     currency: 'MNT'
-//   }, money.new(0))
-//   console.log(money.format(res))
-// }
-
-// test()
+export default MoneyCalculatorImpl

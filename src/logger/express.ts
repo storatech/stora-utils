@@ -2,7 +2,8 @@ import { getLogger } from 'log4js'
 import { Request, Response, NextFunction } from 'express'
 import { reqIdStorage } from '../logger'
 
-export const loggerMiddleware = (req: Request, res: Response, next: NextFunction): void => {
+type LoggerMiddleware = (req: Request, res: Response, next: NextFunction) => void
+export const loggerMiddleware: LoggerMiddleware = (req, res, next) => {
   const logger = getLogger('http')
   const reqId = Math.random()
   const oldEnd = res.end

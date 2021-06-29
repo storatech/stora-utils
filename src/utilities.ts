@@ -1,4 +1,5 @@
-export const combineUrls = (baseUrl: string, ...urlParts: string[]): string => {
+type CombineUrls = (baseUrl: string, ...urlParts: string[]) => string
+export const combineUrls: CombineUrls = (baseUrl, ...urlParts) => {
   if (urlParts.length === 0) {
     return baseUrl
   }
@@ -26,15 +27,18 @@ export function uniqBy<T extends Record<K, string | number>, K extends keyof T> 
   return Object.values(map)
 }
 
-export const isNil = (value: any): value is null | undefined => {
+type IsNil = (value: any) => value is null | undefined
+export const isNil: IsNil = (value): value is null | undefined => {
   return value === null || value === undefined
 }
 
-export const isNonEmptyString = (value: string | null | undefined): value is string => {
+type IsNonEmptyString = (value: string | null | undefined) => value is string
+export const isNonEmptyString: IsNonEmptyString = (value): value is string => {
   return (value ?? '').trim() !== ''
 }
 
-export const isNonEmptyValue = (value: any): boolean => {
+type IsNonEmptyValue = (value: any) => boolean
+export const isNonEmptyValue: IsNonEmptyValue = (value) => {
   if (value === undefined || value === null) {
     return false
   }
