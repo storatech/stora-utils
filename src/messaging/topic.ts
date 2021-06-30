@@ -27,7 +27,7 @@ interface Attribute {
 type StringFilter = string | {exists: boolean} | {'anything-but': string[]} | {prefix: string}
 type NumberFilter = number | {'numberic': ['>' | '=' | '<=' | '>=', number]} | {exists: boolean} | {'anything-but': number[]}
 
-interface MessageFilter {
+export interface MessageFilter {
   stringFilters?: Record<string, StringFilter[]>
   numberFilters?: Record<string, NumberFilter[]>
 }
