@@ -5,8 +5,17 @@ export interface StringMoney {
   currency: Currency
 }
 
-export interface Money extends Omit<StringMoney, 'amount'> {
-  amount: number | string
+export interface NumberMoney {
+  amount: number
+  currency: Currency
+}
+
+export type Money = StringMoney | NumberMoney
+
+export interface MoneyRange {
+  minAmount: string | number
+  maxAmount: string | number
+  currency: Currency
 }
 
 export interface CurrencyRate {
@@ -18,7 +27,7 @@ export interface CurrencyRate {
 
 interface CurrencyTransformer {
   format: (money: Money) => string
-  parse: (money: string) => Money
+  parse: (money: string) => NumberMoney
 }
 
 interface CurrencyDefinition {
@@ -113,14 +122,16 @@ export const CURRENCIES: Record<Currency, CurrencyDefinition> = {
 
 type MoneyCalculator = (currencyRates: Record<string, CurrencyRate>, base?: Currency) => {
   amount: (a: Money) => number
-  new: (a: number | string, currency?: Currency) => Money
-  convert: (a: Money, currency?: Currency) => Money
-  add: (a: Money | undefined | null, b: Money | undefined | null) => Money
-  sum: (...a: Array<Money | undefined | null>) => Money
-  sub: (a: Money, b: Money) => Money
-  multi: (a: Money, b: number) => Money
-  parse: (a: string, currency?: Currency) => Money
+  new: (a: number | string, currency?: Currency) => NumberMoney
+  convert: (a: Money, currency?: Currency) => NumberMoney
+  add: (a: Money | undefined | null, b: Money | undefined | null) => NumberMoney
+  sum: (...a: Array<Money | undefined | null>) => NumberMoney
+  sub: (a: Money, b: Money) => NumberMoney
+  multi: (a: Money, b: number) => NumberMoney
+  parse: (a: string, currency?: Currency) => NumberMoney
   format: (a: Money, currency?: Currency) => string
+  toStringMoney: (a: Money) => StringMoney
+  toNumberMoney: (a: Money) => NumberMoney
 }
 const MoneyCalculatorImpl: MoneyCalculator = (currencyRates, base = 'MNT') => {
   const calculator: ReturnType<MoneyCalculator> = {
@@ -139,7 +150,7 @@ const MoneyCalculatorImpl: MoneyCalculator = (currencyRates, base = 'MNT') => {
     convert: (a, currency = base) => {
       const { ...b } = a
       if (a.currency === currency) {
-        return b
+        return calculator.toNumberMoney(b)
       } else {
         const rate = `${a.currency}_${currency}`
         const currencyRate = currencyRates[rate]
@@ -158,7 +169,7 @@ const MoneyCalculatorImpl: MoneyCalculator = (currencyRates, base = 'MNT') => {
     },
     add: (a, b) => {
       if (a === undefined || b === undefined || a == null || b == null) {
-        return a ?? b ?? calculator.new(0)
+        return calculator.toNumberMoney(a ?? b ?? calculator.new(0))
       }
       if (a.currency === b.currency) {
         return {
@@ -176,9 +187,9 @@ const MoneyCalculatorImpl: MoneyCalculator = (currencyRates, base = 'MNT') => {
     },
     sum: (...a) => {
       const [c, ...rest] = a
-      return rest.reduce((r, b) => {
+      return rest.reduce<NumberMoney>((r, b) => {
         return calculator.add(r, b)
-      }, c) ?? calculator.new(0)
+      }, calculator.toNumberMoney(c ?? calculator.new(0)))
     },
     sub: (a, b) => {
       if (a.currency === b.currency) {
@@ -219,6 +230,18 @@ const MoneyCalculatorImpl: MoneyCalculator = (currencyRates, base = 'MNT') => {
       }
       const def = CURRENCIES[money.currency]
       return def.transformer.format(money)
+    },
+    toStringMoney: (money) => {
+      return {
+        ...money,
+        amount: money.amount.toString()
+      }
+    },
+    toNumberMoney: (money) => {
+      return {
+        ...money,
+        amount: toNumber(money.amount)
+      }
     }
   }
   return calculator
