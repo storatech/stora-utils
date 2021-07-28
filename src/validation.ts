@@ -79,7 +79,7 @@ validate.validators.object = (value: any, options: any, key: string, attributes:
 validate.validators.date = (value: any, options: any, key: string, attributes: any): string | null => {
   if (value != null && value !== undefined) {
     try {
-      if (dayjs(value).isValid()) {
+      if (!dayjs(value).isValid()) {
         return 'invalid date format'
       }
     } catch (e) {
