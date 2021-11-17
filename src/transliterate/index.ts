@@ -1,1 +1,2 @@
-export { default as Transliterate } from './transliterate'
+import Transliterate from './transliterate'
+export default Transliterate
