@@ -79,17 +79,13 @@ const Transliterate = (word: string): string => {
 
   for (let i = 0; i < word.length; i++) {
     if (word[i] !== undefined) {
-      if (s[word[i]] !== undefined) {
-        if (e.includes(word[i + 1])) {
-          resultWord += String(s[word[i]])
-        } else {
-          resultWord += String(a[word[i]])
-        }
+      if (s[word[i]] !== undefined && e.includes(word[i + 1])) {
+        resultWord += String(s[word[i]])
       } else {
         if (a[word[i]] !== undefined) {
-          resultWord += word[i]
-        } else {
           resultWord += String(a[word[i]])
+        } else {
+          resultWord += word[i]
         }
       }
     }
