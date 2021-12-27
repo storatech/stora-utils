@@ -58,9 +58,9 @@ export const CURRENCIES: Record<Currency, CurrencyDefinition> = {
       },
       parse: (money) => {
         const def = CURRENCIES.USD
-        const symbol = money.replace(/[\d.,'\s]+/gi, ' ').trim()
+        const symbol = money.replace(/[\d.,'\s]+/gi, ' ').replace(/-/gi, '').trim()
         if (symbol === def.symbol || symbol === def.currency) {
-          const amount = money.replace(/[^\d.]/gi, '')
+          const amount = money.replace(/[^\d.-]/gi, '')
           if (amount.match(/^\d+(.\d+)?$/gi) !== null) {
             return MoneyCalculatorImpl({}, def.currency).new(amount)
           }
@@ -77,17 +77,17 @@ export const CURRENCIES: Record<Currency, CurrencyDefinition> = {
     transformer: {
       format: (money) => {
         if (typeof money.amount === 'string') {
-          return `₮${parseFloat(money.amount).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
+          return `${parseFloat(money.amount).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}₮`
         } else if (typeof money.amount === 'number') {
-          return `₮${money.amount.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
+          return `${money.amount.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}₮`
         }
         throw new Error('unknown amount')
       },
       parse: (money) => {
         const def = CURRENCIES.MNT
-        const symbol = money.replace(/[\d.,'\s]+/gi, ' ').trim()
+        const symbol = money.replace(/[\d.,'\s]+/gi, ' ').replace(/-/gi, '').trim()
         if (symbol === def.symbol || symbol === def.currency) {
-          const amount = money.replace(/[^\d.]/gi, '')
+          const amount = money.replace(/[^\d.-]/gi, '')
           if (amount.match(/^\d+(.\d+)?$/gi) !== null) {
             return MoneyCalculatorImpl({}, def.currency).new(amount)
           }
@@ -107,11 +107,11 @@ export const CURRENCIES: Record<Currency, CurrencyDefinition> = {
       },
       parse: (money) => {
         const def = CURRENCIES.USc
-        const symbol = money.replace(/[\d.,'\s]+/gi, ' ').trim()
+        const symbol = money.replace(/[\d.,'\s]+/gi, ' ').replace(/-/gi, '').trim()
         if (symbol === def.symbol || symbol === def.currency) {
-          const amount = money.replace(/[^\d.]/gi, '')
+          const amount = money.replace(/[^\d.-]/gi, '')
           if (amount.match(/^\d+(.\d+)?$/gi) !== null) {
-            return MoneyCalculatorImpl({}, 'USD').new(toNumber(amount) / 100)
+            return MoneyCalculatorImpl({}, def.currency).new(amount)
           }
         }
         throw new Error('parse error')
