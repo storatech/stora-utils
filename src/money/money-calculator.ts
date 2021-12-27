@@ -42,7 +42,7 @@ const toNumber = (a: string | number): number => {
   if (typeof a === 'number') {
     return a
   } else {
-    return parseFloat(a.replace(/[^\d.]/gi, ''))
+    return parseFloat(a.replace(/[^\d.-]/gi, ''))
   }
 }
 
@@ -61,7 +61,7 @@ export const CURRENCIES: Record<Currency, CurrencyDefinition> = {
         const symbol = money.replace(/[\d.,'\s]+/gi, ' ').replace(/-/gi, '').trim()
         if (symbol === def.symbol || symbol === def.currency) {
           const amount = money.replace(/[^\d.-]/gi, '')
-          if (amount.match(/^\d+(.\d+)?$/gi) !== null) {
+          if (amount.match(/^-?\d+(.\d+)?$/gi) !== null) {
             return MoneyCalculatorImpl({}, def.currency).new(amount)
           }
         }
@@ -88,7 +88,7 @@ export const CURRENCIES: Record<Currency, CurrencyDefinition> = {
         const symbol = money.replace(/[\d.,'\s]+/gi, ' ').replace(/-/gi, '').trim()
         if (symbol === def.symbol || symbol === def.currency) {
           const amount = money.replace(/[^\d.-]/gi, '')
-          if (amount.match(/^\d+(.\d+)?$/gi) !== null) {
+          if (amount.match(/^-?\d+(.\d+)?$/gi) !== null) {
             return MoneyCalculatorImpl({}, def.currency).new(amount)
           }
         }
@@ -110,8 +110,8 @@ export const CURRENCIES: Record<Currency, CurrencyDefinition> = {
         const symbol = money.replace(/[\d.,'\s]+/gi, ' ').replace(/-/gi, '').trim()
         if (symbol === def.symbol || symbol === def.currency) {
           const amount = money.replace(/[^\d.-]/gi, '')
-          if (amount.match(/^\d+(.\d+)?$/gi) !== null) {
-            return MoneyCalculatorImpl({}, def.currency).new(amount)
+          if (amount.match(/^-?\d+(.\d+)?$/gi) !== null) {
+            return MoneyCalculatorImpl({}, 'USD').new(toNumber(amount) / 100)
           }
         }
         throw new Error('parse error')
