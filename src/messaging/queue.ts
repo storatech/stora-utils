@@ -21,9 +21,14 @@ const MessageQueueImpl: MessageQueue = async (queueNameOrUrl) => {
         VisibilityTimeout: 10, // 10 minute
         AttributeNames: ['All']
       }
-      const res = await sqs.receiveMessage(req).promise()
-      logger.trace('receive message', req, res)
-      const { Messages } = res
+      let Messages: AWS.SQS.MessageList | undefined
+      try {
+        const res = await sqs.receiveMessage(req).promise()
+        Messages = res.Messages
+        logger.trace('receive message', req, res)
+      } catch (e) {
+        logger.debug('receive message error')
+      }
       if (Messages !== undefined) {
         for (const Message of Messages) {
           const { Body, ReceiptHandle } = Message
