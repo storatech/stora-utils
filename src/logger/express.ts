@@ -8,7 +8,7 @@ export const loggerMiddleware: LoggerMiddleware = (req, res, next) => {
   const reqId = Math.random()
   const oldEnd = res.end
   const ts = new Date().getTime()
-  res.end = () => {
+  res.end = (): any => {
     logger.info(res.statusCode, new Date().getTime() - ts, 'ms')
     // @ts-expect-error
     oldEnd.apply(res, arguments)
