@@ -27,7 +27,7 @@ const MessageQueueImpl: MessageQueue = async (queueNameOrUrl) => {
         Messages = res.Messages
         logger.trace('receive message', req, res)
       } catch (e) {
-        logger.debug('receive message error')
+        logger.debug('receive message error', e)
       }
       if (Messages !== undefined) {
         for (const Message of Messages) {
