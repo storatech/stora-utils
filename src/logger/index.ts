@@ -43,7 +43,7 @@ const logFileAppender: DateFileAppender = {
   type: 'dateFile',
   encoding: 'utf-8',
   filename: `${LOG4JS_FILE}.log`,
-  daysToKeep: 30,
+  numBackups: 30,
   layout,
   keepFileExt: true
 }
@@ -52,7 +52,7 @@ const debugFileAppender: DateFileAppender = {
   type: 'dateFile',
   encoding: 'utf-8',
   filename: `${LOG4JS_FILE}.deb`,
-  daysToKeep: 7,
+  numBackups: 7,
   layout,
   keepFileExt: true
 }
