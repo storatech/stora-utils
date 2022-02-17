@@ -13,12 +13,12 @@ type MessageQueue = <T>(queueNameOrUrl: string) => Promise<{
 const MessageQueueImpl: MessageQueue = async (queueNameOrUrl) => {
   const { QueueUrl } = queueNameOrUrl.startsWith('http') ? { QueueUrl: queueNameOrUrl } : await getQueue(queueNameOrUrl)
   return {
-    consume: async (callback, waitSec: number = 10) => {
+    consume: async (callback, waitSec: number = 10, retrySec: number = 10) => {
       const req = {
         QueueUrl,
         WaitTimeSeconds: waitSec,
         MaxNumberOfMessages: 10,
-        VisibilityTimeout: 10, // 10 minute
+        VisibilityTimeout: retrySec, // 10 minute
         AttributeNames: ['All']
       }
       let Messages: AWS.SQS.MessageList | undefined
