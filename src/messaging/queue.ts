@@ -7,7 +7,7 @@ const logger = getLogger('messaging-queue')
 
 type MessageQueue = <T>(queueNameOrUrl: string) => Promise<{
   produce: (message: T, delaySec?: number) => Promise<void>
-  consume: (callback: (message: T, attributes?: Record<string, any>) => Promise<void>, waitSec?: number) => Promise<void>
+  consume: (callback: (message: T, attributes?: Record<string, any>) => Promise<void>, waitSec?: number, retrySec?: number) => Promise<void>
 }>
 
 const MessageQueueImpl: MessageQueue = async (queueNameOrUrl) => {
