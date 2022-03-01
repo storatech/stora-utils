@@ -21,7 +21,7 @@ interface IGrpHdr {
     LoginID: string
     Pwds: Array<{
       PwdType: number
-      Pwd: string
+      Pwd?: string
     }>
   }
 }
