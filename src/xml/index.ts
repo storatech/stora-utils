@@ -64,9 +64,6 @@ export const XML: Xml = <T>(structure: XmlDef<T>) => {
             deep: deep + 1
           }
         }
-        if (tag.isSelfClosing) {
-          parser.onclosetag(tag.name)
-        }
       }
       parser.onclosetag = (tag) => {
         const { parent } = current
