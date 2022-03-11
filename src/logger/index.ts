@@ -9,10 +9,10 @@ const {
 
 export const reqIdStorage = new AsyncLocalStorage<string>()
 
-type GetReqId = (callback: (reqId: string) => Promise<any>) => Promise<void>
-export const getReqId: GetReqId = async (callback) => {
+type GetReqId = (callback: (reqId: string) => Promise<any>, prefix?: string) => Promise<void>
+export const getReqId: GetReqId = async (callback, prefix) => {
   return await new Promise((resolve, reject) => {
-    const reqId = `${Math.random()}`
+    const reqId = `${prefix !== undefined ? prefix + '/' : ''}${Math.random()}`
     reqIdStorage.run(reqId, () => {
       callback(reqId).then(() => {
         resolve()
