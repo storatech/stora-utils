@@ -32,12 +32,12 @@ export interface MessageFilter {
   numberFilters?: Record<string, NumberFilter[]>
 }
 
-type MessageTopic = <T>(topicArn: string) => Promise<{
+interface MessageTopic<T> {
   publish: (message: Message<T>) => Promise<void>
   subscribe: (name: string, filter: MessageFilter) => Promise<void>
-}>
+}
 
-const MessageTopicImpl: MessageTopic = async (topicArn) => {
+const MessageTopicImpl = async <T>(topicArn: string): Promise<MessageTopic<T>> => {
   return {
     publish: async (message) => {
       const { stringAttributes, numberAttributes, arrayAttributes, body } = message
