@@ -1,19 +1,37 @@
 import AWS from 'aws-sdk'
 import { getLogger } from 'log4js'
+import { ThreadPool } from '../concurrency'
 import { getQueue } from './utils'
 
 const sqs = new AWS.SQS({})
 const logger = getLogger('messaging-queue')
 
-type MessageQueue = <T>(queueNameOrUrl: string) => Promise<{
+interface MessageQueue<T> {
   produce: (message: T, delaySec?: number) => Promise<void>
   consume: (callback: (message: T, attributes?: Record<string, any>) => Promise<void>, waitSec?: number, retrySec?: number) => Promise<void>
-}>
+}
 
-const MessageQueueImpl: MessageQueue = async (queueNameOrUrl) => {
+type MessageConsumer = <T>(queue: MessageQueue<T>, concurrentCount: number) => {
+  start: (callback: (message: T, attributes?: Record<string, any>) => Promise<void>, waitSec?: number, retrySec?: number) => void
+}
+
+export const MessageConsumerImpl: MessageConsumer = (queue, concurrentCount) => {
+  const pool = ThreadPool(concurrentCount)
+  return {
+    start: (callback, waitSec = 10, retrySec = 10) => {
+      pool.submit(async () => {
+        while (true) {
+          await queue.consume(callback, waitSec, retrySec)
+        }
+      })
+    }
+  }
+}
+
+const MessageQueueImpl = async <T>(queueNameOrUrl: string): Promise<MessageQueue<T>> => {
   const { QueueUrl } = queueNameOrUrl.startsWith('http') ? { QueueUrl: queueNameOrUrl } : await getQueue(queueNameOrUrl)
   return {
-    consume: async (callback, waitSec: number = 10, retrySec: number = 10) => {
+    consume: async (callback, waitSec = 10, retrySec = 10) => {
       const req = {
         QueueUrl,
         WaitTimeSeconds: waitSec,
@@ -90,3 +108,13 @@ const MessageQueueImpl: MessageQueue = async (queueNameOrUrl) => {
 }
 
 export default MessageQueueImpl
+
+const test = async (): Promise<void> => {
+  const queue = await MessageQueueImpl<string>('amazon-scraper')
+  const consumer = MessageConsumerImpl(queue, 2)
+  consumer.start(async (message) => {
+    console.log('received', message)
+  })
+}
+
+test().catch(e => console.log(e))
