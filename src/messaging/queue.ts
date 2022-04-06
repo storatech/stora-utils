@@ -11,25 +11,9 @@ interface MessageQueue<T> {
   consume: (callback: (message: T, attributes?: Record<string, any>) => Promise<void>, waitSec?: number, retrySec?: number) => Promise<void>
 }
 
-type MessageConsumer = <T>(queue: MessageQueue<T>, concurrentCount: number) => {
-  start: (callback: (message: T, attributes?: Record<string, any>) => Promise<void>, waitSec?: number, retrySec?: number) => void
-}
-
-export const MessageConsumerImpl: MessageConsumer = (queue, concurrentCount) => {
-  const pool = ThreadPool(concurrentCount)
-  return {
-    start: (callback, waitSec = 10, retrySec = 10) => {
-      pool.submit(async () => {
-        while (true) {
-          await queue.consume(callback, waitSec, retrySec)
-        }
-      })
-    }
-  }
-}
-
-const MessageQueueImpl = async <T>(queueNameOrUrl: string): Promise<MessageQueue<T>> => {
+const MessageQueueImpl = async <T>(queueNameOrUrl: string, concurrentCount: number = 1): Promise<MessageQueue<T>> => {
   const { QueueUrl } = queueNameOrUrl.startsWith('http') ? { QueueUrl: queueNameOrUrl } : await getQueue(queueNameOrUrl)
+  const pool = ThreadPool(concurrentCount)
   return {
     consume: async (callback, waitSec = 10, retrySec = 10) => {
       const req = {
@@ -49,49 +33,52 @@ const MessageQueueImpl = async <T>(queueNameOrUrl: string): Promise<MessageQueue
       }
       if (Messages !== undefined) {
         for (const Message of Messages) {
-          const { Body, ReceiptHandle } = Message
-          if (Body !== undefined && ReceiptHandle !== undefined) {
-            try {
-              const body = JSON.parse(Body)
-              if (body.TopicArn !== undefined) {
-                const { Message, Timestamp, TopicArn, MessageAttributes } = body as { Message: string, Timestamp: string, TopicArn: string, MessageAttributes?: Record<string, {Type: String, Value: string}>}
-                const diff = new Date().getTime() - new Date(Timestamp).getTime()
-                logger.debug(`message received from ${TopicArn}, diff: ${diff}`)
-                const message = JSON.parse(Message)
-                const attributes: Record<string, any> = {}
-                if (MessageAttributes !== undefined) {
-                  for (const key in MessageAttributes) {
-                    const Attribute = MessageAttributes[key]
-                    const { Type, Value } = Attribute
-                    try {
-                      if (Type === 'String') {
-                        attributes[key] = Value
+          const onMessage = async (): Promise<void> => {
+            const { Body, ReceiptHandle } = Message
+            if (Body !== undefined && ReceiptHandle !== undefined) {
+              try {
+                const body = JSON.parse(Body)
+                if (body.TopicArn !== undefined) {
+                  const { Message, Timestamp, TopicArn, MessageAttributes } = body as { Message: string, Timestamp: string, TopicArn: string, MessageAttributes?: Record<string, {Type: String, Value: string}>}
+                  const diff = new Date().getTime() - new Date(Timestamp).getTime()
+                  logger.debug(`message received from ${TopicArn}, diff: ${diff}`)
+                  const message = JSON.parse(Message)
+                  const attributes: Record<string, any> = {}
+                  if (MessageAttributes !== undefined) {
+                    for (const key in MessageAttributes) {
+                      const Attribute = MessageAttributes[key]
+                      const { Type, Value } = Attribute
+                      try {
+                        if (Type === 'String') {
+                          attributes[key] = Value
+                        }
+                        if (Type === 'Number') {
+                          attributes[key] = parseInt(Value, 10)
+                        }
+                        if (Type === 'String.Array') {
+                          attributes[key] = JSON.parse(Value)
+                        }
+                      } catch (e) {
                       }
-                      if (Type === 'Number') {
-                        attributes[key] = parseInt(Value, 10)
-                      }
-                      if (Type === 'String.Array') {
-                        attributes[key] = JSON.parse(Value)
-                      }
-                    } catch (e) {
                     }
                   }
+                  await callback(message, attributes)
+                } else {
+                  const message = body
+                  await callback(message)
                 }
-                await callback(message, attributes)
-              } else {
-                const message = body
-                await callback(message)
+                const req = {
+                  QueueUrl,
+                  ReceiptHandle
+                }
+                const res = await sqs.deleteMessage(req).promise()
+                logger.trace('delete message', res)
+              } catch (e) {
+                logger.error('subsribe error', e)
               }
-              const req = {
-                QueueUrl,
-                ReceiptHandle
-              }
-              const res = await sqs.deleteMessage(req).promise()
-              logger.trace('delete message', res)
-            } catch (e) {
-              logger.error('subsribe error', e)
             }
           }
+          pool.submit(onMessage)
         }
       }
     },
@@ -108,13 +95,3 @@ const MessageQueueImpl = async <T>(queueNameOrUrl: string): Promise<MessageQueue
 }
 
 export default MessageQueueImpl
-
-const test = async (): Promise<void> => {
-  const queue = await MessageQueueImpl<string>('amazon-scraper')
-  const consumer = MessageConsumerImpl(queue, 2)
-  consumer.start(async (message) => {
-    console.log('received', message)
-  })
-}
-
-test().catch(e => console.log(e))
