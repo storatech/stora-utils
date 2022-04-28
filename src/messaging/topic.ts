@@ -1,9 +1,24 @@
 import AWS from 'aws-sdk'
+import http from 'http'
 import { getLogger } from 'log4js'
 import { getQueue } from './utils'
 
-const sqs = new AWS.SQS({})
-const sns = new AWS.SNS({})
+const agent = new http.Agent({
+  keepAlive: true,
+  keepAliveMsecs: 60000,
+  // Infinity is read as 50 sockets
+  maxSockets: Infinity
+})
+
+const sqs = new AWS.SQS({
+
+})
+const sns = new AWS.SNS({
+  httpOptions: {
+    agent
+  }
+})
+
 const logger = getLogger('messaging-topic')
 
 interface Message<T> {
