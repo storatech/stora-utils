@@ -1,9 +1,9 @@
 import AWS from 'aws-sdk'
-import http from 'http'
+import https from 'https'
 import { getLogger } from 'log4js'
 import { getQueue } from './utils'
 
-const agent = new http.Agent({
+const agent = new https.Agent({
   keepAlive: true,
   keepAliveMsecs: 60000,
   // Infinity is read as 50 sockets
@@ -11,7 +11,9 @@ const agent = new http.Agent({
 })
 
 const sqs = new AWS.SQS({
-
+  httpOptions: {
+    agent
+  }
 })
 const sns = new AWS.SNS({
   httpOptions: {
