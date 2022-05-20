@@ -8,18 +8,18 @@ const logger = getLogger('messaging-queue')
 
 interface MessageQueue<T> {
   produce: (message: T, delaySec?: number) => Promise<void>
-  consume: (callback: (message: T, attributes?: Record<string, any>) => Promise<void>, waitSec?: number, retrySec?: number) => Promise<void>
+  consume: (callback: (message: T, attributes?: Record<string, any>) => Promise<void>, waitSec?: number, retrySec?: number, maxDiffMs?: number) => Promise<void>
 }
 
 const MessageQueueImpl = async <T>(queueNameOrUrl: string, concurrentCount: number = 1): Promise<MessageQueue<T>> => {
   const { QueueUrl } = queueNameOrUrl.startsWith('http') ? { QueueUrl: queueNameOrUrl } : await getQueue(queueNameOrUrl)
   const pool = ThreadPool(concurrentCount)
   return {
-    consume: async (callback, waitSec = 10, retrySec = 10) => {
+    consume: async (callback, waitSec = 10, retrySec = 10, maxDiffMs = 0) => {
       const req = {
         QueueUrl,
         WaitTimeSeconds: waitSec,
-        MaxNumberOfMessages: 10,
+        MaxNumberOfMessages: concurrentCount,
         VisibilityTimeout: retrySec, // 10 minute
         AttributeNames: ['All']
       }
@@ -42,27 +42,31 @@ const MessageQueueImpl = async <T>(queueNameOrUrl: string, concurrentCount: numb
                   const { Message, Timestamp, TopicArn, MessageAttributes } = body as { Message: string, Timestamp: string, TopicArn: string, MessageAttributes?: Record<string, {Type: String, Value: string}>}
                   const diff = new Date().getTime() - new Date(Timestamp).getTime()
                   logger.debug(`message received from ${TopicArn}, diff: ${diff}`)
-                  const message = JSON.parse(Message)
-                  const attributes: Record<string, any> = {}
-                  if (MessageAttributes !== undefined) {
-                    for (const key in MessageAttributes) {
-                      const Attribute = MessageAttributes[key]
-                      const { Type, Value } = Attribute
-                      try {
-                        if (Type === 'String') {
-                          attributes[key] = Value
+                  if (maxDiffMs > 0 && maxDiffMs < diff) {
+                    logger.debug('message too old ignored')
+                  } else {
+                    const message = JSON.parse(Message)
+                    const attributes: Record<string, any> = {}
+                    if (MessageAttributes !== undefined) {
+                      for (const key in MessageAttributes) {
+                        const Attribute = MessageAttributes[key]
+                        const { Type, Value } = Attribute
+                        try {
+                          if (Type === 'String') {
+                            attributes[key] = Value
+                          }
+                          if (Type === 'Number') {
+                            attributes[key] = parseInt(Value, 10)
+                          }
+                          if (Type === 'String.Array') {
+                            attributes[key] = JSON.parse(Value)
+                          }
+                        } catch (e) {
                         }
-                        if (Type === 'Number') {
-                          attributes[key] = parseInt(Value, 10)
-                        }
-                        if (Type === 'String.Array') {
-                          attributes[key] = JSON.parse(Value)
-                        }
-                      } catch (e) {
                       }
                     }
+                    await callback(message, attributes)
                   }
-                  await callback(message, attributes)
                 } else {
                   const message = body
                   await callback(message)
@@ -78,7 +82,7 @@ const MessageQueueImpl = async <T>(queueNameOrUrl: string, concurrentCount: numb
               }
             }
           }
-          pool.submit(onMessage)
+          await pool.submit(onMessage)
         }
       }
     },
