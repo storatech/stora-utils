@@ -4,13 +4,19 @@ import '../logger'
 
 const logger = getLogger('test')
 
-const t = ThreadPool(9)
-for (let i = 0; i < 10; i++) {
-  t.submit(async () => {
-    logger.info('thread start', i)
-    await new Promise((resolve, reject) => {
-      setTimeout(resolve, 10000)
+const t = ThreadPool(10)
+const test = async (): Promise<void> => {
+  for (let i = 0; i < 101; i++) {
+    await t.submit(async () => {
+      logger.info('thread start', i)
+      await new Promise((resolve, reject) => {
+        setTimeout(resolve, 1000)
+      })
+      logger.info('thread end', i)
     })
-    logger.info('thread end', i)
-  })
+  }
 }
+
+test().catch(e => {
+
+})

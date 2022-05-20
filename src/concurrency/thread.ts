@@ -12,31 +12,27 @@ export const ThreadPoolImpl = (size: number): ThreadPool => {
   const logger = getLogger('THREAD')
   const queue: ThreadTask[] = []
   const emitter = new EventEmitter()
-  emitter.on('new', (d: ThreadTask) => {
-    queue.push(d)
-    logger.trace('waiting tasks: ', queue.length)
-  })
   emitter.setMaxListeners(size + 1)
   const runner = async (thread: number): Promise<void> => {
     await getReqId(async () => {
       while (true) {
         const d = queue.shift()
         if (d !== undefined) {
-          logger.trace('waiting tasks: ', queue.length)
           try {
             await d()
           } catch (e) {
             logger.error('unknown error', thread, e)
           }
+          emitter.emit('end')
         } else {
           await new Promise((resolve, reject) => {
-            const wait = (): void => {
+            const waitEnd = (): void => {
               clearTimeout(timeout)
               resolve(undefined)
-              emitter.removeListener('new', wait)
+              emitter.removeListener('begin', waitEnd)
             }
-            const timeout = setTimeout(wait, 60000)
-            emitter.once('new', wait)
+            const timeout = setTimeout(waitEnd, 60000)
+            emitter.once('begin', waitEnd)
           })
         }
       }
@@ -49,7 +45,13 @@ export const ThreadPoolImpl = (size: number): ThreadPool => {
   }
   return {
     submit: async (d) => {
-      emitter.emit('new', d)
+      if (queue.length >= size) {
+        await new Promise((resolve, reject) => {
+          emitter.once('end', resolve)
+        })
+      }
+      queue.push(d)
+      emitter.emit('begin')
     }
   }
 }
