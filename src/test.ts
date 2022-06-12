@@ -21,7 +21,7 @@ const test = async (deep: number): Promise<void> => {
     }, {
       session
     })
-    logger.info('insertRes', insertRes.result)
+    logger.info('insertRes', insertRes)
     if (deep > 3) {
       throw new Error('test error')
     }
@@ -30,7 +30,7 @@ const test = async (deep: number): Promise<void> => {
     }, {
       $inc: { a: 1 }
     }, {
-      returnOriginal: false,
+      returnDocument: 'after',
       session
     })
     logger.info('updateRes', updateRes)
