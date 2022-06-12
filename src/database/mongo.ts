@@ -1,17 +1,10 @@
 import { AsyncLocalStorage } from 'async_hooks'
 import { getLogger } from 'log4js'
-import { ClientSession, Collection, Db, Logger, MongoClient, MongoClientCommonOption, MongoClientOptions, SessionOptions, TransactionOptions } from 'mongodb'
+import { ClientSession, Collection, Db, MongoClient, MongoClientCommonOption, MongoClientOptions, SessionOptions, TransactionOptions } from 'mongodb'
 
 const logger = getLogger('db')
 
 const sessionStorage = new AsyncLocalStorage<ClientSession>()
-
-Logger.setLevel('debug')
-Logger.filter('class', ['Cursor', 'Db'])
-Logger.setCurrentLogger(function (msg, state) {
-  const session = sessionStorage.getStore()
-  logger.debug(state?.className, state?.pid, state?.message, session !== undefined ? 'session' : '')
-})
 
 type MongoCollection = <T> (name: string) => ((conn: Db) => Collection<T>)
 export const MongoCollectionImpl: MongoCollection = (name) => {
@@ -22,26 +15,33 @@ export const MongoCollectionImpl: MongoCollection = (name) => {
 
 type Mongo = (url: string, db: string, options?: MongoClientOptions) => {
   connect: () => Promise<MongoClient>
-  isConnected: (options?: MongoClientCommonOption) => boolean
+  isConnected: (options?: MongoClientCommonOption) => Promise<boolean>
   disconnect: (force?: boolean) => Promise<void>
   database: (dbname?: string, options?: MongoClientCommonOption) => Promise<Db>
   session: (options?: SessionOptions) => Promise<ClientSession>
   withTransaction: <T>(callback: (session: ClientSession) => Promise<T>, options?: TransactionOptions) => Promise<T>
 }
 
-export const MongoImpl: Mongo = (url, db, options = { useUnifiedTopology: true }) => {
+export const MongoImpl: Mongo = (url, db, options) => {
+  options = { monitorCommands: true }
   const client = new MongoClient(url, options)
+  client.on('commandStarted', (event) => logger.trace('start', event))
+  client.on('commandSucceeded', (event) => logger.trace('success', event))
+  client.on('commandFailed', (event) => logger.trace('failed', event))
   return {
     connect: async () => {
       await client.connect()
       logger.debug('🔗 Connected to Mongo')
       return client
     },
-    isConnected: (options) => {
-      return client.isConnected(options)
+    isConnected: async (options) => {
+      await client.db(db).command({
+        ping: 1
+      })
+      return true
     },
     disconnect: async (force) => {
-      await client.close(force)
+      await client.close(force ?? false)
     },
     database: async (dbname, options) => {
       return client.db(dbname ?? db, options)
