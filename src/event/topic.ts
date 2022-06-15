@@ -4,6 +4,7 @@ import '../logger'
 export type Topic = <T>() => {
   publish: (subscriptionId: string, data: T) => void
   subscribe: (subscriptionId: string, waitMs: number) => Promise<T | undefined>
+  subscribeAll: (subscriptionId: string, waitMs: number, limit?: number) => Promise<Array<T | undefined>>
 }
 
 export const TopicImpl: Topic = () => {
@@ -26,6 +27,27 @@ export const TopicImpl: Topic = () => {
       })
       const data = await a
       return data
+    },
+    subscribeAll: async (subscriptionId, waitMs, limit = Infinity): Promise<any> => {
+      let count = 0;
+      const a = new Promise((resolve, reject) => {
+        const result: any = []
+        const listener = (data: any): void => {
+          result.push(data)
+          if (result.length >= limit) {
+            end()
+            clearTimeout(timeout)
+          }
+        }
+        const end = () => {
+          emitter.removeListener(subscriptionId, listener)
+          resolve(result)
+        }
+        const timeout = setTimeout(end, waitMs)
+        emitter.on(subscriptionId, listener)
+      })
+      const data = await a
+      return data
     }
   }
 }
@@ -33,22 +55,30 @@ export const TopicImpl: Topic = () => {
 export default TopicImpl
 
 // const test = (): void => {
+//   const logger = getLogger('test')
 //   const topic = TopicImpl<string>()
 
 //   const thread1 = async (): Promise<void> => {
 //     setTimeout(() => {
 //       topic.publish('1', '123')
-//     }, 12000)
+//     }, 1000)
+//   }
+
+//   const thread3 = async (): Promise<void> => {
+//     setTimeout(() => {
+//       topic.publish('1', '123')
+//     }, 2000)
 //   }
 
 //   const thread2 = async (): Promise<void> => {
-//     const data = await topic.subscribe('1', 10000)
-//     console.log('1', data)
+//     logger.info('start')
+//     const data = await topic.subscribeAll('1', 3000, 2)
+//     logger.info('end', data)
 //   }
 
 //   thread1().catch(e => e)
-
 //   thread2().catch(e => e)
+//   thread3().catch(e => e)
 // }
 
 // test()
