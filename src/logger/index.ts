@@ -43,6 +43,7 @@ const logFileAppender: DateFileAppender = {
   type: 'dateFile',
   encoding: 'utf-8',
   filename: `${LOG4JS_FILE}.log`,
+  compress: true,
   numBackups: 30,
   layout,
   keepFileExt: true
@@ -53,6 +54,7 @@ const debugFileAppender: DateFileAppender = {
   encoding: 'utf-8',
   filename: `${LOG4JS_FILE}.deb`,
   numBackups: 7,
+  compress: true,
   layout,
   keepFileExt: true
 }
