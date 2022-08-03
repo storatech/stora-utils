@@ -6,6 +6,7 @@ type ThreadTask = () => Promise<void>
 
 interface ThreadPool {
   submit: (task: ThreadTask) => void
+  finish: () => Promise<void>
 }
 
 export const ThreadPoolImpl = (size: number): ThreadPool => {
@@ -45,13 +46,20 @@ export const ThreadPoolImpl = (size: number): ThreadPool => {
   }
   return {
     submit: async (d) => {
-      if (queue.length >= size) {
-        await new Promise((resolve, reject) => {
-          emitter.once('end', resolve)
-        })
-      }
       queue.push(d)
       emitter.emit('begin')
+    },
+    finish: async () => {
+      await new Promise((resolve, reject) => {
+        const onFinish = (): void => {
+          if (queue.length === 0) {
+            resolve('finished')
+          } else {
+            logger.debug('awaiting tasks', queue.length)
+          }
+        }
+        emitter.on('end', onFinish)
+      })
     }
   }
 }
