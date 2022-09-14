@@ -1,1 +1,1 @@
-export { default as Mongo, MongoCollectionImpl as MongoCollection } from './mongo'
+export { default as Mongo, MongoCollection } from './mongo'

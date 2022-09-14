@@ -6,8 +6,7 @@ const logger = getLogger('db')
 
 const sessionStorage = new AsyncLocalStorage<ClientSession>()
 
-type MongoCollection = <T> (name: string) => ((conn: Db) => Collection<T>)
-export const MongoCollectionImpl: MongoCollection = (name) => {
+export const MongoCollection: <A> (name: string) => ((conn: Db) => Collection<A>) = (name) => {
   return (conn) => {
     return conn.collection(name)
   }
