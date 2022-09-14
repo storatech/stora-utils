@@ -207,8 +207,11 @@ const MoneyCalculatorImpl: MoneyCalculator = (currencyRates, base = 'MNT') => {
       }
     },
     multi: (a, b) => {
+      const { precision } = CURRENCIES[a.currency]
+      const precisionAdj = Math.pow(10, precision)
+      const amount = Math.round(b * toNumber(a.amount) * precisionAdj) / precisionAdj
       return {
-        amount: toNumber(a.amount) * b,
+        amount,
         currency: a.currency
       }
     },
