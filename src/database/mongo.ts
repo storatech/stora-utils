@@ -25,22 +25,15 @@ type Mongo = (url: string, db: string, options?: MongoClientOptions) => {
 export const MongoImpl: Mongo = (url, db, options) => {
   options = { monitorCommands: true }
   const client = new MongoClient(url, options)
-  const logEvent = (event: any) => {
-    
-    const { connectionId, requestId, databaseName, commandName, duration, command, reply } = event as { 
-      connectionId: string, 
-      requestId: string, 
-      databaseName: string, 
-      commandName: string, 
-      duration?: number,
-      command?: any,
-      reply?: any
-    }
-    logger.trace(`${commandName}|${connectionId}:${requestId}`, JSON.stringify(command ?? reply))
-  }
-  client.on('commandStarted', logEvent)
-  client.on('commandSucceeded', logEvent)
-  client.on('commandFailed', logEvent)
+  client.on('commandStarted', (event) => {
+    logger.trace(`${event.commandName}|${event.connectionId ?? ''}:${event.requestId}`, JSON.stringify(event.command))
+  })
+  client.on('commandSucceeded', (event) => {
+    logger.trace(`${event.commandName}|${event.connectionId ?? ''}:${event.requestId}`, JSON.stringify(event.reply))
+  })
+  client.on('commandFailed', (event) => {
+    logger.trace(`${event.commandName}|${event.connectionId ?? ''}:${event.requestId}`, JSON.stringify(event.failure.message))
+  })
   return {
     connect: async () => {
       await client.connect()
