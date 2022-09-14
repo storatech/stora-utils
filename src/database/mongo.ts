@@ -1,12 +1,12 @@
 import { AsyncLocalStorage } from 'async_hooks'
 import { getLogger } from 'log4js'
-import { ClientSession, ClientSessionOptions, Collection, Db, DbOptions, MongoClient, MongoClientOptions, TransactionOptions } from 'mongodb'
+import { ClientSession, ClientSessionOptions, Collection, Db, DbOptions, Document, MongoClient, MongoClientOptions, TransactionOptions } from 'mongodb'
 
 const logger = getLogger('db')
 
 const sessionStorage = new AsyncLocalStorage<ClientSession>()
 
-export const MongoCollection: <A> (name: string) => ((conn: Db) => Collection<A>) = (name) => {
+export const MongoCollection: <A extends Document> (name: string) => ((conn: Db) => Collection<A>) = (name) => {
   return (conn) => {
     return conn.collection(name)
   }
