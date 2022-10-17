@@ -12,6 +12,7 @@ interface ThreadPool {
 export const ThreadPoolImpl = (size: number): ThreadPool => {
   const logger = getLogger('THREAD')
   const queue: ThreadTask[] = []
+  let runningJobs = 0
   const emitter = new EventEmitter()
   emitter.setMaxListeners(size + 1)
   const runner = async (thread: number): Promise<void> => {
@@ -19,11 +20,13 @@ export const ThreadPoolImpl = (size: number): ThreadPool => {
       while (true) {
         const d = queue.shift()
         if (d !== undefined) {
+          runningJobs += 1
           try {
             await d()
           } catch (e) {
             logger.error('unknown error', thread, e)
           }
+          runningJobs -= 1
           emitter.emit('end')
         } else {
           await new Promise((resolve, reject) => {
@@ -52,10 +55,10 @@ export const ThreadPoolImpl = (size: number): ThreadPool => {
     finish: async () => {
       await new Promise((resolve, reject) => {
         const onFinish = (): void => {
-          if (queue.length === 0) {
+          if (queue.length === 0 && runningJobs === 0) {
             resolve('finished')
           } else {
-            logger.debug('awaiting tasks', queue.length)
+            logger.debug('awaiting tasks:', queue.length, 'running task:', runningJobs)
           }
         }
         emitter.on('end', onFinish)
