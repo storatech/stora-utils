@@ -1,6 +1,7 @@
 import AWS from 'aws-sdk'
 import { getLogger } from 'log4js'
 import { ThreadPool } from '../concurrency'
+import { isNil } from '../utilities'
 import { getQueue } from './utils'
 
 const sqs = new AWS.SQS({})
@@ -38,7 +39,7 @@ const MessageQueueImpl = async <T>(queueNameOrUrl: string, concurrentCount: numb
             if (Body !== undefined && ReceiptHandle !== undefined) {
               try {
                 const body = JSON.parse(Body)
-                if (body.TopicArn !== undefined) {
+                if (!isNil(body) && !isNil(body.TopicArn)) {
                   const { Message, Timestamp, TopicArn, MessageAttributes } = body as { Message: string, Timestamp: string, TopicArn: string, MessageAttributes?: Record<string, {Type: String, Value: string}>}
                   const diff = new Date().getTime() - new Date(Timestamp).getTime()
                   logger.debug(`message received from ${TopicArn}, diff: ${diff}`)
