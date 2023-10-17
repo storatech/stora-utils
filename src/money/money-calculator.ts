@@ -1,4 +1,4 @@
-export type Currency = 'USD' | 'MNT' | 'USc'
+export type Currency = 'USD' | 'MNT' | 'USc' | 'CNY'
 
 export interface StringMoney {
   amount: string
@@ -85,6 +85,36 @@ export const CURRENCIES: Record<Currency, CurrencyDefinition> = {
       },
       parse: (money) => {
         const def = CURRENCIES.MNT
+        const symbol = money.replace(/[\d.,'\s]+/gi, ' ').replace(/-/gi, '').trim()
+        if (symbol === def.symbol || symbol === def.currency) {
+          const amount = money.replace(/[^\d.-]/gi, '')
+          if (amount.match(/^-?\d+(.\d+)?$/gi) !== null) {
+            return MoneyCalculatorImpl({}, def.currency).new(amount)
+          }
+        }
+        throw new Error('parse error')
+      }
+    }
+  },
+  CNY: {
+    name: 'Chinese Yuan',
+    currency: 'CNY',
+    symbol: '¥',
+    precision: 2,
+    transformer: {
+      format: (money) => {
+        // return toNumber(money.amount).toLocaleString('en-US', { style: 'currency', currency: 'CNY', minimumFractionDigits: CURRENCIES.CNY.precision, maximumFractionDigits: CURRENCIES.CNY.precision })
+
+        const def = CURRENCIES.CNY
+        if (typeof money.amount === 'string') {
+          return `${parseFloat(money.amount).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}${def.symbol}`
+        } else if (typeof money.amount === 'number') {
+          return `${money.amount.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}${def.symbol}`
+        }
+        throw new Error('unknown amount')
+      },
+      parse: (money) => {
+        const def = CURRENCIES.CNY
         const symbol = money.replace(/[\d.,'\s]+/gi, ' ').replace(/-/gi, '').trim()
         if (symbol === def.symbol || symbol === def.currency) {
           const amount = money.replace(/[^\d.-]/gi, '')
