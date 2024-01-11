@@ -11,9 +11,7 @@ export const redis = createClient({
   url: REDIS_URL
 })
 
-redis.connect().catch(e => {
-  logger.error('connect error', e)
-})
+logger.debug('redis')
 
 export type PubSubListener<T> = (message: T) => Promise<void>
 
@@ -42,7 +40,7 @@ export const PubSubChannel = <T>(channel: string): PubSub<T> => {
       })
     },
     count: async () => {
-      const res =  await redis.pubSubNumSub(channel)
+      const res = await redis.pubSubNumSub(channel)
       return res[channel]
     },
     publish: async (message) => {
