@@ -1,6 +1,6 @@
 import Koa from 'koa'
 import { getLogger } from 'log4js'
-import { getReqId } from '.'
+import { getReqId } from './config'
 
 export const koaLogger: Koa.Middleware = async (ctx, next) => {
   const logger = getLogger('http')
