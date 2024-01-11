@@ -1,2 +1,2 @@
-export { default as MessageQueue } from './queue'
-export { default as MessageTopic, MessageFilter } from './topic'
+export { default as MessageQueue, MessageQueue as MessageQueueType } from './queue'
+export { default as MessageTopic, MessageTopic as MessageTopicType, MessageFilter } from './topic'

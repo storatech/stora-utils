@@ -7,16 +7,21 @@ import { getQueue } from './utils'
 const sqs = new AWS.SQS({})
 const logger = getLogger('messaging-queue')
 
-interface MessageQueue<T> {
+export interface MessageQueue<T> {
   produce: (message: T, delaySec?: number) => Promise<void>
   consume: (callback: (message: T, attributes?: Record<string, any>) => Promise<void>, waitSec?: number, retrySec?: number, maxDiffMs?: number) => Promise<void>
 }
 
-const MessageQueueImpl = async <T>(queueNameOrUrl: string, concurrentCount: number = 1): Promise<MessageQueue<T>> => {
-  const { QueueUrl } = queueNameOrUrl.startsWith('http') ? { QueueUrl: queueNameOrUrl } : await getQueue(queueNameOrUrl)
+const MessageQueueImpl = <T>(queueNameOrUrl: string, concurrentCount: number = 1): MessageQueue<T> => {
   const pool = ThreadPool(concurrentCount)
+  const setup = async (): Promise<string> => {
+    const { QueueUrl } = queueNameOrUrl.startsWith('http') ? { QueueUrl: queueNameOrUrl } : await getQueue(queueNameOrUrl)
+    return QueueUrl;
+  }
+  const url = setup()
   return {
     consume: async (callback, waitSec = 10, retrySec = 10, maxDiffMs = 0) => {
+      const QueueUrl = await url
       const req = {
         QueueUrl,
         WaitTimeSeconds: waitSec,
@@ -88,6 +93,7 @@ const MessageQueueImpl = async <T>(queueNameOrUrl: string, concurrentCount: numb
       }
     },
     produce: async (message, delaySec = 0) => {
+      const QueueUrl = await url
       const req: AWS.SQS.Types.SendMessageRequest = {
         QueueUrl,
         DelaySeconds: delaySec,
