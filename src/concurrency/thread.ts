@@ -1,6 +1,6 @@
 import EventEmitter from 'events'
 import { getLogger } from 'log4js'
-import { getReqId } from '../logger'
+import { getReqId } from '../logger/config'
 
 type ThreadTask = () => Promise<void>
 
