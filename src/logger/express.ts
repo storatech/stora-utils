@@ -1,6 +1,6 @@
 import { getLogger } from 'log4js'
 import { Request, Response, NextFunction } from 'express'
-import { reqIdStorage } from '../logger'
+import { reqIdStorage } from './config'
 
 type LoggerMiddleware = (req: Request, res: Response, next: NextFunction) => void
 export const loggerMiddleware: LoggerMiddleware = (req, res, next) => {
