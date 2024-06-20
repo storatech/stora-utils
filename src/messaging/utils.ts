@@ -1,28 +1,54 @@
-import AWS from 'aws-sdk'
+import { CreateQueueCommand, CreateQueueCommandOutput, GetQueueAttributesCommand, GetQueueAttributesCommandOutput, GetQueueUrlCommand, GetQueueUrlCommandOutput, SQSClient } from '@aws-sdk/client-sqs'
+
 import { getLogger } from 'log4js'
+import { isNil } from '../utilities'
 
-const sqs = new AWS.SQS({})
-const logger = getLogger('messaging')
+const sqs = new SQSClient({})
 
-export const getQueue = async (queueName: string): Promise<{QueueUrl: string, QueueArn: string, Policy: string}> => {
-  const req: AWS.SQS.Types.GetQueueUrlRequest = {
+const logger = getLogger('messaging utils')
+
+export interface GetQueueRes {
+  QueueUrl: string
+  QueueArn?: string
+  Policy?: string
+}
+
+export const createQueue = async (queueName: string): Promise<void> => {
+  const command = new CreateQueueCommand({
     QueueName: queueName
-  }
-  const res = await sqs.getQueueUrl(req).promise()
+  })
+
+  const res: CreateQueueCommandOutput = await sqs.send(command)
+  logger.trace('CreateQueue', command, res)
+}
+
+export const getQueue = async (queueName: string): Promise<GetQueueRes> => {
+  const command = new GetQueueUrlCommand({
+    QueueName: queueName
+  })
+
+  const res: GetQueueUrlCommandOutput = await sqs.send(command)
+  logger.trace('getQueue', command, res)
+
   const { QueueUrl } = res
 
-  if (QueueUrl !== undefined) {
-    const req: AWS.SQS.GetQueueAttributesRequest = {
+  if (!isNil(QueueUrl)) {
+    const command = new GetQueueAttributesCommand({
       QueueUrl,
       AttributeNames: ['QueueArn', 'Policy']
-    }
-    const res = await sqs.getQueueAttributes(req).promise()
-    logger.trace('getQueue', req, res)
+    })
+
+    const res: GetQueueAttributesCommandOutput = await sqs.send(command)
+    logger.trace('getQueueAttributes', command, res)
+
     const { Attributes } = res
-    if (Attributes !== undefined) {
+
+    if (!isNil(Attributes)) {
       const { QueueArn, Policy } = Attributes
+
       return { QueueUrl, QueueArn, Policy }
     }
   }
-  throw new Error('cant get queue ANR')
+
+  throw new Error('cant get queue Arn')
 }
