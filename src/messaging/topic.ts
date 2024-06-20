@@ -1,25 +1,13 @@
-import AWS from 'aws-sdk'
-import https from 'https'
+// import AWS from 'aws-sdk'
+import { SQSClient, SetQueueAttributesCommand } from '@aws-sdk/client-sqs'
+import { PublishCommand, PublishCommandOutput, SNSClient, SubscribeCommand } from '@aws-sdk/client-sns'
 import { getLogger } from 'log4js'
-import { getQueue } from './utils'
+import { GetQueueRes, createQueue, getQueue } from './utils'
+import { isNil } from '../utilities'
 
-const agent = new https.Agent({
-  keepAlive: true,
-  keepAliveMsecs: 60000,
-  // Infinity is read as 50 sockets
-  maxSockets: Infinity
-})
+const sqs = new SQSClient({})
 
-const sqs = new AWS.SQS({
-  httpOptions: {
-    agent
-  }
-})
-const sns = new AWS.SNS({
-  httpOptions: {
-    agent
-  }
-})
+const sns = new SNSClient({})
 
 const logger = getLogger('messaging-topic')
 
@@ -41,8 +29,8 @@ interface Attribute {
   StringValue: string
 }
 
-type StringFilter = string | {exists: boolean} | {'anything-but': string[]} | {prefix: string}
-type NumberFilter = number | {'numberic': ['>' | '=' | '<=' | '>=', number]} | {exists: boolean} | {'anything-but': number[]}
+type StringFilter = string | { exists: boolean } | { 'anything-but': string[] } | { prefix: string }
+type NumberFilter = number | { 'numberic': ['>' | '=' | '<=' | '>=', number] } | { exists: boolean } | { 'anything-but': number[] }
 
 export interface MessageFilter {
   stringFilters?: Record<string, StringFilter[]>
@@ -72,6 +60,7 @@ const MessageTopicImpl = <T>(topicArn: string): MessageTopic<T> => {
           }
         }
       }
+
       if (numberAttributes !== undefined) {
         for (const key of Object.keys(numberAttributes)) {
           const numberValue = numberAttributes[key]
@@ -84,6 +73,7 @@ const MessageTopicImpl = <T>(topicArn: string): MessageTopic<T> => {
           }
         }
       }
+
       if (arrayAttributes !== undefined) {
         for (const key of Object.keys(arrayAttributes)) {
           const arrayValue = arrayAttributes[key]
@@ -96,50 +86,69 @@ const MessageTopicImpl = <T>(topicArn: string): MessageTopic<T> => {
           }
         }
       }
-      const req: AWS.SNS.PublishInput = {
+
+      const command = new PublishCommand({
         TopicArn: topicArn,
         Message: JSON.stringify({ default: json, sqs: json }),
         MessageAttributes: attributes,
         MessageStructure: 'json'
-      }
-      const res = await sns.publish(req).promise()
-      logger.debug('publish message', req, res)
+      })
+
+      const res: PublishCommandOutput = await sns.send(command)
+
+      logger.trace('publish message', command, res)
     },
     subscribe: async (name, filter) => {
+      let queue: GetQueueRes | undefined
+
       try {
-        await sqs.createQueue({
-          QueueName: name
-        }).promise()
-      } catch (e) {
-        logger.trace('create error', e)
+        queue = await getQueue(name)
+      } catch {
+        await createQueue(name)
+        queue = await getQueue(name)
       }
-      const queue = await getQueue(name)
+
+      if (isNil(queue)) {
+        throw new Error('Get queue failed.')
+      }
+
       const { QueueArn, QueueUrl } = queue
+
+      if (isNil(QueueArn)) {
+        throw new Error('Queue Arn not found.')
+      }
+
       const defaultPolicy: Policy = {
         Version: '2008-10-17',
         Id: `${QueueArn}/SQSPOLICY`,
         Statement: []
       }
+
       const {
         Policy = JSON.stringify(defaultPolicy)
       } = queue
-      console.log(Policy)
+
+      logger.trace(Policy)
+
       const policy: Policy = JSON.parse(Policy)
+
       const { Statement } = policy
+
       let existingPolicy = false
-      Statement.map((value) => {
+
+      for (const value of Statement) {
         logger.info(value)
         if (value.Sid === `topic-subscription-${topicArn}`) {
           existingPolicy = true
         }
-      })
+      }
+
       if (!existingPolicy) {
         Statement.push({
           Sid: `topic-subscription-${topicArn}`,
           Effect: 'Allow',
           Principal: {
             Service: 'sns.amazonaws.com'
-            // AWS: '*'
           },
           Action: ['SQS:SendMessage'],
           Resource: QueueArn,
@@ -149,29 +158,34 @@ const MessageTopicImpl = <T>(topicArn: string): MessageTopic<T> => {
             }
           }
         })
-        {
-          const req: AWS.SQS.SetQueueAttributesRequest = {
-            QueueUrl,
-            Attributes: {
-              Policy: JSON.stringify(policy)
-            }
+
+        const command = new SetQueueAttributesCommand({
+          QueueUrl,
+          Attributes: {
+            Policy: JSON.stringify(policy)
           }
-          logger.trace('SQS.setQueueAttributes', req)
-          await sqs.setQueueAttributes(req).promise()
-        }
+        })
+        logger.trace('SQS.setQueueAttributes', command)
+
+        const res = await sqs.send(command)
+        logger.trace('SQS.setQueueAttributes', res, command)
       }
+
       const { stringFilters, numberFilters } = filter
       const FilterPolicy = JSON.stringify({ ...stringFilters, ...numberFilters })
-      const req = {
+
+      const command = new SubscribeCommand({
         Protocol: 'sqs',
         TopicArn: topicArn,
         Attributes: {
           FilterPolicy
         },
         Endpoint: QueueArn
-      }
-      logger.trace('SQS.subscribe', req)
-      await sns.subscribe(req).promise()
+      })
+      logger.trace('SQS.subscribe', command)
+
+      const res = await sns.send(command)
+      logger.trace('SQS.subscribe', command, res)
     }
   }
 }
