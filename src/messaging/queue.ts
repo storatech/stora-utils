@@ -30,7 +30,7 @@ const MessageQueueImpl = <T>(queueNameOrUrl: string, concurrentCount: number = 1
       const command = new ReceiveMessageCommand({
         QueueUrl,
         WaitTimeSeconds: waitSec,
-        MaxNumberOfMessages: concurrentCount,
+        MaxNumberOfMessages: 10,
         VisibilityTimeout: retrySec, // 10 minute
         AttributeNames: ['All']
       })
