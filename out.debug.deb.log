@@ -1,0 +1,3033 @@
+[32m[19:41:36.292][INFO][queue-test][src/queue_test.ts:23][][39m Main started.
+[34m[19:41:37.247][TRACE][messaging utils][messaging/utils.ts:31][][39m getQueue GetQueueUrlCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_GetQueueUrlCommand],
+  deserialize: [AsyncFunction: de_GetQueueUrlCommand],
+  input: { QueueName: 'test-queue' }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '44c3aaf2-d376-5b73-9832-f5c538c79f5a',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue'
+}
+[34m[19:41:37.542][TRACE][messaging utils][messaging/utils.ts:42][][39m getQueueAttributes GetQueueAttributesCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_GetQueueAttributesCommand],
+  deserialize: [AsyncFunction: de_GetQueueAttributesCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    AttributeNames: [ 'QueueArn', 'Policy' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: 'fbfcf1a3-be96-5be2-b39c-ae945527efcb',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  Attributes: {
+    QueueArn: 'arn:aws:sqs:us-west-2:837841471692:test-queue',
+    Policy: '{"Version":"2012-10-17","Id":"__default_policy_ID","Statement":[{"Sid":"__owner_statement","Effect":"Allow","Principal":{"AWS":"arn:aws:iam::837841471692:root"},"Action":"SQS:*","Resource":"arn:aws:sqs:us-west-2:837841471692:test-queue"}]}'
+  }
+}
+[32m[19:41:38.360][INFO][queue-test][src/queue_test.ts:8][runner#2/0.5928667374482595][39m consuming started:  {
+  insertTime: '2024-08-15T11:38:52.923Z',
+  uuid: 'ab898695-6fef-467d-86fc-15c2e058c17f'
+}
+[32m[19:41:38.364][INFO][queue-test][src/queue_test.ts:8][runner#1/0.7307217622564501][39m consuming started:  {
+  insertTime: '2024-08-15T11:38:52.923Z',
+  uuid: 'd18e728e-1e4b-43a5-9172-badcdacfab79'
+}
+[32m[19:41:38.366][INFO][queue-test][src/queue_test.ts:8][runner#0/0.5187137112582398][39m consuming started:  {
+  insertTime: '2024-08-15T11:38:52.923Z',
+  uuid: '06daa548-9c64-42eb-9bba-b3de6600ec55'
+}
+[32m[19:41:41.735][INFO][queue-test][src/queue_test.ts:17][runner#0/0.5187137112582398][39m consuming finished.
+[34m[19:41:41.941][TRACE][messaging-queue][messaging/queue.ts:137][runner#0/0.5187137112582398][39m delete message DeleteMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_DeleteMessageCommand],
+  deserialize: [AsyncFunction: de_DeleteMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    ReceiptHandle: 'AQEBQAkA86zury4VZO3qc1xoKwCxfQoBe5qPlWr9MCM2hknp4kyaMyP5IByDkAzDOePikJJb9oLHw5hPfjmz9sfk4ooDGkcHmlVdhJGugSz+Bc9tegQxMPfARE4p1NIUN+LTpuqFiW7GWg0t/sIsaXzhT/11yp6h9W6i2MRQzFNQwHVLJEU9Mg4/QONNqkOCRbX4EeNh7yqUfawG1O2hpXpITxAL6kjU7CP0OlnVMRa2qAM+dK5weOIHW2Ifo9ruWnREYPlsCKue5fhs1S50Xn7BoYWtxldhktqaQggmyUgtAKmrmKMEcnNYdXFI03M+MOdf3p3EfxUuHqF6MZKNFMY6eA62yJMKJeW4XwDmCCxS8sjfbMtkG0kkgNU786b88O/ph0UMpAe3ZmKssxTltqEuiQ=='
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '457a77dd-caef-5300-942f-28ea2159d250',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:41:41.942][TRACE][messaging-queue][messaging/queue.ts:143][runner#0/0.5187137112582398][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '78b3c9c5-dda4-55d2-a083-96f23616f482',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  Messages: [
+    {
+      Attributes: [Object],
+      Body: '{"insertTime":"2024-08-15T11:38:52.923Z","uuid":"06daa548-9c64-42eb-9bba-b3de6600ec55"}',
+      MD5OfBody: '5dba276d1ca2aece6915d3beb59f7610',
+      MessageId: '3c067c4b-d021-41ae-98a7-5fb7805016c7',
+      ReceiptHandle: 'AQEBQAkA86zury4VZO3qc1xoKwCxfQoBe5qPlWr9MCM2hknp4kyaMyP5IByDkAzDOePikJJb9oLHw5hPfjmz9sfk4ooDGkcHmlVdhJGugSz+Bc9tegQxMPfARE4p1NIUN+LTpuqFiW7GWg0t/sIsaXzhT/11yp6h9W6i2MRQzFNQwHVLJEU9Mg4/QONNqkOCRbX4EeNh7yqUfawG1O2hpXpITxAL6kjU7CP0OlnVMRa2qAM+dK5weOIHW2Ifo9ruWnREYPlsCKue5fhs1S50Xn7BoYWtxldhktqaQggmyUgtAKmrmKMEcnNYdXFI03M+MOdf3p3EfxUuHqF6MZKNFMY6eA62yJMKJeW4XwDmCCxS8sjfbMtkG0kkgNU786b88O/ph0UMpAe3ZmKssxTltqEuiQ=='
+    }
+  ]
+}
+[32m[19:41:42.147][INFO][queue-test][src/queue_test.ts:8][runner#0/0.5187137112582398][39m consuming started:  {
+  insertTime: '2024-08-15T11:38:52.923Z',
+  uuid: '55c0af15-5cb7-41be-a348-358a70947794'
+}
+[32m[19:41:42.456][INFO][queue-test][src/queue_test.ts:17][runner#2/0.5928667374482595][39m consuming finished.
+[34m[19:41:42.662][TRACE][messaging-queue][messaging/queue.ts:137][runner#2/0.5928667374482595][39m delete message DeleteMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_DeleteMessageCommand],
+  deserialize: [AsyncFunction: de_DeleteMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    ReceiptHandle: 'AQEB54rF9SBQyYd4zJKRcZvtRdEERG5o7K1C+MHnkN1TMcfnUI9kApSX33Qehs94KwpwIuRTCvbx9346/ICRzc6Rtsr3P4pVNEqD1z29oBidkrZBW2hbs7Kq/I7iJFb+PLhDzEgXPBggRsKs6bSSWOfncYAuyq2Q7Q1vPttxN9/RBBh8oIH2cnvyW9Jr9gCSGbTpOTtFlTSN0m7TJTbfhpRqivOrncENNmV0I1/0HCVFnx5p9b9+ubiwYYTqUBIm6LeeDkNtUSVWvwbfEirjAkv9lSaCg26kC7mXaWzY2UBhf4H446EcCOKSO+LCOHBt+YLjCUY0muzadQk3KJBQ6dcv6wrftndz2xjLvqAm4Syb67pPFfknPSePxDa0S5iUu6tTsXxycHbUbmq5mYFWv6IN7A=='
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '87370d7b-bf23-502e-a06f-524c5495b17e',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:41:42.663][TRACE][messaging-queue][messaging/queue.ts:143][runner#2/0.5928667374482595][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: 'bc563bb7-3437-5b84-a070-6480df853b56',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  Messages: [
+    {
+      Attributes: [Object],
+      Body: '{"insertTime":"2024-08-15T11:38:52.923Z","uuid":"ab898695-6fef-467d-86fc-15c2e058c17f"}',
+      MD5OfBody: '61948dc87b0cc2568b6b5304ee33b29f',
+      MessageId: 'b3c037c8-4970-4c2a-bb31-bcc6557e47d0',
+      ReceiptHandle: 'AQEB54rF9SBQyYd4zJKRcZvtRdEERG5o7K1C+MHnkN1TMcfnUI9kApSX33Qehs94KwpwIuRTCvbx9346/ICRzc6Rtsr3P4pVNEqD1z29oBidkrZBW2hbs7Kq/I7iJFb+PLhDzEgXPBggRsKs6bSSWOfncYAuyq2Q7Q1vPttxN9/RBBh8oIH2cnvyW9Jr9gCSGbTpOTtFlTSN0m7TJTbfhpRqivOrncENNmV0I1/0HCVFnx5p9b9+ubiwYYTqUBIm6LeeDkNtUSVWvwbfEirjAkv9lSaCg26kC7mXaWzY2UBhf4H446EcCOKSO+LCOHBt+YLjCUY0muzadQk3KJBQ6dcv6wrftndz2xjLvqAm4Syb67pPFfknPSePxDa0S5iUu6tTsXxycHbUbmq5mYFWv6IN7A=='
+    }
+  ]
+}
+[32m[19:41:42.772][INFO][queue-test][src/queue_test.ts:17][runner#1/0.7307217622564501][39m consuming finished.
+[32m[19:41:42.866][INFO][queue-test][src/queue_test.ts:8][runner#2/0.5928667374482595][39m consuming started:  {
+  insertTime: '2024-08-15T11:38:52.923Z',
+  uuid: '32d70d2b-4dfc-4449-aac7-138e1920e11c'
+}
+[34m[19:41:42.979][TRACE][messaging-queue][messaging/queue.ts:137][runner#1/0.7307217622564501][39m delete message DeleteMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_DeleteMessageCommand],
+  deserialize: [AsyncFunction: de_DeleteMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    ReceiptHandle: 'AQEB9GzfkFf8c3k5/Hm6ujIasO7iBQXDaueQhksERnDbCAIvNFMtQNmJV5mQ8ybSKBkDrrC53y7dSvAaC20mDULxEPgz9ykj0/wIUU7U2dcb1V+MnXeRnVhz1Gy0wq6fUZkCmJQXH4+MN7qUS1of7ac6GqjE5qDVEWZojO3jjvOiaeLnsm7L0aUThdclHZe8LL3JBxG9Bq+6d2kCZ5ihefmuNSS4650AIBKU2a5J449p/nL5MMflXQ50HP1ZNZtY/nmGQz9/NhTSMkQ/R/J/uUdEuC1DZiA12npG8xAB9Y6OL/yPd4O7HYW4NYof6hBTNmm+rHlIbqSIJG8TOaoqzZIb57SGZVv16NN4aN3eMz/FJd9GEutBG7puCrLuZBD385qD761/5V5MePu6W+ybkyG6dQ=='
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: 'b7eefc54-3f1b-5f48-9e0a-a363d4acc2f8',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:41:42.979][TRACE][messaging-queue][messaging/queue.ts:143][runner#1/0.7307217622564501][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '6b2e900d-7666-528f-84cb-cf3a9dd4ff3f',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  Messages: [
+    {
+      Attributes: [Object],
+      Body: '{"insertTime":"2024-08-15T11:38:52.923Z","uuid":"d18e728e-1e4b-43a5-9172-badcdacfab79"}',
+      MD5OfBody: 'bbe9ae3ee398f5b5b2a43e0bf2c004af',
+      MessageId: 'b2e979b4-cc53-425c-a0a9-9c4b2fe4b1f1',
+      ReceiptHandle: 'AQEB9GzfkFf8c3k5/Hm6ujIasO7iBQXDaueQhksERnDbCAIvNFMtQNmJV5mQ8ybSKBkDrrC53y7dSvAaC20mDULxEPgz9ykj0/wIUU7U2dcb1V+MnXeRnVhz1Gy0wq6fUZkCmJQXH4+MN7qUS1of7ac6GqjE5qDVEWZojO3jjvOiaeLnsm7L0aUThdclHZe8LL3JBxG9Bq+6d2kCZ5ihefmuNSS4650AIBKU2a5J449p/nL5MMflXQ50HP1ZNZtY/nmGQz9/NhTSMkQ/R/J/uUdEuC1DZiA12npG8xAB9Y6OL/yPd4O7HYW4NYof6hBTNmm+rHlIbqSIJG8TOaoqzZIb57SGZVv16NN4aN3eMz/FJd9GEutBG7puCrLuZBD385qD761/5V5MePu6W+ybkyG6dQ=='
+    }
+  ]
+}
+[32m[19:41:43.214][INFO][queue-test][src/queue_test.ts:8][runner#1/0.7307217622564501][39m consuming started:  {
+  insertTime: '2024-08-15T11:38:52.923Z',
+  uuid: 'ab3b626a-819c-4e63-b341-ecbc77519b18'
+}
+[32m[19:41:46.954][INFO][queue-test][src/queue_test.ts:17][runner#0/0.5187137112582398][39m consuming finished.
+[32m[19:41:47.017][INFO][queue-test][src/queue_test.ts:17][runner#1/0.7307217622564501][39m consuming finished.
+[34m[19:41:47.174][TRACE][messaging-queue][messaging/queue.ts:137][runner#0/0.5187137112582398][39m delete message DeleteMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_DeleteMessageCommand],
+  deserialize: [AsyncFunction: de_DeleteMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    ReceiptHandle: 'AQEBFDLGnmG9MwoQOOVX1L+GwsBq+SacFbvnaEAStz+WhyaXGAF6eU8JMN1Qfg9wyywumuwCnSlZGXjpn03BDb4bGBWc7VI3XRC1t/WcIoncsd1nDuqpHsdMcmV1X5x1YgiGSo5nlh6UlNerhsbxdQAx+gWptg1vhpkOjJkBxOyUxE7QXBn9J3l5X4FlPMcsckalvnAdPqrDkLdES/dMugrhBZWNRt/ydjNSMFHTfPW5PNj59cycwJdZ9Zg/RknJVj/nAMWVBvTfvVkcfwc6EGLSDW8VKtU4qZDPCoFUA/yUfzy76yP2pKdYaKCEyIW6/I93+ufITuojowPYXWVTzi1iMXnbAOtbAvDDF0aWFiXGmN2urW+giEr4jZvT25xj9SXHDKlow5vv42uLxU838Ca/mw=='
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: 'f9d8ddf5-c0be-5926-b8b2-82c22b057496',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:41:47.175][TRACE][messaging-queue][messaging/queue.ts:143][runner#0/0.5187137112582398][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: 'aa69bc0b-d8d0-5e78-b162-e33c33662f28',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  Messages: [
+    {
+      Attributes: [Object],
+      Body: '{"insertTime":"2024-08-15T11:38:52.923Z","uuid":"55c0af15-5cb7-41be-a348-358a70947794"}',
+      MD5OfBody: '368144c523bc9b767d8c260337411152',
+      MessageId: 'cad51d8a-fd4a-4975-a250-f0ba45ceb306',
+      ReceiptHandle: 'AQEBFDLGnmG9MwoQOOVX1L+GwsBq+SacFbvnaEAStz+WhyaXGAF6eU8JMN1Qfg9wyywumuwCnSlZGXjpn03BDb4bGBWc7VI3XRC1t/WcIoncsd1nDuqpHsdMcmV1X5x1YgiGSo5nlh6UlNerhsbxdQAx+gWptg1vhpkOjJkBxOyUxE7QXBn9J3l5X4FlPMcsckalvnAdPqrDkLdES/dMugrhBZWNRt/ydjNSMFHTfPW5PNj59cycwJdZ9Zg/RknJVj/nAMWVBvTfvVkcfwc6EGLSDW8VKtU4qZDPCoFUA/yUfzy76yP2pKdYaKCEyIW6/I93+ufITuojowPYXWVTzi1iMXnbAOtbAvDDF0aWFiXGmN2urW+giEr4jZvT25xj9SXHDKlow5vv42uLxU838Ca/mw=='
+    }
+  ]
+}
+[34m[19:41:47.225][TRACE][messaging-queue][messaging/queue.ts:137][runner#1/0.7307217622564501][39m delete message DeleteMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_DeleteMessageCommand],
+  deserialize: [AsyncFunction: de_DeleteMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    ReceiptHandle: 'AQEB4JQN/202xmGw6JPHG4CK590QuzbXc5yWdt3cUOn5+VeThMvN5nBkL1/lt+V3X/DtvkMPhF4xIIEkdV9VJNXnyygdNZZjiic0bNEVEv7TJ5qMz4l/krZ0N7i+4XfYSq18Yth9MRVfnuuld4WfvETumIKigajMDTguHM3FPt1EleXBGX7tkup85jnV3ISaBYddPMVWu5GX7kuZCyBO8g5LglWayEzT7AkuMUGy2+UXWgnEm7dgtky3BiG7viDwXdY1zB4HGdHGaEmgvL/86ggGsDegflhGDVFAyRxSQ618OdU1MNhXN6cwvQGJeZUjUGv0gpdsIJQCGzhMsreeY6+QBdrwEaumu4a3GA8/jrd1uw1n6SpgNn9JW/vfALCUoy/UVpeuTSgDhW5cM7G+uooA7w=='
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '52269d81-1c44-525c-ad64-c2b6f7ffd30c',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:41:47.225][TRACE][messaging-queue][messaging/queue.ts:143][runner#1/0.7307217622564501][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '155ca0d8-e686-5e5c-b2da-ffef0d3143ec',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  Messages: [
+    {
+      Attributes: [Object],
+      Body: '{"insertTime":"2024-08-15T11:38:52.923Z","uuid":"ab3b626a-819c-4e63-b341-ecbc77519b18"}',
+      MD5OfBody: '8988ebdccf394feb6c73d91f325f390c',
+      MessageId: 'dc804d11-a94f-482a-9713-8c34ef393d3c',
+      ReceiptHandle: 'AQEB4JQN/202xmGw6JPHG4CK590QuzbXc5yWdt3cUOn5+VeThMvN5nBkL1/lt+V3X/DtvkMPhF4xIIEkdV9VJNXnyygdNZZjiic0bNEVEv7TJ5qMz4l/krZ0N7i+4XfYSq18Yth9MRVfnuuld4WfvETumIKigajMDTguHM3FPt1EleXBGX7tkup85jnV3ISaBYddPMVWu5GX7kuZCyBO8g5LglWayEzT7AkuMUGy2+UXWgnEm7dgtky3BiG7viDwXdY1zB4HGdHGaEmgvL/86ggGsDegflhGDVFAyRxSQ618OdU1MNhXN6cwvQGJeZUjUGv0gpdsIJQCGzhMsreeY6+QBdrwEaumu4a3GA8/jrd1uw1n6SpgNn9JW/vfALCUoy/UVpeuTSgDhW5cM7G+uooA7w=='
+    }
+  ]
+}
+[32m[19:41:47.384][INFO][queue-test][src/queue_test.ts:8][runner#0/0.5187137112582398][39m consuming started:  {
+  insertTime: '2024-08-15T11:38:52.923Z',
+  uuid: '4918d2cf-357a-4ff9-9006-aff784fccf9a'
+}
+[32m[19:41:47.498][INFO][queue-test][src/queue_test.ts:8][runner#1/0.7307217622564501][39m consuming started:  {
+  insertTime: '2024-08-15T11:38:52.923Z',
+  uuid: '44fa94c9-e7ae-4c75-940c-6c6895af0bc8'
+}
+[32m[19:41:47.867][INFO][queue-test][src/queue_test.ts:17][runner#2/0.5928667374482595][39m consuming finished.
+[34m[19:41:48.065][TRACE][messaging-queue][messaging/queue.ts:137][runner#2/0.5928667374482595][39m delete message DeleteMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_DeleteMessageCommand],
+  deserialize: [AsyncFunction: de_DeleteMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    ReceiptHandle: 'AQEB9CvNOrOUVfRaoMjbbzMvXJO+FnhjPtU0BpqErtLyMIMeCzXek+u/y//IK6F9gE18yqjxtL2mOB+mmpnXtwHnw9He2bNZm7WMHY8qRCSiXSor1hgkOqbkGkRpUOdcN5sRgB+NHnZxQxjbAQwYc7IcMQDQ4ABwlwcTA6fx8j8xp83849l8D53503X/CFZZ8SZ0qc7jYTasz3eYldVXwcdzTRXOX1AEtqe1vslKGCVrXZ+ERfkwVfnOdbwoNz34nbirbj/faAbw4l5zkP1GJ+n7aCHAHnjHKFDEMX4OIcZSIKQC4/1UR6edM88RGputHySj3dNxunNn3iM2d6vGiiBWD2sxSY9INe4AsVBkm8hd4y5mz57G3X/4KVUqrjQCbrQsiFb3OZf9bdFEnsBPJ4ofTg=='
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '751190e7-4934-533f-a6ac-cfd0a288926f',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:41:48.065][TRACE][messaging-queue][messaging/queue.ts:143][runner#2/0.5928667374482595][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: 'f36ee0c7-87ae-580b-816c-bff06c18595b',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  Messages: [
+    {
+      Attributes: [Object],
+      Body: '{"insertTime":"2024-08-15T11:38:52.923Z","uuid":"32d70d2b-4dfc-4449-aac7-138e1920e11c"}',
+      MD5OfBody: '401c11254fb402d2f1378f09f0d1975f',
+      MessageId: '24f7b6ff-1c0d-45c3-85c8-01f6e8135579',
+      ReceiptHandle: 'AQEB9CvNOrOUVfRaoMjbbzMvXJO+FnhjPtU0BpqErtLyMIMeCzXek+u/y//IK6F9gE18yqjxtL2mOB+mmpnXtwHnw9He2bNZm7WMHY8qRCSiXSor1hgkOqbkGkRpUOdcN5sRgB+NHnZxQxjbAQwYc7IcMQDQ4ABwlwcTA6fx8j8xp83849l8D53503X/CFZZ8SZ0qc7jYTasz3eYldVXwcdzTRXOX1AEtqe1vslKGCVrXZ+ERfkwVfnOdbwoNz34nbirbj/faAbw4l5zkP1GJ+n7aCHAHnjHKFDEMX4OIcZSIKQC4/1UR6edM88RGputHySj3dNxunNn3iM2d6vGiiBWD2sxSY9INe4AsVBkm8hd4y5mz57G3X/4KVUqrjQCbrQsiFb3OZf9bdFEnsBPJ4ofTg=='
+    }
+  ]
+}
+[32m[19:41:48.265][INFO][queue-test][src/queue_test.ts:8][runner#2/0.5928667374482595][39m consuming started:  {
+  insertTime: '2024-08-15T11:38:52.923Z',
+  uuid: 'd9428366-4ab2-4f9a-9773-134974b2c2cd'
+}
+[32m[19:41:51.346][INFO][queue-test][src/queue_test.ts:17][runner#1/0.7307217622564501][39m consuming finished.
+[32m[19:41:51.517][INFO][queue-test][src/queue_test.ts:17][runner#0/0.5187137112582398][39m consuming finished.
+[34m[19:41:51.552][TRACE][messaging-queue][messaging/queue.ts:137][runner#1/0.7307217622564501][39m delete message DeleteMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_DeleteMessageCommand],
+  deserialize: [AsyncFunction: de_DeleteMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    ReceiptHandle: 'AQEBIx044+JeF8ki+fLwwgNL97VmO9pp6jkTXQLtzS7UxkgdmWs6bMUBVXBYowef6j9IQU0w6pY6tcwnlXi/h6PstIuHNu3zPWeUAF1RQdbJBazjmcaxevpzldAGi7KxZEzA5hIr+VG5MiSG764o0KC3aPsc12RM1QSAcWWWCWRyGNxFiGI/zJwArhiq4EQfzqFhadAqmIvh4b1Qdt2W/p8msUr2MFs/ovnvgq5vhnKXx8b09M/ZUOluubDPZf87fRjcw3RAPWqnta3ZtpigNOrwjzLVd+XV6Iu4zbZyvxq3paWbxbvQtL1E5B7moch3N6TABvdYZeK48j2/MnJ5Xl9RbCNv6nR6xSGtjLO/t0XlrH4hwm602t3kdeoeQe0rEM3XYVKHph36TERNjqNhuksenw=='
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '0caa2cce-aec7-57a2-b41c-73f9457896f2',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:41:51.554][TRACE][messaging-queue][messaging/queue.ts:143][runner#1/0.7307217622564501][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '91095421-d9d3-544e-afc9-0b163268c51e',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  Messages: [
+    {
+      Attributes: [Object],
+      Body: '{"insertTime":"2024-08-15T11:38:52.923Z","uuid":"44fa94c9-e7ae-4c75-940c-6c6895af0bc8"}',
+      MD5OfBody: '66c472e13bfb2d5a3d7de1d38f73b6d4',
+      MessageId: 'da8d50a5-1c2b-4ef5-856f-962f4b4a7d05',
+      ReceiptHandle: 'AQEBIx044+JeF8ki+fLwwgNL97VmO9pp6jkTXQLtzS7UxkgdmWs6bMUBVXBYowef6j9IQU0w6pY6tcwnlXi/h6PstIuHNu3zPWeUAF1RQdbJBazjmcaxevpzldAGi7KxZEzA5hIr+VG5MiSG764o0KC3aPsc12RM1QSAcWWWCWRyGNxFiGI/zJwArhiq4EQfzqFhadAqmIvh4b1Qdt2W/p8msUr2MFs/ovnvgq5vhnKXx8b09M/ZUOluubDPZf87fRjcw3RAPWqnta3ZtpigNOrwjzLVd+XV6Iu4zbZyvxq3paWbxbvQtL1E5B7moch3N6TABvdYZeK48j2/MnJ5Xl9RbCNv6nR6xSGtjLO/t0XlrH4hwm602t3kdeoeQe0rEM3XYVKHph36TERNjqNhuksenw=='
+    }
+  ]
+}
+[34m[19:41:51.719][TRACE][messaging-queue][messaging/queue.ts:137][runner#0/0.5187137112582398][39m delete message DeleteMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_DeleteMessageCommand],
+  deserialize: [AsyncFunction: de_DeleteMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    ReceiptHandle: 'AQEBZsZ2DtafJciVwo71UDH6R4DJO7xTTMwHwIZav38dbEPAtJhLguNMh+KV5gQ7G/y1XDRgbAXxw2lp+FQwMkh0m3yb1cwAYLIfLeEUNdckXBWBo8iYOmBdp5S9XM9bxB+Asa8Ky2BGPorA6sLMHhrQc/rZejsRA+BRAzU7v6w4E3OO6NFsRh/lwhBGvWY1yDCOZcdkAO+MNF2GjRsRrLLRyBbOerWpskKeTQTrxqhgi4PjFLw5lNZ506j/yoNDhuhbscW05IdJY3AslDo4RUtdkk9ju+uCOBSCeXXknFiOd2O7hNsciy4/5bu0e/cEag4Cl2Lpai7k7irIClAcpbBPMF+XvvOB8aYFgxLYEhGZdB43AzffjzAbxflVmHlQBxp/gF/aJ8aTw+ZJVGDLc0LCkw=='
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: 'f6ecdedc-e2dd-5c7d-ba56-81eb0962d1cd',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:41:51.721][TRACE][messaging-queue][messaging/queue.ts:143][runner#0/0.5187137112582398][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: 'a04fa7da-34a6-5599-8511-f8eddf1d5829',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  Messages: [
+    {
+      Attributes: [Object],
+      Body: '{"insertTime":"2024-08-15T11:38:52.923Z","uuid":"4918d2cf-357a-4ff9-9006-aff784fccf9a"}',
+      MD5OfBody: '924626a62d512b5739354b01d6f78138',
+      MessageId: 'eb87e9e1-78f3-4514-bd9c-1c23398a1f32',
+      ReceiptHandle: 'AQEBZsZ2DtafJciVwo71UDH6R4DJO7xTTMwHwIZav38dbEPAtJhLguNMh+KV5gQ7G/y1XDRgbAXxw2lp+FQwMkh0m3yb1cwAYLIfLeEUNdckXBWBo8iYOmBdp5S9XM9bxB+Asa8Ky2BGPorA6sLMHhrQc/rZejsRA+BRAzU7v6w4E3OO6NFsRh/lwhBGvWY1yDCOZcdkAO+MNF2GjRsRrLLRyBbOerWpskKeTQTrxqhgi4PjFLw5lNZ506j/yoNDhuhbscW05IdJY3AslDo4RUtdkk9ju+uCOBSCeXXknFiOd2O7hNsciy4/5bu0e/cEag4Cl2Lpai7k7irIClAcpbBPMF+XvvOB8aYFgxLYEhGZdB43AzffjzAbxflVmHlQBxp/gF/aJ8aTw+ZJVGDLc0LCkw=='
+    }
+  ]
+}
+[32m[19:41:51.758][INFO][queue-test][src/queue_test.ts:8][runner#1/0.7307217622564501][39m consuming started:  {
+  insertTime: '2024-08-15T11:38:52.923Z',
+  uuid: 'c55bf844-de24-4a32-9ce6-454f8aabe931'
+}
+[32m[19:41:51.928][INFO][queue-test][src/queue_test.ts:8][runner#0/0.5187137112582398][39m consuming started:  {
+  insertTime: '2024-08-15T11:38:52.923Z',
+  uuid: 'de30e606-e92b-41b3-91b9-e25935b60db5'
+}
+[32m[19:41:52.260][INFO][queue-test][src/queue_test.ts:17][runner#2/0.5928667374482595][39m consuming finished.
+[34m[19:41:52.464][TRACE][messaging-queue][messaging/queue.ts:137][runner#2/0.5928667374482595][39m delete message DeleteMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_DeleteMessageCommand],
+  deserialize: [AsyncFunction: de_DeleteMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    ReceiptHandle: 'AQEBWj3dtMCsYKO6Xf9POsg8GY+qz7Ffk1YiRdvMuJ4MdXbem03lNx28h/68AwBOTAgqxALT4Ak5CXVdNxLJwA/QgFhXfF3xMrvUDs9WLM3dy2nOCf7ixYdq0q6GNac+p6GOU3z0KICNX5ApnbNTZzKXFZSr8Rlho7S7fsYaRFnDmVRMszie9e/EoZhbQzGhAzozURE7oDFMykYT9wi1iZqlg12Vnwx3sdticdrCwFvXGqdvf3NjQGhZHoHZOiVkHTA4nxabtcwVNrOEJN9G1FSMaewLwRjEXHx56Ki3nhS89duyeLW6Ngk6TJnh7Fvp8Y2Ty66nYwk9aT1vDcttMYAWW/JfoMdFdtj8ttjAZp1pWX9kMN2z/li1x8caYefNrgOGXspVfnp1GHKDWIoInBt+ug=='
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '090d2121-1925-5bb4-81dd-7e16f2e5a604',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:41:52.466][TRACE][messaging-queue][messaging/queue.ts:143][runner#2/0.5928667374482595][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '304fd363-3b85-51ac-a786-8c54d039f0fc',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  Messages: [
+    {
+      Attributes: [Object],
+      Body: '{"insertTime":"2024-08-15T11:38:52.923Z","uuid":"d9428366-4ab2-4f9a-9773-134974b2c2cd"}',
+      MD5OfBody: 'db6e69737c943bc97d37b71e269c3cde',
+      MessageId: '2ca64496-970f-42b9-a978-e8e8fd297078',
+      ReceiptHandle: 'AQEBWj3dtMCsYKO6Xf9POsg8GY+qz7Ffk1YiRdvMuJ4MdXbem03lNx28h/68AwBOTAgqxALT4Ak5CXVdNxLJwA/QgFhXfF3xMrvUDs9WLM3dy2nOCf7ixYdq0q6GNac+p6GOU3z0KICNX5ApnbNTZzKXFZSr8Rlho7S7fsYaRFnDmVRMszie9e/EoZhbQzGhAzozURE7oDFMykYT9wi1iZqlg12Vnwx3sdticdrCwFvXGqdvf3NjQGhZHoHZOiVkHTA4nxabtcwVNrOEJN9G1FSMaewLwRjEXHx56Ki3nhS89duyeLW6Ngk6TJnh7Fvp8Y2Ty66nYwk9aT1vDcttMYAWW/JfoMdFdtj8ttjAZp1pWX9kMN2z/li1x8caYefNrgOGXspVfnp1GHKDWIoInBt+ug=='
+    }
+  ]
+}
+[32m[19:41:52.746][INFO][queue-test][src/queue_test.ts:8][runner#2/0.5928667374482595][39m consuming started:  {
+  insertTime: '2024-08-15T11:38:52.923Z',
+  uuid: 'c7d9c02b-9f90-4c66-8c9d-393205fca1fb'
+}
+[32m[19:41:55.796][INFO][queue-test][src/queue_test.ts:17][runner#0/0.5187137112582398][39m consuming finished.
+[32m[19:41:55.803][INFO][queue-test][src/queue_test.ts:17][runner#1/0.7307217622564501][39m consuming finished.
+[34m[19:41:56.082][TRACE][messaging-queue][messaging/queue.ts:137][runner#1/0.7307217622564501][39m delete message DeleteMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_DeleteMessageCommand],
+  deserialize: [AsyncFunction: de_DeleteMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    ReceiptHandle: 'AQEBA+W+9OK1+fzXJEZ2GAB2vAcR14gFPynem/hIAmvR14gac+Vt3EzfizpNaZHjpbK0haZuxqD+Tp9z65Cn9cS4UHx96hNOHGuad+VG4lJ86UBFsWjPchd78urTM0SRyAxIoNfrmoZjR5KQ4a8yfgoPrG/AY91z+i685WLCRj5O3fkg3dUZ+EEJnVjfKfsZUuD0wlP9/Wj8sgbVla9Aby4ZQPhrFXCIslp86kw8le6DiIOLKxglV6IkQQgeWru06yPD85r+w5Ap+n6jx+Uhs1+e4VD3QY9f44YLSdSBxoFh+KxyPrsj3VNIvVMejVtkdPPGNgIHjnPmLj0Zaxk7UWW52Ts9ESJDyBISEaBn9xG1JVPp2rzaFyUWPDI2uI7rYTgwHktqEFQw3IMdyPH+3pdbAQ=='
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '678bb5a9-b807-5aed-8a5f-ea9e53c3cbbd',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:41:56.083][TRACE][messaging-queue][messaging/queue.ts:143][runner#1/0.7307217622564501][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: 'fd2bd0c0-fb21-5f33-bf7f-8ff7109e5e63',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  Messages: [
+    {
+      Attributes: [Object],
+      Body: '{"insertTime":"2024-08-15T11:38:52.923Z","uuid":"c55bf844-de24-4a32-9ce6-454f8aabe931"}',
+      MD5OfBody: '0e4f7ffe659ef83651bd42221c76e1c7',
+      MessageId: '2142bbdd-86a6-4792-bcd2-5d617379ed41',
+      ReceiptHandle: 'AQEBA+W+9OK1+fzXJEZ2GAB2vAcR14gFPynem/hIAmvR14gac+Vt3EzfizpNaZHjpbK0haZuxqD+Tp9z65Cn9cS4UHx96hNOHGuad+VG4lJ86UBFsWjPchd78urTM0SRyAxIoNfrmoZjR5KQ4a8yfgoPrG/AY91z+i685WLCRj5O3fkg3dUZ+EEJnVjfKfsZUuD0wlP9/Wj8sgbVla9Aby4ZQPhrFXCIslp86kw8le6DiIOLKxglV6IkQQgeWru06yPD85r+w5Ap+n6jx+Uhs1+e4VD3QY9f44YLSdSBxoFh+KxyPrsj3VNIvVMejVtkdPPGNgIHjnPmLj0Zaxk7UWW52Ts9ESJDyBISEaBn9xG1JVPp2rzaFyUWPDI2uI7rYTgwHktqEFQw3IMdyPH+3pdbAQ=='
+    }
+  ]
+}
+[34m[19:41:56.085][TRACE][messaging-queue][messaging/queue.ts:137][runner#0/0.5187137112582398][39m delete message DeleteMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_DeleteMessageCommand],
+  deserialize: [AsyncFunction: de_DeleteMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    ReceiptHandle: 'AQEBIVoqOxV6PAvcVzkPrUcGnBANnetcNo7Jo5/29lh4CQbXKx5vEC/el7/9hstPfgmfukzsW8D4+ab3WIJbBDLYRTMMRoFwj0YWmUjV4Y+T+fIvfb3/xTyazBPmFoLG1ztv6sYxXvzOc2/RDXP7satKXANCQs2qrM1A8y9qJxvRh+S5GjDiU/+hdUfzgzUj9xCArvSyAZinMDnESxqFuVVzNcai5LsFKJ2gYdm4hEmOI6Nnt4QqfPERTLUs9htdX0HbJT1Pf2dj0jUuwTUZuZbV65HOgyFCOfBTBrwLSFkA39PogcknNUN9/KErXaGp/a8wmO0cRsiX3hSNSDa/yZEERSAydEmwis9dVsweRRF2Kd28gJM2ogp7sWmyDeoCfK6/fVgNQjXMaOGTb+6OEApaPA=='
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '85e1a40b-49bf-56c6-8516-fb3ca27bbb76',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:41:56.085][TRACE][messaging-queue][messaging/queue.ts:143][runner#0/0.5187137112582398][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: 'e94d2baa-6453-5a15-829c-749d8f9397a5',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  Messages: [
+    {
+      Attributes: [Object],
+      Body: '{"insertTime":"2024-08-15T11:38:52.923Z","uuid":"de30e606-e92b-41b3-91b9-e25935b60db5"}',
+      MD5OfBody: '56e970938842b61bb629fdc8ca3f9a29',
+      MessageId: '857b94a4-4139-4a8b-ba2d-bc518551d80e',
+      ReceiptHandle: 'AQEBIVoqOxV6PAvcVzkPrUcGnBANnetcNo7Jo5/29lh4CQbXKx5vEC/el7/9hstPfgmfukzsW8D4+ab3WIJbBDLYRTMMRoFwj0YWmUjV4Y+T+fIvfb3/xTyazBPmFoLG1ztv6sYxXvzOc2/RDXP7satKXANCQs2qrM1A8y9qJxvRh+S5GjDiU/+hdUfzgzUj9xCArvSyAZinMDnESxqFuVVzNcai5LsFKJ2gYdm4hEmOI6Nnt4QqfPERTLUs9htdX0HbJT1Pf2dj0jUuwTUZuZbV65HOgyFCOfBTBrwLSFkA39PogcknNUN9/KErXaGp/a8wmO0cRsiX3hSNSDa/yZEERSAydEmwis9dVsweRRF2Kd28gJM2ogp7sWmyDeoCfK6/fVgNQjXMaOGTb+6OEApaPA=='
+    }
+  ]
+}
+[32m[19:41:56.291][INFO][queue-test][src/queue_test.ts:8][runner#1/0.7307217622564501][39m consuming started:  {
+  insertTime: '2024-08-15T11:38:52.923Z',
+  uuid: '50f4c8f8-65fc-4160-971c-b03f5c480245'
+}
+[32m[19:41:56.296][INFO][queue-test][src/queue_test.ts:8][runner#0/0.5187137112582398][39m consuming started:  {
+  insertTime: '2024-08-15T11:38:52.923Z',
+  uuid: 'c339cec1-609c-4c79-86d5-3463155351dc'
+}
+[32m[19:41:57.369][INFO][queue-test][src/queue_test.ts:17][runner#2/0.5928667374482595][39m consuming finished.
+[34m[19:41:57.569][TRACE][messaging-queue][messaging/queue.ts:137][runner#2/0.5928667374482595][39m delete message DeleteMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_DeleteMessageCommand],
+  deserialize: [AsyncFunction: de_DeleteMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    ReceiptHandle: 'AQEB//qtO1YqrQuMppMfvg54avLxYKAjsFhuzmHR53nlGI5wBGXmsVTXfhCmr1MXypIU/qk7XYtTpXEt+ViI9eBH8rfRHJM/er+YzohMAiZ0kgjZcfpVME2N9B4NXQZXclj1y9ZLcEdNDTujvNwi0B6bVQPb4LeUDXNS+H/K53ZCU1nZL2H0bbRnaAsIv+Ia9US4k9yxGF/27MzTbeG/KBdmW1Qe6T6/KdcNVOLs6f0huB0Cx6qBptrK/Ym0QZk2s99vBfVdGlIW8EtNPhyyp0hKy0DsI3/wC2wEyhyIojeEYN0W+hHLQUpeoJTs7SuL5v5x9MlEwFKopynvzSsFhxggT2KwR6G1OCLjfwM5r8vRvQBYpJy7fOFANlF7mDUEQzbCqQFlFRfFNHDE6krAzGq5tA=='
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: 'a1652098-d449-5dff-84b1-7faf3f8cb04f',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:41:57.570][TRACE][messaging-queue][messaging/queue.ts:143][runner#2/0.5928667374482595][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: 'b5261040-3884-5963-8055-4f77d34484d3',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  Messages: [
+    {
+      Attributes: [Object],
+      Body: '{"insertTime":"2024-08-15T11:38:52.923Z","uuid":"c7d9c02b-9f90-4c66-8c9d-393205fca1fb"}',
+      MD5OfBody: 'ca020b45022199c9bec55cd074bb26f8',
+      MessageId: 'bac178d1-6384-48be-a62a-9a0bb2ccb0b7',
+      ReceiptHandle: 'AQEB//qtO1YqrQuMppMfvg54avLxYKAjsFhuzmHR53nlGI5wBGXmsVTXfhCmr1MXypIU/qk7XYtTpXEt+ViI9eBH8rfRHJM/er+YzohMAiZ0kgjZcfpVME2N9B4NXQZXclj1y9ZLcEdNDTujvNwi0B6bVQPb4LeUDXNS+H/K53ZCU1nZL2H0bbRnaAsIv+Ia9US4k9yxGF/27MzTbeG/KBdmW1Qe6T6/KdcNVOLs6f0huB0Cx6qBptrK/Ym0QZk2s99vBfVdGlIW8EtNPhyyp0hKy0DsI3/wC2wEyhyIojeEYN0W+hHLQUpeoJTs7SuL5v5x9MlEwFKopynvzSsFhxggT2KwR6G1OCLjfwM5r8vRvQBYpJy7fOFANlF7mDUEQzbCqQFlFRfFNHDE6krAzGq5tA=='
+    }
+  ]
+}
+[32m[19:41:57.775][INFO][queue-test][src/queue_test.ts:8][runner#2/0.5928667374482595][39m consuming started:  {
+  insertTime: '2024-08-15T11:38:52.923Z',
+  uuid: '64eb38ff-8c47-4fc0-9d36-a978ba6592a4'
+}
+[32m[19:41:59.582][INFO][queue-test][src/queue_test.ts:17][runner#1/0.7307217622564501][39m consuming finished.
+[32m[19:41:59.618][INFO][queue-test][src/queue_test.ts:17][runner#0/0.5187137112582398][39m consuming finished.
+[34m[19:41:59.786][TRACE][messaging-queue][messaging/queue.ts:137][runner#1/0.7307217622564501][39m delete message DeleteMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_DeleteMessageCommand],
+  deserialize: [AsyncFunction: de_DeleteMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    ReceiptHandle: 'AQEBu9PENC/0WaBdpVCqxwmTQRth7yed2J0Vz7+WqYw03WGQePtKTNcPOZHwywmvVcFmDntWtkrRYxiTR7y5CqYFqEAJDJ8++ge5yzCfnBiGHvTnqPmx+ROLbpDR5CtN/V3nfQNNPZ7hBP/JF2mcgcDYZvlf+19b6TPiBnqQlceCiEPdFo8meSfuteBrL1dt9zntzDIEx7mna+DGnFu5nlxWYbmll5u/vSYEcqqfa5lv9BH+Nd9Y8H356dkLkm74rVvUz7XwjunJzXE/rAVjuqaFYNJREMIgnZIY2FnsvzOfzYni6s/R5pgXLTucmLcIVAgx0kZnoqaLAo213ZMDAfPliLnjNkvOk4+1a/3bAtn7WO1dw7Or3SJJnzyRE594x2/y1AcOXY5goRBcUXBR9dnGXw=='
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: 'c5600540-475e-5d46-a8fa-5a77ac9970f6',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:41:59.788][TRACE][messaging-queue][messaging/queue.ts:143][runner#1/0.7307217622564501][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '22df8c1b-be10-538d-a806-d32c55d4b2dd',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  Messages: [
+    {
+      Attributes: [Object],
+      Body: '{"insertTime":"2024-08-15T11:38:52.923Z","uuid":"50f4c8f8-65fc-4160-971c-b03f5c480245"}',
+      MD5OfBody: '528ea6ad915a42b905d8d30c3f1959dd',
+      MessageId: '6438a764-8348-4607-87e2-8277ceed2150',
+      ReceiptHandle: 'AQEBu9PENC/0WaBdpVCqxwmTQRth7yed2J0Vz7+WqYw03WGQePtKTNcPOZHwywmvVcFmDntWtkrRYxiTR7y5CqYFqEAJDJ8++ge5yzCfnBiGHvTnqPmx+ROLbpDR5CtN/V3nfQNNPZ7hBP/JF2mcgcDYZvlf+19b6TPiBnqQlceCiEPdFo8meSfuteBrL1dt9zntzDIEx7mna+DGnFu5nlxWYbmll5u/vSYEcqqfa5lv9BH+Nd9Y8H356dkLkm74rVvUz7XwjunJzXE/rAVjuqaFYNJREMIgnZIY2FnsvzOfzYni6s/R5pgXLTucmLcIVAgx0kZnoqaLAo213ZMDAfPliLnjNkvOk4+1a/3bAtn7WO1dw7Or3SJJnzyRE594x2/y1AcOXY5goRBcUXBR9dnGXw=='
+    }
+  ]
+}
+[34m[19:41:59.819][TRACE][messaging-queue][messaging/queue.ts:137][runner#0/0.5187137112582398][39m delete message DeleteMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_DeleteMessageCommand],
+  deserialize: [AsyncFunction: de_DeleteMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    ReceiptHandle: 'AQEBTecFgds249G7qnRvZQlPBreGKK6WfTInhNDiJLgUo4iDxVM0/RiSKfaG/V77dCEys3HXhSjbsMnVuIiBwzclieBbabv0KexUU+/eFHdBaD64wcmfx/jX7t92slUHm1TSQgq1oWDzcVswraf/AOiUS3vjwuucr+iYXvzDxRSGgS1Jl5VUbvaXnEuSxXfIWzJT5VHcJZ6n1e8H9vjRlVvRRK7C+3PNxrjUZktr8SmM/Xypyx+FZKwoaxLa2IaXJBgodtOTsVIUXlpzeJdqCNtVzQl5Gec0s5fV5ZcOAyX+PKMYY5hzr6gPpEls3h52rz5UKbod1ex0Q+Eo36mlQBvqPzrY+rVM498QrtT3jkEDBMsAfLATgXdAl3DVgOt8CJPR6njQUsFQ8HxMWbzWqucwBQ=='
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '5a75c599-b7e8-5d1e-afce-9aae5c2f7c4e',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:41:59.820][TRACE][messaging-queue][messaging/queue.ts:143][runner#0/0.5187137112582398][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: 'e1a6e1be-ed99-5457-b83d-be89065d89e7',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  Messages: [
+    {
+      Attributes: [Object],
+      Body: '{"insertTime":"2024-08-15T11:38:52.923Z","uuid":"c339cec1-609c-4c79-86d5-3463155351dc"}',
+      MD5OfBody: 'c3dbae731265287d55fa881d5dc1a78c',
+      MessageId: '9eb6be4b-1482-4b41-971a-12b6557a31fc',
+      ReceiptHandle: 'AQEBTecFgds249G7qnRvZQlPBreGKK6WfTInhNDiJLgUo4iDxVM0/RiSKfaG/V77dCEys3HXhSjbsMnVuIiBwzclieBbabv0KexUU+/eFHdBaD64wcmfx/jX7t92slUHm1TSQgq1oWDzcVswraf/AOiUS3vjwuucr+iYXvzDxRSGgS1Jl5VUbvaXnEuSxXfIWzJT5VHcJZ6n1e8H9vjRlVvRRK7C+3PNxrjUZktr8SmM/Xypyx+FZKwoaxLa2IaXJBgodtOTsVIUXlpzeJdqCNtVzQl5Gec0s5fV5ZcOAyX+PKMYY5hzr6gPpEls3h52rz5UKbod1ex0Q+Eo36mlQBvqPzrY+rVM498QrtT3jkEDBMsAfLATgXdAl3DVgOt8CJPR6njQUsFQ8HxMWbzWqucwBQ=='
+    }
+  ]
+}
+[32m[19:41:59.999][INFO][queue-test][src/queue_test.ts:8][runner#1/0.7307217622564501][39m consuming started:  {
+  insertTime: '2024-08-15T11:38:52.923Z',
+  uuid: '92024c7a-2545-43d1-9c49-d0cb0fce9a3f'
+}
+[32m[19:42:00.081][INFO][queue-test][src/queue_test.ts:8][runner#0/0.5187137112582398][39m consuming started:  {
+  insertTime: '2024-08-15T11:38:52.923Z',
+  uuid: '3ed42041-828b-48fa-ae6f-42d406adda62'
+}
+[32m[19:42:02.526][INFO][queue-test][src/queue_test.ts:17][runner#2/0.5928667374482595][39m consuming finished.
+[34m[19:42:02.727][TRACE][messaging-queue][messaging/queue.ts:137][runner#2/0.5928667374482595][39m delete message DeleteMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_DeleteMessageCommand],
+  deserialize: [AsyncFunction: de_DeleteMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    ReceiptHandle: 'AQEBafKvGbsxsialrS/6RLk0IkW558qGc0AFmsxR22KNnNAgPlGRLzWSg5CCb2vYZq/PKFUkMvFcpMBgpnRMyse/tSnj4jWdIWvzKhSJvT2ucZ2QkYCGDg4V6/k6s0JyfgPfz6GTt8DU0EaXGq1v9qMMS8ovjE/PGzIGamnoV9E3k0RyaqghAX8r1cw53zh/M7jxImgK6e3eF6ev9aHav+v2cLYlNnUA8z3YUHaB3PNfAjPXZ0Ml2scBUpM5kDxNSjFBrccu81Mffg9I7zOOUOmzeQwr851eQt3bTRkTO7m9GFC39/CSUWz6vMKw5pvFTSKkGKj7MFJWqJivEsfDU+pMus5uw9cbaPfkvhxZwdKmDZRa6cMQ/M6EyvYNx8X9iEb17oo9b0APNHqksEsuKBXBHg=='
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '485b3fbd-8be4-5214-93c6-608a602ef344',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:42:02.728][TRACE][messaging-queue][messaging/queue.ts:143][runner#2/0.5928667374482595][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '35aeb5ef-7d0f-5749-b964-ead896ca9af9',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  Messages: [
+    {
+      Attributes: [Object],
+      Body: '{"insertTime":"2024-08-15T11:38:52.923Z","uuid":"64eb38ff-8c47-4fc0-9d36-a978ba6592a4"}',
+      MD5OfBody: 'c8e09904ce2678beca0677fb07437f2f',
+      MessageId: '58c81c7d-3eea-4b61-a216-b8cbbb3eb19e',
+      ReceiptHandle: 'AQEBafKvGbsxsialrS/6RLk0IkW558qGc0AFmsxR22KNnNAgPlGRLzWSg5CCb2vYZq/PKFUkMvFcpMBgpnRMyse/tSnj4jWdIWvzKhSJvT2ucZ2QkYCGDg4V6/k6s0JyfgPfz6GTt8DU0EaXGq1v9qMMS8ovjE/PGzIGamnoV9E3k0RyaqghAX8r1cw53zh/M7jxImgK6e3eF6ev9aHav+v2cLYlNnUA8z3YUHaB3PNfAjPXZ0Ml2scBUpM5kDxNSjFBrccu81Mffg9I7zOOUOmzeQwr851eQt3bTRkTO7m9GFC39/CSUWz6vMKw5pvFTSKkGKj7MFJWqJivEsfDU+pMus5uw9cbaPfkvhxZwdKmDZRa6cMQ/M6EyvYNx8X9iEb17oo9b0APNHqksEsuKBXBHg=='
+    }
+  ]
+}
+[32m[19:42:02.927][INFO][queue-test][src/queue_test.ts:8][runner#2/0.5928667374482595][39m consuming started:  {
+  insertTime: '2024-08-15T11:38:52.923Z',
+  uuid: '5be4d528-43de-40d1-bb12-2a6e366c2404'
+}
+[32m[19:42:04.379][INFO][queue-test][src/queue_test.ts:17][runner#1/0.7307217622564501][39m consuming finished.
+[34m[19:42:04.579][TRACE][messaging-queue][messaging/queue.ts:137][runner#1/0.7307217622564501][39m delete message DeleteMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_DeleteMessageCommand],
+  deserialize: [AsyncFunction: de_DeleteMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    ReceiptHandle: 'AQEBmGyhabQAnRewjmOeVB69XXbvCk1Dc4IIZw/P4+D29RabZS5sbglmsMDU5OmUpUftgug6bwaDWMroe+ksyN/yaGSq3ahwCECCbLmJM4oZKcDjhA6vrl7ydhxR8gCEejfxKpfHjJ2sCWJEyt0qvjljncbzY66cM5qBXw1XLL4+pnpycSYt8Zt4Nz48xLWE5zlw9K9HqB4+lF6TUMoF2UJZFy6ovgDKE915Q8TexMG9vuzumwJtmnWANQDGRAEIHYIwk1C4ZxHSWsGGm4yKfAHMR4wcu3M8BCX97Ub9GKUmG8nrlB5/BnOtpTvcDe4tvDdNLFaByIByML5W1lCprN1nw/pWVtl65q52iUdSAmiZCazErM/YnUjGK3r8noTE/n3tfWY8DvZD19+/NvMAtqHBPA=='
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: 'af4dc47c-c3da-5f67-95a8-9b4b28163e37',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:42:04.580][TRACE][messaging-queue][messaging/queue.ts:143][runner#1/0.7307217622564501][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '59d70d71-aa66-585b-98ce-524641ae15eb',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  Messages: [
+    {
+      Attributes: [Object],
+      Body: '{"insertTime":"2024-08-15T11:38:52.923Z","uuid":"92024c7a-2545-43d1-9c49-d0cb0fce9a3f"}',
+      MD5OfBody: '150ac1f72cab1846704bba413b7c7e60',
+      MessageId: '79dceb34-6fab-4bdd-9122-932d65dd76aa',
+      ReceiptHandle: 'AQEBmGyhabQAnRewjmOeVB69XXbvCk1Dc4IIZw/P4+D29RabZS5sbglmsMDU5OmUpUftgug6bwaDWMroe+ksyN/yaGSq3ahwCECCbLmJM4oZKcDjhA6vrl7ydhxR8gCEejfxKpfHjJ2sCWJEyt0qvjljncbzY66cM5qBXw1XLL4+pnpycSYt8Zt4Nz48xLWE5zlw9K9HqB4+lF6TUMoF2UJZFy6ovgDKE915Q8TexMG9vuzumwJtmnWANQDGRAEIHYIwk1C4ZxHSWsGGm4yKfAHMR4wcu3M8BCX97Ub9GKUmG8nrlB5/BnOtpTvcDe4tvDdNLFaByIByML5W1lCprN1nw/pWVtl65q52iUdSAmiZCazErM/YnUjGK3r8noTE/n3tfWY8DvZD19+/NvMAtqHBPA=='
+    }
+  ]
+}
+[32m[19:42:04.793][INFO][queue-test][src/queue_test.ts:17][runner#0/0.5187137112582398][39m consuming finished.
+[32m[19:42:04.804][INFO][queue-test][src/queue_test.ts:8][runner#1/0.7307217622564501][39m consuming started:  {
+  insertTime: '2024-08-15T11:38:52.923Z',
+  uuid: '698ddbe7-7ba1-4576-b916-ef9657242884'
+}
+[34m[19:42:04.998][TRACE][messaging-queue][messaging/queue.ts:137][runner#0/0.5187137112582398][39m delete message DeleteMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_DeleteMessageCommand],
+  deserialize: [AsyncFunction: de_DeleteMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    ReceiptHandle: 'AQEBbyh7sdcjWMnTowdq3hUwKo4KJuaTUYXAAcrPNNf0IHszOY9lOIIdBBhJpWuE86rC/hEEcB3znojVBxQvIPtwqfc8PeaaqwCO4zg7nI1mWvBIpP9MjHCoea9nFJvjFp6aQZwKFl1oxqV9NwnIU8LVhe5Jp1weIHMytU62pr2LOv/fr15yXz/Gwh5oH8cg6CjBdpadh2DcpwZA2wJLaPlTJmeW9W7Y9iE6VArW0gFXfl33TVrigJlc74JGiJxIMHl3dcZWjZ2f51S9X03TrfoyGvCLionLRKPXRkWVxGZpv+aRdaYzWDaNea1t7gCtxP4MA30eZVysJOYxTU/Bnxc555eoO4foWRzhBbTF00ukBzhjRX0Lhr9hehdbPFdDvY81zFbrxev6chDH74sLyYDSZQ=='
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: 'cab6c03a-a4bb-5e20-9ed5-9f0d4f762390',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:42:04.999][TRACE][messaging-queue][messaging/queue.ts:143][runner#0/0.5187137112582398][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '11f944cc-d10d-5117-9415-1bfb3ac57047',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  Messages: [
+    {
+      Attributes: [Object],
+      Body: '{"insertTime":"2024-08-15T11:38:52.923Z","uuid":"3ed42041-828b-48fa-ae6f-42d406adda62"}',
+      MD5OfBody: '91eb25741dd4c7703f7a548f49b0a072',
+      MessageId: '1eb545c2-7daf-40bc-8900-6737227f39a8',
+      ReceiptHandle: 'AQEBbyh7sdcjWMnTowdq3hUwKo4KJuaTUYXAAcrPNNf0IHszOY9lOIIdBBhJpWuE86rC/hEEcB3znojVBxQvIPtwqfc8PeaaqwCO4zg7nI1mWvBIpP9MjHCoea9nFJvjFp6aQZwKFl1oxqV9NwnIU8LVhe5Jp1weIHMytU62pr2LOv/fr15yXz/Gwh5oH8cg6CjBdpadh2DcpwZA2wJLaPlTJmeW9W7Y9iE6VArW0gFXfl33TVrigJlc74JGiJxIMHl3dcZWjZ2f51S9X03TrfoyGvCLionLRKPXRkWVxGZpv+aRdaYzWDaNea1t7gCtxP4MA30eZVysJOYxTU/Bnxc555eoO4foWRzhBbTF00ukBzhjRX0Lhr9hehdbPFdDvY81zFbrxev6chDH74sLyYDSZQ=='
+    }
+  ]
+}
+[32m[19:42:05.208][INFO][queue-test][src/queue_test.ts:8][runner#0/0.5187137112582398][39m consuming started:  {
+  insertTime: '2024-08-15T11:38:52.923Z',
+  uuid: '8ea53b3c-0405-4a2d-abfc-e7f229d105df'
+}
+[32m[19:42:06.347][INFO][queue-test][src/queue_test.ts:17][runner#2/0.5928667374482595][39m consuming finished.
+[34m[19:42:06.566][TRACE][messaging-queue][messaging/queue.ts:137][runner#2/0.5928667374482595][39m delete message DeleteMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_DeleteMessageCommand],
+  deserialize: [AsyncFunction: de_DeleteMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    ReceiptHandle: 'AQEBjp9YJpRuwYSn5GkRXG2dVEdR+aSMg/cBh3d4bLr7qB/L3dJsJssRJcS3/P7b5PGbhWrDxKKHQJu2kuO4rdV8NFLBWMejcWxV/9Bz9pUpXnwrxpfYz4y+RRdNre4TuLhxtch90jS6RMG5gsbIZyxQh8O6IJxGxMt7u9QZDi0izf70T5+tCMdWQT5OJbkv5AsqFUtGVEJXIxoTX8xkmM3YQFkyGIlLatLlu+/YHWCF/0qnEwmfp1qV3EvS5RN5jyA4AEgZ+1sbdmhDFrwNHSMQxIC+zXDNZt21A1whJQHtJnEsNgeP4FeJkhF8ESQgKqNgFj2elssugGNjK5S8J86dS65PCJw2BBFKrysEhI1nPWnIeSxQ9HTlCZvr2f0epAhZM9fwY8TC6RvFjrs4/7SG7A=='
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '3fe58370-7bf7-5c7b-a393-dc47903931cb',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:42:06.566][TRACE][messaging-queue][messaging/queue.ts:143][runner#2/0.5928667374482595][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '268a6e0b-1ff6-581d-a481-313cf43d494d',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  Messages: [
+    {
+      Attributes: [Object],
+      Body: '{"insertTime":"2024-08-15T11:38:52.923Z","uuid":"5be4d528-43de-40d1-bb12-2a6e366c2404"}',
+      MD5OfBody: '3feb173b8ecf759de9f2a46a2151ed6b',
+      MessageId: '958c9db3-e996-4a15-b94e-7e424df62916',
+      ReceiptHandle: 'AQEBjp9YJpRuwYSn5GkRXG2dVEdR+aSMg/cBh3d4bLr7qB/L3dJsJssRJcS3/P7b5PGbhWrDxKKHQJu2kuO4rdV8NFLBWMejcWxV/9Bz9pUpXnwrxpfYz4y+RRdNre4TuLhxtch90jS6RMG5gsbIZyxQh8O6IJxGxMt7u9QZDi0izf70T5+tCMdWQT5OJbkv5AsqFUtGVEJXIxoTX8xkmM3YQFkyGIlLatLlu+/YHWCF/0qnEwmfp1qV3EvS5RN5jyA4AEgZ+1sbdmhDFrwNHSMQxIC+zXDNZt21A1whJQHtJnEsNgeP4FeJkhF8ESQgKqNgFj2elssugGNjK5S8J86dS65PCJw2BBFKrysEhI1nPWnIeSxQ9HTlCZvr2f0epAhZM9fwY8TC6RvFjrs4/7SG7A=='
+    }
+  ]
+}
+[32m[19:42:06.774][INFO][queue-test][src/queue_test.ts:8][runner#2/0.5928667374482595][39m consuming started:  {
+  insertTime: '2024-08-15T11:38:52.923Z',
+  uuid: 'eabe87b4-c4a3-41e4-9c20-ab2cbf4cef91'
+}
+[32m[19:42:09.452][INFO][queue-test][src/queue_test.ts:17][runner#0/0.5187137112582398][39m consuming finished.
+[32m[19:42:09.675][INFO][queue-test][src/queue_test.ts:17][runner#1/0.7307217622564501][39m consuming finished.
+[34m[19:42:09.717][TRACE][messaging-queue][messaging/queue.ts:137][runner#0/0.5187137112582398][39m delete message DeleteMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_DeleteMessageCommand],
+  deserialize: [AsyncFunction: de_DeleteMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    ReceiptHandle: 'AQEBrRQT13mUgjiBRRhAxJbWxTLccVGJxgT0/YMJyDNZwtEVulBKBzWfjI97GCpw1yWdrLztfVEKMY+AO4JraN0HswoAeuST3eezFfCnyDVgiUz57NQxAGExzPhbUGL5uRtFPhqem/c6wzv/NeYDaRA/qAQDTFUHMqJPF/I+8jr2BkZ60OkPLFK3iJ3AqBey7AGbGs5AhRUGHCW+1o7bLyAyg5mnsfk8e3K7hOxjSMvJ5YXVHQox5yuSbZ+xU7y+kECnjkaTYeIqgC8Idl+Z3FccSSU1R0rFb0woSrmOeLGmKBp+znPsfURUjBQOqyMRgRZIImSbNIbfmgQ+3Q92pDQxkA7v9/HY+MP3VdWoqKo7HZVjDNPUIF0whNWtilO/6EU1G4bAXf5bkRkV6R1Fkw9XCA=='
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '642a8fd5-735d-55f2-8708-d0e2988c2842',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:42:09.717][TRACE][messaging-queue][messaging/queue.ts:143][runner#0/0.5187137112582398][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: 'df3e280e-94d3-50ec-98ed-77397f1ead5c',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  Messages: [
+    {
+      Attributes: [Object],
+      Body: '{"insertTime":"2024-08-15T11:38:52.923Z","uuid":"8ea53b3c-0405-4a2d-abfc-e7f229d105df"}',
+      MD5OfBody: 'a2883468dd629ed13ece16c6fc474274',
+      MessageId: 'acb19e8f-a8fc-4cb6-ad3c-28910e5c1e8b',
+      ReceiptHandle: 'AQEBrRQT13mUgjiBRRhAxJbWxTLccVGJxgT0/YMJyDNZwtEVulBKBzWfjI97GCpw1yWdrLztfVEKMY+AO4JraN0HswoAeuST3eezFfCnyDVgiUz57NQxAGExzPhbUGL5uRtFPhqem/c6wzv/NeYDaRA/qAQDTFUHMqJPF/I+8jr2BkZ60OkPLFK3iJ3AqBey7AGbGs5AhRUGHCW+1o7bLyAyg5mnsfk8e3K7hOxjSMvJ5YXVHQox5yuSbZ+xU7y+kECnjkaTYeIqgC8Idl+Z3FccSSU1R0rFb0woSrmOeLGmKBp+znPsfURUjBQOqyMRgRZIImSbNIbfmgQ+3Q92pDQxkA7v9/HY+MP3VdWoqKo7HZVjDNPUIF0whNWtilO/6EU1G4bAXf5bkRkV6R1Fkw9XCA=='
+    }
+  ]
+}
+[32m[19:42:09.814][INFO][queue-test][src/queue_test.ts:17][runner#2/0.5928667374482595][39m consuming finished.
+[34m[19:42:09.875][TRACE][messaging-queue][messaging/queue.ts:137][runner#1/0.7307217622564501][39m delete message DeleteMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_DeleteMessageCommand],
+  deserialize: [AsyncFunction: de_DeleteMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    ReceiptHandle: 'AQEBy22UudeP1k1cWe+qi5ux7+DCUjLpsNDBPQf0PRZBQRT5eR0/zDD/lX4ngiEPxnmMf7//x1rvO/yvIZKPGQPgs5zAybvXinWd4TE9uZqkvsOZKjkNtw69necX2/3WST2HEWoH4pSQB2RyFqbz5iXNX2FHjsVkhJLCJbSK1Wt+AgZE/mEwhCt+gHCZleoR3OmRjVpSuWz3ieKOCebxSkHyi/ez2fP+HAjZ2gcKgcQyZOd9ouYLoQKxvQW8FPHUbCQfLOSnyJ1IfWnkbRY/smm0UC6JMvIglsUVqYbbEYezo3czUcmX2qh4zMPCiOnuU5zggBSqOsk637EHYe4HNX/N6OCIwdXiG2q7ebUQ6/qTTopoNroKOgE6xVQMJcsRyxuy9MrW1vf7PssxD6t8DPdEVg=='
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '265352af-4dcb-56c8-b5f0-0d98a6194798',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:42:09.875][TRACE][messaging-queue][messaging/queue.ts:143][runner#1/0.7307217622564501][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: 'f5a84db2-129c-53f4-b029-1285f950e2a4',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  Messages: [
+    {
+      Attributes: [Object],
+      Body: '{"insertTime":"2024-08-15T11:38:52.923Z","uuid":"698ddbe7-7ba1-4576-b916-ef9657242884"}',
+      MD5OfBody: '0711877d613e533d28387a08c1bd116a',
+      MessageId: 'c2309c6a-9609-49a1-b085-ff2d185c05bf',
+      ReceiptHandle: 'AQEBy22UudeP1k1cWe+qi5ux7+DCUjLpsNDBPQf0PRZBQRT5eR0/zDD/lX4ngiEPxnmMf7//x1rvO/yvIZKPGQPgs5zAybvXinWd4TE9uZqkvsOZKjkNtw69necX2/3WST2HEWoH4pSQB2RyFqbz5iXNX2FHjsVkhJLCJbSK1Wt+AgZE/mEwhCt+gHCZleoR3OmRjVpSuWz3ieKOCebxSkHyi/ez2fP+HAjZ2gcKgcQyZOd9ouYLoQKxvQW8FPHUbCQfLOSnyJ1IfWnkbRY/smm0UC6JMvIglsUVqYbbEYezo3czUcmX2qh4zMPCiOnuU5zggBSqOsk637EHYe4HNX/N6OCIwdXiG2q7ebUQ6/qTTopoNroKOgE6xVQMJcsRyxuy9MrW1vf7PssxD6t8DPdEVg=='
+    }
+  ]
+}
+[32m[19:42:09.927][INFO][queue-test][src/queue_test.ts:8][runner#0/0.5187137112582398][39m consuming started:  {
+  insertTime: '2024-08-15T11:38:52.923Z',
+  uuid: 'fd59396f-1ff9-44f3-a81b-70467e14dfb5'
+}
+[34m[19:42:10.047][TRACE][messaging-queue][messaging/queue.ts:137][runner#2/0.5928667374482595][39m delete message DeleteMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_DeleteMessageCommand],
+  deserialize: [AsyncFunction: de_DeleteMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    ReceiptHandle: 'AQEBodRHgEB63mcXkmEeMe8eLGMME+iDbQMWFQtYIvu+/oLNOSXesVAvsS75OJYdFbfM4aIx2ByFb5uVB9tV4X9MdjkdKF8i9uM22XVOlxhrSX00ADX48UYwIPs2I+7ng6qwNY+vtH/YgXpuxlFFNowqf6qCX+RVLYaYTy6O2mq2LYuJfsG0Fl3L4vX1MnJg2tJtfIDOQkCvczLUYcx5v98h5yarMpb8hN6FXk+Bfk5albi8Kn4NrkkmpPj35tr8TVEcib7bdsgP86Dn+BuVt/yGMlByZTW00Ml1dJ0wikwz+F0OMHNS9aY6Tpv2iU8nwGEC2BY26hTfNKtCp7BJhS6EL+iulS8X1bh5gzh2wvnE8QZyvvZEds2HfWHSW9Qb8/1MpROHkW10aOgnpU9Zs/6+tQ=='
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '3d3ac8dd-64f2-588f-8ee3-97ea8f20a85d',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:42:10.048][TRACE][messaging-queue][messaging/queue.ts:143][runner#2/0.5928667374482595][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '1bedaff2-406c-5e7d-ae04-f0c5aba273cd',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  Messages: [
+    {
+      Attributes: [Object],
+      Body: '{"insertTime":"2024-08-15T11:38:52.923Z","uuid":"eabe87b4-c4a3-41e4-9c20-ab2cbf4cef91"}',
+      MD5OfBody: 'db16ab5d326a6850ee96d3e373ebdee5',
+      MessageId: '7fdab1d4-43f0-4e9c-b4d8-5835a73f9576',
+      ReceiptHandle: 'AQEBodRHgEB63mcXkmEeMe8eLGMME+iDbQMWFQtYIvu+/oLNOSXesVAvsS75OJYdFbfM4aIx2ByFb5uVB9tV4X9MdjkdKF8i9uM22XVOlxhrSX00ADX48UYwIPs2I+7ng6qwNY+vtH/YgXpuxlFFNowqf6qCX+RVLYaYTy6O2mq2LYuJfsG0Fl3L4vX1MnJg2tJtfIDOQkCvczLUYcx5v98h5yarMpb8hN6FXk+Bfk5albi8Kn4NrkkmpPj35tr8TVEcib7bdsgP86Dn+BuVt/yGMlByZTW00Ml1dJ0wikwz+F0OMHNS9aY6Tpv2iU8nwGEC2BY26hTfNKtCp7BJhS6EL+iulS8X1bh5gzh2wvnE8QZyvvZEds2HfWHSW9Qb8/1MpROHkW10aOgnpU9Zs/6+tQ=='
+    }
+  ]
+}
+[32m[19:42:10.085][INFO][queue-test][src/queue_test.ts:8][runner#1/0.7307217622564501][39m consuming started:  {
+  insertTime: '2024-08-15T11:38:52.923Z',
+  uuid: '95a6af91-7c4b-46e8-bceb-522aa75e35da'
+}
+[32m[19:42:10.257][INFO][queue-test][src/queue_test.ts:8][runner#2/0.5928667374482595][39m consuming started:  {
+  insertTime: '2024-08-15T11:38:52.923Z',
+  uuid: 'f1b31137-464f-4ee5-b258-c0bab03e801e'
+}
+[32m[19:42:13.144][INFO][queue-test][src/queue_test.ts:17][runner#1/0.7307217622564501][39m consuming finished.
+[34m[19:42:13.388][TRACE][messaging-queue][messaging/queue.ts:137][runner#1/0.7307217622564501][39m delete message DeleteMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_DeleteMessageCommand],
+  deserialize: [AsyncFunction: de_DeleteMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    ReceiptHandle: 'AQEBhGP0ttHUSzd764No5YlSdlKobLLjaG6FRFzvZtW4XSUxO3yzD+JccOX/6e6Ph3p2GVVG6QDZPjGqEbwaqpEXiVBo7Fv+mE7J+5dW2zEMkrc/AQ5LY6SzKCUMRUewJt4UJnFD2pm7r9uKLrbPEnxpIrCByKjWjRyreai1aXYnPWIEZMWiKVfvTn7gjzIRa/fbX65WAUK82Lj3NMlndIe7AuO+RLELL4pSsGgww1HLOAj7vylwiuofcElkM73M4k82sS/1tZCEFI0nN2k810KB/NCKVCU3ymf4vNgf3UYOPFX21mrBDXucGYnfOj8jvW/wAYwINGSJG0Xh8RFvE9xwA67eqbz/98PweDo+FlgySMl5nP/O4vT1qUuNHE7132BiJfWhZIkRvWDCVuunT3d2mg=='
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: 'f4852884-c2fe-55af-a0c5-77b3292b057d',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:42:13.390][TRACE][messaging-queue][messaging/queue.ts:143][runner#1/0.7307217622564501][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '750a287d-3cc7-5623-be81-774ad7154773',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  Messages: [
+    {
+      Attributes: [Object],
+      Body: '{"insertTime":"2024-08-15T11:38:52.923Z","uuid":"95a6af91-7c4b-46e8-bceb-522aa75e35da"}',
+      MD5OfBody: 'd4ed6f648112bc2c45be08d493cc0e59',
+      MessageId: '1300c21b-77b9-4418-98e6-0b26068ec4aa',
+      ReceiptHandle: 'AQEBhGP0ttHUSzd764No5YlSdlKobLLjaG6FRFzvZtW4XSUxO3yzD+JccOX/6e6Ph3p2GVVG6QDZPjGqEbwaqpEXiVBo7Fv+mE7J+5dW2zEMkrc/AQ5LY6SzKCUMRUewJt4UJnFD2pm7r9uKLrbPEnxpIrCByKjWjRyreai1aXYnPWIEZMWiKVfvTn7gjzIRa/fbX65WAUK82Lj3NMlndIe7AuO+RLELL4pSsGgww1HLOAj7vylwiuofcElkM73M4k82sS/1tZCEFI0nN2k810KB/NCKVCU3ymf4vNgf3UYOPFX21mrBDXucGYnfOj8jvW/wAYwINGSJG0Xh8RFvE9xwA67eqbz/98PweDo+FlgySMl5nP/O4vT1qUuNHE7132BiJfWhZIkRvWDCVuunT3d2mg=='
+    }
+  ]
+}
+[32m[19:42:13.759][INFO][queue-test][src/queue_test.ts:17][runner#0/0.5187137112582398][39m consuming finished.
+[34m[19:42:13.963][TRACE][messaging-queue][messaging/queue.ts:137][runner#0/0.5187137112582398][39m delete message DeleteMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_DeleteMessageCommand],
+  deserialize: [AsyncFunction: de_DeleteMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    ReceiptHandle: 'AQEBy8/k/+xwSd8IUX4i21dQ0X20vb62KdiaBP2ea2R00SHyJ8LSfNCotjqQRKM1TkH6bdYYqsaowf5AaybE2CZYP5x7jfzDtc4k7JhcaPs/26ZCSK1cnsVJYzs9wMqosbqXwyX1YJb5hnbegTRND5i94NCaorGJjCtqR7oLzclFLF3ujiie43c5wh9qzVBpCPgWWwBueIgUgHNOsLRJenEb19C+VIx6vHdKfRoYXCtdq0O0y0RQsPnjnxcUi0VAuspFxZqE47Aamn5taaU38AT1LwQvXU7aOd8Hy5fo2FvPP2Xq+Nm6dZlwz0pk5kOh5QQiMKarJ6lpxuIs3ptThtHbEVe8zwQC4gfu86bzloO7Zo1H96gFglqAK2VIM4D5Y/Yb/11xvOwwSqxmTWz0SW3wjA=='
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: 'ee39a973-d0ba-515a-b2a8-f6443b6c400a',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:42:13.964][TRACE][messaging-queue][messaging/queue.ts:143][runner#0/0.5187137112582398][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: 'f35629cb-24f0-5400-b92e-76fccf2219b0',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  Messages: [
+    {
+      Attributes: [Object],
+      Body: '{"insertTime":"2024-08-15T11:38:52.923Z","uuid":"fd59396f-1ff9-44f3-a81b-70467e14dfb5"}',
+      MD5OfBody: '704b6858a943e91219b3d8bf8cd0ab59',
+      MessageId: 'd3150e71-efc7-4b1a-8dd0-10d9b2316ddd',
+      ReceiptHandle: 'AQEBy8/k/+xwSd8IUX4i21dQ0X20vb62KdiaBP2ea2R00SHyJ8LSfNCotjqQRKM1TkH6bdYYqsaowf5AaybE2CZYP5x7jfzDtc4k7JhcaPs/26ZCSK1cnsVJYzs9wMqosbqXwyX1YJb5hnbegTRND5i94NCaorGJjCtqR7oLzclFLF3ujiie43c5wh9qzVBpCPgWWwBueIgUgHNOsLRJenEb19C+VIx6vHdKfRoYXCtdq0O0y0RQsPnjnxcUi0VAuspFxZqE47Aamn5taaU38AT1LwQvXU7aOd8Hy5fo2FvPP2Xq+Nm6dZlwz0pk5kOh5QQiMKarJ6lpxuIs3ptThtHbEVe8zwQC4gfu86bzloO7Zo1H96gFglqAK2VIM4D5Y/Yb/11xvOwwSqxmTWz0SW3wjA=='
+    }
+  ]
+}
+[32m[19:42:14.452][INFO][queue-test][src/queue_test.ts:17][runner#2/0.5928667374482595][39m consuming finished.
+[34m[19:42:14.657][TRACE][messaging-queue][messaging/queue.ts:137][runner#2/0.5928667374482595][39m delete message DeleteMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_DeleteMessageCommand],
+  deserialize: [AsyncFunction: de_DeleteMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    ReceiptHandle: 'AQEB72/6R1xqKGPJGKXR9r7lqAMmf7nostvq4Es+Vz0EceRYa5xRYOvdjG8nuu6joz+KT+1krllq0ZciNfbonerk2quZFVG77aud3+W6rd9cXiwIEiYR82k+7yBozo/jRtQLFADOu3RYOOwVMp+01YCwXY7+lWsZqnOdYEpKqRqRNRYCbF1i4ObaGVi3YGop632IFNCP3PR+Z3pN8I4SNjwdj3Gh2OZEi4M4hqdWnHFSU2D43zcmpcCpKRDRNPpTrrTnKMf+hVyo1+RmkphVL9D9EKTVpq8DBcF3axxmq9L9pqtHVH6d5znoY5j4zMSs15r7476jBIA/4HGwXyaMFxEdh67UGo3XgR2cppkIIVQd/TjLG2BMv7yPHt2x3/SbDDMkPZdLaEUVZfLb0eh4ScBWjw=='
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '81d51040-96fe-56d6-982d-4f777d280b66',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:42:14.658][TRACE][messaging-queue][messaging/queue.ts:143][runner#2/0.5928667374482595][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: 'a95d8106-6eba-5917-8774-de31856829c5',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  },
+  Messages: [
+    {
+      Attributes: [Object],
+      Body: '{"insertTime":"2024-08-15T11:38:52.923Z","uuid":"f1b31137-464f-4ee5-b258-c0bab03e801e"}',
+      MD5OfBody: '5a8ddf827ec1ec31df26c724594a1521',
+      MessageId: 'd19ac976-1016-425b-8f24-34835011d556',
+      ReceiptHandle: 'AQEB72/6R1xqKGPJGKXR9r7lqAMmf7nostvq4Es+Vz0EceRYa5xRYOvdjG8nuu6joz+KT+1krllq0ZciNfbonerk2quZFVG77aud3+W6rd9cXiwIEiYR82k+7yBozo/jRtQLFADOu3RYOOwVMp+01YCwXY7+lWsZqnOdYEpKqRqRNRYCbF1i4ObaGVi3YGop632IFNCP3PR+Z3pN8I4SNjwdj3Gh2OZEi4M4hqdWnHFSU2D43zcmpcCpKRDRNPpTrrTnKMf+hVyo1+RmkphVL9D9EKTVpq8DBcF3axxmq9L9pqtHVH6d5znoY5j4zMSs15r7476jBIA/4HGwXyaMFxEdh67UGo3XgR2cppkIIVQd/TjLG2BMv7yPHt2x3/SbDDMkPZdLaEUVZfLb0eh4ScBWjw=='
+    }
+  ]
+}
+[34m[19:42:23.680][TRACE][messaging-queue][messaging/queue.ts:143][runner#1/0.7307217622564501][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '49bf587b-7488-50da-b8d4-074c9f5d0008',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:42:24.198][TRACE][messaging-queue][messaging/queue.ts:143][runner#0/0.5187137112582398][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '60a2bae1-b3bb-5f0f-ae8f-e5d6586d0e5f',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:42:24.857][TRACE][messaging-queue][messaging/queue.ts:143][runner#2/0.5928667374482595][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: 'ab7287e2-e012-5b9d-b29d-d8d50bc4562d',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:42:33.882][TRACE][messaging-queue][messaging/queue.ts:143][runner#1/0.7307217622564501][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: 'b19f38f1-1c43-5dec-a93b-67c6f7a37d3e',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:42:34.399][TRACE][messaging-queue][messaging/queue.ts:143][runner#0/0.5187137112582398][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '1795e90a-228c-5827-ad0a-b63dc96cc977',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:42:35.055][TRACE][messaging-queue][messaging/queue.ts:143][runner#2/0.5928667374482595][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '40f6ca94-90ab-5dbe-81f8-95a37b4ad00e',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:42:44.128][TRACE][messaging-queue][messaging/queue.ts:143][runner#1/0.7307217622564501][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: 'b4cac916-8e21-5d82-a77c-962165cbfd50',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:42:44.654][TRACE][messaging-queue][messaging/queue.ts:143][runner#0/0.5187137112582398][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '9cf5704c-3a6f-5fd9-bf76-2f7bd1855e89',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:42:45.258][TRACE][messaging-queue][messaging/queue.ts:143][runner#2/0.5928667374482595][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '505aaddf-ddbf-5f7f-a92f-f2e8365412cf',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:42:54.330][TRACE][messaging-queue][messaging/queue.ts:143][runner#1/0.7307217622564501][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: 'b063570b-6597-54aa-a08f-083c8e634478',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:42:54.853][TRACE][messaging-queue][messaging/queue.ts:143][runner#0/0.5187137112582398][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '1a146e72-7849-54ff-9444-314593bd75af',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:42:55.457][TRACE][messaging-queue][messaging/queue.ts:143][runner#2/0.5928667374482595][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: 'f22d8494-8fe5-5905-b6c1-dba3641074b5',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:43:04.578][TRACE][messaging-queue][messaging/queue.ts:143][runner#1/0.7307217622564501][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: 'fdc9c13a-b672-57cf-91e8-9e0d5d8ce71d',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:43:05.101][TRACE][messaging-queue][messaging/queue.ts:143][runner#0/0.5187137112582398][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '19d36943-61a2-5d6a-a1e0-36748a5dcc3a',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:43:05.656][TRACE][messaging-queue][messaging/queue.ts:143][runner#2/0.5928667374482595][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: 'c05a577a-6b14-5f49-b19d-084d80ebf2f9',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:43:14.789][TRACE][messaging-queue][messaging/queue.ts:143][runner#1/0.7307217622564501][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: 'eada7d87-f748-59f7-8912-22b01b409925',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:43:15.366][TRACE][messaging-queue][messaging/queue.ts:143][runner#0/0.5187137112582398][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '47be0d8e-443c-58fb-b3cf-52b9a83519ab',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:43:15.911][TRACE][messaging-queue][messaging/queue.ts:143][runner#2/0.5928667374482595][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '1ea1a2ae-2c6f-574f-b5e5-fd99c066aaff',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:43:25.026][TRACE][messaging-queue][messaging/queue.ts:143][runner#1/0.7307217622564501][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: 'a0fbd999-2e01-56ec-964e-86aec212363e',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:43:25.561][TRACE][messaging-queue][messaging/queue.ts:143][runner#0/0.5187137112582398][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: 'f2c8b143-1ee9-5801-90ae-ee74f2fac951',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:43:26.107][TRACE][messaging-queue][messaging/queue.ts:143][runner#2/0.5928667374482595][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: 'dd23628d-dc72-51f6-9801-3dba30666c46',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:43:35.263][TRACE][messaging-queue][messaging/queue.ts:143][runner#1/0.7307217622564501][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '0febb982-8f66-5a5e-b88a-e6b5637b1a8c',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:43:35.757][TRACE][messaging-queue][messaging/queue.ts:143][runner#0/0.5187137112582398][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '65d3cd43-51f9-5a72-b58f-9274bde43b22',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:43:36.390][TRACE][messaging-queue][messaging/queue.ts:143][runner#2/0.5928667374482595][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '4780d861-a0df-56d4-84c8-87564cc1fb64',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:43:45.482][TRACE][messaging-queue][messaging/queue.ts:143][runner#1/0.7307217622564501][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '16853d44-c31e-5ea3-94f3-62732f39ce71',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:43:45.997][TRACE][messaging-queue][messaging/queue.ts:143][runner#0/0.5187137112582398][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '802c9303-f401-5947-bf2b-cc3418294817',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:43:46.587][TRACE][messaging-queue][messaging/queue.ts:143][runner#2/0.5928667374482595][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '99a2d58b-1e90-57d3-bdb1-8abcf2b8ba63',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:43:55.685][TRACE][messaging-queue][messaging/queue.ts:143][runner#1/0.7307217622564501][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '6a6d9542-1282-571d-b28b-ca75feb387cf',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:43:56.254][TRACE][messaging-queue][messaging/queue.ts:143][runner#0/0.5187137112582398][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: 'a9b4068d-6d56-55ec-a7ae-59ba816444bc',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:43:56.784][TRACE][messaging-queue][messaging/queue.ts:143][runner#2/0.5928667374482595][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: 'b56bde2b-63c7-56ea-bcc1-811c8ff50b5a',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:44:05.918][TRACE][messaging-queue][messaging/queue.ts:143][runner#1/0.7307217622564501][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '90e846a5-150a-5b55-a312-1992f936eb87',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:44:06.452][TRACE][messaging-queue][messaging/queue.ts:143][runner#0/0.5187137112582398][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '7859b5f3-af09-512b-8922-eac44335807b',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:44:06.981][TRACE][messaging-queue][messaging/queue.ts:143][runner#2/0.5928667374482595][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: 'fbde34b3-bd03-52f5-b16e-6b84513eaf45',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}
+[34m[19:44:16.116][TRACE][messaging-queue][messaging/queue.ts:143][runner#1/0.7307217622564501][39m receive message ReceiveMessageCommand {
+  middlewareStack: {
+    add: [Function: add],
+    addRelativeTo: [Function: addRelativeTo],
+    clone: [Function: clone],
+    use: [Function: use],
+    remove: [Function: remove],
+    removeByTag: [Function: removeByTag],
+    concat: [Function: concat],
+    applyToStack: [Function: cloneTo],
+    identify: [Function: identify],
+    identifyOnResolve: [Function: identifyOnResolve],
+    resolve: [Function: resolve]
+  },
+  serialize: [AsyncFunction: se_ReceiveMessageCommand],
+  deserialize: [AsyncFunction: de_ReceiveMessageCommand],
+  input: {
+    QueueUrl: 'https://sqs.us-west-2.amazonaws.com/837841471692/test-queue',
+    WaitTimeSeconds: 10,
+    MaxNumberOfMessages: 1,
+    VisibilityTimeout: 10,
+    AttributeNames: [ 'All' ]
+  }
+} {
+  '$metadata': {
+    httpStatusCode: 200,
+    requestId: '64aab915-5e88-52f2-8b3c-e622b2ce0220',
+    extendedRequestId: undefined,
+    cfId: undefined,
+    attempts: 1,
+    totalRetryDelay: 0
+  }
+}

@@ -4,7 +4,7 @@ import { isNil } from '../utilities'
 
 const {
   LOG4JS_LEVEL = 'trace',
-  LOG4JS_PATTERN = '%[[%d{hh:mm:ss.SSS}][%p][%c][%f{2}:%l][%x{reqId}]%] %m',
+  LOG4JS_PATTERN = '%[[%d{hh:mm:ss.SSS}][%p][%c][%f{2}:%l][%x{reqId}]%] %m'
 } = process.env
 
 export const reqIdStorage = new AsyncLocalStorage<string>()
@@ -54,7 +54,7 @@ const fileAppender = (file: string): DateFileAppender => {
 export const configureLogger = (file?: string): void => {
   const config: log4js.Configuration = {
     appenders: {
-      consoleAppender,
+      consoleAppender
     },
     categories: {
       default: {
@@ -65,14 +65,14 @@ export const configureLogger = (file?: string): void => {
     }
   }
   if (!isNil(file)) {
-    config.appenders.logFileAppender = fileAppender(file)
+    config.appenders.logFileAppender = fileAppender(file + '.log')
     config.appenders.logAppender = {
       type: 'logLevelFilter',
       appender: 'logFileAppender',
       level: 'INFO'
     }
     config.categories.default.appenders.push('logAppender')
-    config.appenders.debugFileAppender = fileAppender(file)
+    config.appenders.debugFileAppender = fileAppender(file + '.deb')
     config.appenders.debugAppender = {
       type: 'logLevelFilter',
       appender: 'debugFileAppender',

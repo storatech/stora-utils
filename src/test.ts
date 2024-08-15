@@ -1,9 +1,9 @@
-import { getLogger } from 'log4js'
-import { Mongo, MongoCollection } from './database'
-import './logger'
-import { MoneyCalculator } from './money'
+// import { getLogger } from 'log4js'
+// import { Mongo, MongoCollection } from './database'
+// import './logger'
+// import { MoneyCalculator } from './money'
 
-// const mongo = Mongo('mongodb://localhost:27017', 'test')
+// // const mongo = Mongo('mongodb://localhost:27017', 'test')
 
 // const logger = getLogger('db-test')
 
@@ -46,7 +46,7 @@ import { MoneyCalculator } from './money'
 //   logger.error('error', e)
 // })
 
-const money = MoneyCalculator({}, "MNT")
-const t = money.new('100.99', 'CNY')
-console.log(money.format(t))
-console.log(money.parse('¥100.99'))
+// const money = MoneyCalculator({}, "MNT")
+// const t = money.new('100.99', 'CNY')
+// console.log(money.format(t))
+// console.log(money.parse('¥100.99'))
