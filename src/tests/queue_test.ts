@@ -21,7 +21,7 @@ const main = async (): Promise<void> => {
   const testQueue = MessageQueue<any>('test-queue', 3)
 
   logger.info('Main started.')
-  await testQueue.startPool(consumeSingleData)
+  await testQueue.consume(consumeSingleData)
 }
 
 main().catch(console.log)

@@ -213,14 +213,14 @@ const MessageQueueImpl = <T>(
         }
       }
     },
-    startPool: async (callback, waitSec = 10, retrySec = 10, maxDiffMs = 0) => {
+    startConsume: async (callback, waitSec = 10, retrySec = 10, maxDiffMs = 0) => {
       for (let i = 0; i < concurrentCount; i++) {
         logger.info('Starting pool consumer: ', i)
 
         pool.submit(async () => {
           while (true) {
             // [OPTIMIZATION] waitSec: Will send fewer requests to the server when idle. AWS max is 20 seconds.
-            await handler({ queueUrl: await url, callback, waitSec: i === 0 ? 10 : 20, retrySec, maxDiffMs })
+            await handler({ queueUrl: await url, callback, waitSec: i === 0 ? waitSec : 20, retrySec, maxDiffMs })
           }
         })
       }
