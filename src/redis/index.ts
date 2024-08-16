@@ -24,7 +24,7 @@ export interface PubSub<T> {
 export const PubSubChannel = <T>(channel: string): PubSub<T> => {
   return {
     subscribe: async (listener) => {
-      logger.debug('subscribing channel', channel)
+      logger.info('subscribing channel: ', channel)
       const sub = redis.duplicate()
       await sub.connect()
       await sub.subscribe(channel, (message, channel) => {
@@ -32,19 +32,21 @@ export const PubSubChannel = <T>(channel: string): PubSub<T> => {
           const m = JSON.parse(message) as T
           logger.debug('message received on channel', channel, m)
           listener(m).catch((e: any) => {
-            logger.error('subscriber error', e)
+            logger.error('subscriber error:', e)
           })
         } catch (e) {
-          logger.error('message error', e)
+          logger.error('message error: ', e)
         }
       })
     },
     count: async () => {
       const res = await redis.pubSubNumSub(channel)
+      logger.trace('message count: ', res[channel])
+
       return res[channel]
     },
     publish: async (message) => {
-      logger.debug('message publish on channel', channel, message)
+      logger.debug('message publish on channel: ', channel, message)
       const m = JSON.stringify(message)
       await redis.publish(channel, m)
     }

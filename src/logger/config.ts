@@ -72,7 +72,8 @@ export const configureLogger = (file?: string): void => {
       level: 'INFO'
     }
     config.categories.default.appenders.push('logAppender')
-    config.appenders.debugFileAppender = fileAppender(file)
+
+    config.appenders.debugFileAppender = fileAppender(file + '.deb')
     config.appenders.debugAppender = {
       type: 'logLevelFilter',
       appender: 'debugFileAppender',
