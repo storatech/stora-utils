@@ -1,3 +1,11 @@
 {
-  "standard.engine": "ts-standard"
+  "editor.tabSize": 2,
+  "standard.engine": "ts-standard",
+  "standard.enableGlobally": true,
+  "standard.usePackageJson": false,
+  "standard.autoFixOnSave": true,
+  "standard.validate": [
+    "javascript",
+    "typescript",
+  ]
 }

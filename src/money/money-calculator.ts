@@ -103,8 +103,6 @@ export const CURRENCIES: Record<Currency, CurrencyDefinition> = {
     precision: 2,
     transformer: {
       format: (money) => {
-        // return toNumber(money.amount).toLocaleString('en-US', { style: 'currency', currency: 'CNY', minimumFractionDigits: CURRENCIES.CNY.precision, maximumFractionDigits: CURRENCIES.CNY.precision })
-
         const def = CURRENCIES.CNY
         if (typeof money.amount === 'string') {
           return `${parseFloat(money.amount).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}${def.symbol}`

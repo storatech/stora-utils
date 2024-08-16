@@ -1,5 +1,5 @@
 import { AsyncLocalStorage } from 'async_hooks'
-import log4js, { ConsoleAppender, DateFileAppender, LogLevelFilterAppender, PatternLayout } from 'log4js'
+import log4js, { ConsoleAppender, DateFileAppender, PatternLayout } from 'log4js'
 import { isNil } from '../utilities'
 
 const {
@@ -64,14 +64,17 @@ export const configureLogger = (file?: string): void => {
       }
     }
   }
+
   if (!isNil(file)) {
-    config.appenders.logFileAppender = fileAppender(file + '.log')
+    config.appenders.logFileAppender = fileAppender(file)
+
     config.appenders.logAppender = {
       type: 'logLevelFilter',
       appender: 'logFileAppender',
       level: 'INFO'
     }
     config.categories.default.appenders.push('logAppender')
+
     config.appenders.debugFileAppender = fileAppender(file + '.deb')
     config.appenders.debugAppender = {
       type: 'logLevelFilter',
@@ -80,5 +83,6 @@ export const configureLogger = (file?: string): void => {
     }
     config.categories.default.appenders.push('debugAppender')
   }
+
   log4js.configure(config)
 }

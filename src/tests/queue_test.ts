@@ -1,6 +1,6 @@
-import './logger'
+import { MessageQueue } from '../messaging'
+import '../src/logger'
 import { getLogger } from 'log4js'
-import { MessageQueue } from './messaging'
 
 const logger = getLogger('queue-test')
 
@@ -21,17 +21,7 @@ const main = async (): Promise<void> => {
   const testQueue = MessageQueue<any>('test-queue', 3)
 
   logger.info('Main started.')
-  await testQueue.consume(consumeSingleData)
+  await testQueue.startPool(consumeSingleData)
 }
-
-// const main = async (): Promise<void> => {
-//   const pool = ThreadPool(3)
-//   for (let i = 0; i < 30; i++) {
-//     await pool.submit(async () => {
-//       await consumeSingleData(i)
-//     })
-//   }
-//   await pool.finish()
-// }
 
 main().catch(console.log)

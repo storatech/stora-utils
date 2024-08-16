@@ -1,7 +1,7 @@
-import { XmlDate, XmlDef, XmlNumber, XmlString } from './types'
 import fs from 'fs'
-import { XML } from '.'
 import '../logger'
+import { XML } from '../xml'
+import { XmlDef, XmlNumber, XmlString, XmlDate } from '../xml/types'
 
 interface IGrpHdr {
   MsgId: string

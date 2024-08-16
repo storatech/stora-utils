@@ -1,6 +1,6 @@
 const Transliterate = (word: string): string => {
-  var resultWord = ''
-  var a: any = {
+  let resultWord = ''
+  const a: any = {
     Ё: 'Yo',
     Й: 'I',
     Ц: 'Ts',
@@ -73,7 +73,7 @@ const Transliterate = (word: string): string => {
     ю: 'yu'
   }
 
-  var s: any = { Я: 'Y', я: 'y', Ё: 'Y', ё: 'y', Е: 'Y', е: 'y', Ю: 'Y', ю: 'y' }
+  const s: any = { Я: 'Y', я: 'y', Ё: 'Y', ё: 'y', Е: 'Y', е: 'y', Ю: 'Y', ю: 'y' }
 
   const e = ['а', 'А', 'э', 'Э', 'ү', 'Ү', 'Ө', 'ө', 'о', 'О', 'у', 'У']
 
