@@ -2,6 +2,6 @@ dist
 node_modules
 .DS_Store
 logs
-package-lock.json
 
 .env
+package-lock.json

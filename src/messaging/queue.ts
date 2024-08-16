@@ -145,7 +145,6 @@ const MessageQueueImpl = <T>(
       })
 
       let Messages: ReceiveMessageCommandOutput['Messages'] | undefined
-
       try {
         const res: ReceiveMessageCommandOutput = await sqs.send(command)
 

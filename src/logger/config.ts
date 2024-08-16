@@ -1,10 +1,10 @@
 import { AsyncLocalStorage } from 'async_hooks'
-import log4js, { ConsoleAppender, DateFileAppender, PatternLayout } from 'log4js'
+import log4js, { ConsoleAppender, DateFileAppender, LogLevelFilterAppender, PatternLayout } from 'log4js'
 import { isNil } from '../utilities'
 
 const {
   LOG4JS_LEVEL = 'trace',
-  LOG4JS_PATTERN = '%[[%d{hh:mm:ss.SSS}][%p][%c][%f{2}:%l][%x{reqId}]%] %m'
+  LOG4JS_PATTERN = '%[[%d{hh:mm:ss.SSS}][%p][%c][%f{2}:%l][%x{reqId}]%] %m',
 } = process.env
 
 export const reqIdStorage = new AsyncLocalStorage<string>()
@@ -54,7 +54,7 @@ const fileAppender = (file: string): DateFileAppender => {
 export const configureLogger = (file?: string): void => {
   const config: log4js.Configuration = {
     appenders: {
-      consoleAppender
+      consoleAppender,
     },
     categories: {
       default: {
@@ -64,10 +64,8 @@ export const configureLogger = (file?: string): void => {
       }
     }
   }
-
   if (!isNil(file)) {
     config.appenders.logFileAppender = fileAppender(file)
-
     config.appenders.logAppender = {
       type: 'logLevelFilter',
       appender: 'logFileAppender',
@@ -83,6 +81,5 @@ export const configureLogger = (file?: string): void => {
     }
     config.categories.default.appenders.push('debugAppender')
   }
-
   log4js.configure(config)
 }
