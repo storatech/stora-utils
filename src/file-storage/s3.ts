@@ -8,6 +8,8 @@ const logger = getLogger('S3FileStorage')
 export const S3FileStorage = (config: S3Config): FileStorage => {
   const s3 = new S3Client({})
 
+  const { cdnPath } = config
+
   return {
     listFiles: async (path: string, filter: any): Promise<string[]> => {
       logger.trace('listFiles request:', path, filter)
@@ -29,7 +31,7 @@ export const S3FileStorage = (config: S3Config): FileStorage => {
 
       const command = new GetObjectCommand({
         Bucket: config.bucket,
-        Key: path
+        Key: `${cdnPath}/${path}`
       })
 
       const res = await s3.send(command)
@@ -40,18 +42,20 @@ export const S3FileStorage = (config: S3Config): FileStorage => {
 
       return Buffer.from(await res.Body.transformToByteArray())
     },
-    uploadFile: async (path: string, name: string, data: Buffer): Promise<void> => {
+    uploadFile: async (path: string, name: string, data: Buffer): Promise<string> => {
       logger.trace('uploadFile request:', name, path)
 
       const command = new PutObjectCommand({
         Bucket: config.bucket,
-        Key: `${path}/${name}`,
+        Key: `${cdnPath}/${path}/${name}`,
         Body: data
       })
 
       const res = await s3.send(command)
 
       logger.trace('uploadFile response:', res)
+
+      return `${cdnPath}/${path}/${name}`
     },
     deleteFile: async (path: string): Promise<void> => {
       logger.trace('deleteFile request:', path)
