@@ -6,6 +6,7 @@ if (isNil(process.env.AWS_ACCESS) || isNil(process.env.AWS_SECRET)) {
 }
 
 const client = S3FileStorage({
+  cdnPath: 'https://test.com',
   bucket: 'stora-dev-bucket'
 })
 
@@ -33,15 +34,15 @@ const s3DeleteTest = async (): Promise<void> => {
   console.log('deleteResult: ', deleteResult)
 }
 
-// s3ListTest().catch(e => {
-//   console.error(e)
-// })
-// s3UploadeTest().catch(e => {
-//   console.error(e)
-// })
-// s3DownloadTest().catch(e => {
-//   console.error(e)
-// })
-// s3DeleteTest().catch(e => {
-//   console.error(e)
-// })
+s3ListTest().catch(e => {
+  console.error(e)
+})
+s3UploadeTest().catch(e => {
+  console.error(e)
+})
+s3DownloadTest().catch(e => {
+  console.error(e)
+})
+s3DeleteTest().catch(e => {
+  console.error(e)
+})
