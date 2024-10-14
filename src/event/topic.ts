@@ -29,7 +29,7 @@ export const TopicImpl: Topic = () => {
       return data
     },
     subscribeAll: async (subscriptionId, waitMs, limit = Infinity): Promise<any> => {
-      let count = 0;
+      // const count = 0
       const a = new Promise((resolve, reject) => {
         const result: any = []
         const listener = (data: any): void => {

@@ -163,7 +163,7 @@ export const XML: Xml = <T>(structure: XmlDef<T>) => {
           } else if (Array.isArray(parent.structure)) {
             const current: XmlNode<any> = {
               parent,
-              deep: deep,
+              deep,
               structure: parent.structure[0],
               tag: parent.tag
             }
