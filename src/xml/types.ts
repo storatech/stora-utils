@@ -11,7 +11,7 @@ export type XmlTransformer<T> = () => {
 export type XmlDef<T> = (XmlObject<T> | XmlTransformer<T | undefined>)
 
 export type XmlObject<T> = {
-  [Z in keyof T]?: (T extends [] ? XmlDef<T[number]>: XmlDef<T[Z]>)
+  [Z in keyof T]?: (T extends [] ? XmlDef<T[number]> : XmlDef<T[Z]>)
 }
 
 export const XmlBoolean = (trueValue: string, falseValue: string): XmlTransformer<boolean | undefined> => {

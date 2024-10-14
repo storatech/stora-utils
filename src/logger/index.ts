@@ -1,4 +1,4 @@
-import { configureLogger } from "./config";
+import { configureLogger } from './config'
 export { getReqId } from './config'
 
 const {
