@@ -42,13 +42,14 @@ export const S3FileStorage = (config: S3Config): FileStorage => {
 
       return Buffer.from(await res.Body.transformToByteArray())
     },
-    uploadFile: async (path: string, name: string, data: Buffer): Promise<string> => {
+    uploadFile: async (path: string, name: string, data: Buffer, contentType: string): Promise<string> => {
       logger.trace('uploadFile request:', name, path)
 
       const command = new PutObjectCommand({
         Bucket: config.bucket,
         Key: `${cdnPath}/${path}/${name}`,
-        Body: data
+        Body: data,
+        ContentType: contentType
       })
 
       const res = await s3.send(command)

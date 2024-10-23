@@ -16,7 +16,7 @@ const s3ListTest = async (): Promise<void> => {
 }
 
 const s3UploadeTest = async (): Promise<void> => {
-  const uploadResult = await client.uploadFile('test', 'test2.txt', Buffer.from('test'))
+  const uploadResult = await client.uploadFile('test', 'test2.txt', Buffer.from('test'), 'plain/text')
   console.log('uploadResult: ', uploadResult)
 }
 
