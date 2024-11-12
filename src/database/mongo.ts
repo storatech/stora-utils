@@ -12,7 +12,7 @@ export const MongoCollection: <A extends Document> (name: string) => ((conn: Db)
   }
 }
 
-type Mongo = (url: string, db: string, options?: MongoClientOptions) => {
+export type Mongo = (url: string, db: string, options?: MongoClientOptions) => {
   connect: () => Promise<MongoClient>
   isConnected: () => Promise<boolean>
   disconnect: (force?: boolean) => Promise<void>
