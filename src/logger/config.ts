@@ -53,6 +53,8 @@ const fileAppender = (file: string): DateFileAppender => {
 
 export const configureLogger = (file?: string): void => {
   const config: log4js.Configuration = {
+    pm2: true,
+    disableClustering: true,
     appenders: {
       consoleAppender
     },
