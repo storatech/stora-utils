@@ -70,3 +70,13 @@ cd ../stora-api && pnpm add ../stora-utils/dist/storatech-stora-utils-<version>.
 2. Compare the public surface. Build `main` first and copy `dist` to a temp folder, then build your branch and run `diff -r -x '*.js' <temp-folder> dist`. Only intended `.d.ts` additions should appear.
 3. Pack the build (see Commands), install it in at least one consumer that uses the module (`docs/HANDOVER.md` §1), and exercise the changed code path. For messaging or database changes, use the dev environment, never prod.
 4. Bump `version`, then update `docs/HANDOVER.md` (§4 module reference, §5 release history, §7 issues).
+
+## Coding standards
+
+Follow the shared Stora coding standard: [stora-dev-guide/coding-standards.md](https://github.com/storatech/stora-dev-guide/blob/main/coding-standards.md). In short:
+
+- **ts-standard (StandardJS):** 2 spaces, single quotes, no semicolons. There is no `lint` script, but ts-standard is a dev dependency — run `npx ts-standard` and keep the build (`tsc`) passing before a PR.
+- **Naming:** `camelCase` variables and functions, `CONSTANT_CASE` constants, `PascalCase` types, interfaces, enums and classes (no `I` prefix), `CONSTANT_CASE` enum members, kebab-case file names, `_`-prefixed unused arguments.
+- **Types:** named `interface`s for request/response shapes; avoid `any` (prefer `unknown` with narrowing). Use the `@/` import alias where the repo defines one.
+- **Modern JS:** arrow functions, spread, destructuring, `for…of`/`for…in`, `map`/`filter`/`reduce`.
+- **Git:** feature branch → PR into the branch this repo merges features to (see above); never push to `main`. A PR must pass lint and the build before review.
