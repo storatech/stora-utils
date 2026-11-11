@@ -29,7 +29,7 @@ cd ../stora-api && pnpm add ../stora-utils/dist/storatech-stora-utils-<version>.
 
 - `src/utilities.ts` → `/utilities`: `isNil`, `isNonEmptyString`, `isNonEmptyValue`, `keyBy`, `uniqBy`, `combineUrls`, `escapeXml` (runs in browsers)
 - `src/money/` → `/money`: `MoneyCalculator`, `CURRENCIES`, `NumberMoney`/`StringMoney` types (runs in browsers)
-- `src/express/` → `/express`: `ApiRequest`/`ApiResponse` types, `ApiException`, `ApiErrorCode`, `HttpStatus`, `expressErrorHandler`, `expressNotFoundHandler`
+- `src/express/` → `/express`: `ApiRequest`/`ApiResponse` types, `ApiException`, `ApiErrorCode`, `HttpStatus`, `expressErrorHandler`, `expressNotFoundHandler`, `expressResponseHelper`, `Pagination` types
 - `src/logger/` → `/logger` (importing it configures log4js), `/logger/config`, `/logger/express`, `/logger/koa`, `/logger/axios`
 - `src/database/` → `/database`: `Mongo(url, db)` wrapper with nested `withTransaction`, `MongoCollection<T>(name)`
 - `src/messaging/` → `/messaging`: SQS `MessageQueue` (`produce`, `startConsume`, deprecated `consume`), SNS `MessageTopic`
@@ -38,6 +38,7 @@ cd ../stora-api && pnpm add ../stora-utils/dist/storatech-stora-utils-<version>.
 - `src/event/` → `/event`: `Topic<T>()` in-process EventEmitter pub/sub with timeouts
 - `src/file-storage/` → `/file-storage`: `S3FileStorage({ bucket, cdnPath })`
 - `src/analytics/` → `/analytics`: `sendAnalyticsEvent(event, data)` into a Mongo `analytics` collection
+- `src/telemetry/` → `/telemetry`: `startTelemetry(options)` OpenTelemetry traces and metrics to Google Cloud (off without `GOOGLE_CLOUD_PROJECT`)
 - `src/validation.ts` → `/validation`: registers extra validate.js validators on import, exports the `Constraint<T>` type
 - `src/xml/` → `/xml`, `/xml/types`: typed sax-based XML parse and format
 - `src/random/` → `/random` · `src/hash/` → `/hash` (MD5) · `src/transliterate/` → `/transliterate` (Mongolian Cyrillic to Latin)
@@ -57,7 +58,7 @@ cd ../stora-api && pnpm add ../stora-utils/dist/storatech-stora-utils-<version>.
 - This is a shared library. Never remove or rename an export, file, parameter or enum value. Never change a default, log category, message format or retry/delete behaviour without a version bump and a note in `docs/HANDOVER.md`.
 - Semver: patch for a fix with no API change, minor for additions, major for removals or behaviour changes. Every `^2.x` consumer picks up a new 2.x on its next install.
 - **Every push to `main` publishes** the `version` in `package.json` (`.github/workflows/main.yml`). Bump `version` in the same PR, and never reuse a version (the publish step fails).
-- 2.8.0 is already published, but its source is not in this repo (see `docs/HANDOVER.md` §5). The next version must be greater than 2.8.0, and the 2.8.0 additions must be restored first, or the next release will silently remove them.
+- 2.8.0 was published without its source; its additions were restored in 2.9.0 (see `docs/HANDOVER.md` §5.3). Never reuse or go below a published version.
 - 1.x consumers (notification-core, stora-locker-api, stora-scripts) do not receive 2.x changes. Do not assume a fix reaches them.
 - Don't publish, push, tag or trigger the workflow unless asked. Don't edit the GitHub Actions workflow without being asked.
 - Secrets: never commit tokens, keys, connection strings or account IDs, and never put `_authToken` in the repo `.npmrc`. The repo is public. Don't copy values from `test.xml` or git history.

@@ -82,6 +82,7 @@ Every third-party package is a **devDependency**. The published package declares
 | `redis ^4.1.0` (node-redis v4 API) | redis |
 | `validate.js ^0.13.1`, `dayjs ^1.10.5` | validation; `dayjs` also by `xml/types` |
 | `sax ^1.2.1` | xml |
+| `@opentelemetry/api ~1.9.1` (`sdk-node` 0.223 requires `<1.10.0`), `@opentelemetry/sdk-node ^0.223.1`, `@opentelemetry/sdk-trace-base ^2.12.1`, `@opentelemetry/auto-instrumentations-node ^0.81.2`, `@opentelemetry/exporter-trace-otlp-grpc ^0.223.1`, `@opentelemetry/exporter-metrics-otlp-grpc ^0.223.1`, `@grpc/grpc-js ^1.14.7`, `google-auth-library ^10.9.1` | telemetry. Stay on the OpenTelemetry 2.x SDK line (`sdk-node` 0.2xx, `auto-instrumentations-node` 0.81.x): 3.x needs Node ≥ 22.15, and the services run Node 22.5 |
 | `express ^4.17.2`, `koa ^2.13.1`, `axios ^0.21.1` | types only (`express`, `logger/express`, `logger/koa`, `logger/axios`); nothing is required at runtime |
 | Node built-ins `async_hooks`, `events`, `crypto` | logger/database (AsyncLocalStorage), concurrency/event, hash |
 
@@ -177,7 +178,8 @@ Each module lives in `src/<name>/` and is imported as `@storatech/stora-utils/<n
 If the `Accept` header resolves to HTML (`req.accepts(['html', 'json'])`), the body is the plain `error.message` instead of JSON. That includes unknown errors (see §7).
 
 - `expressNotFoundHandler`: responds 404 with `{ errorCode: 996, error: 'not found' }`.
-- Published 2.8.0 also contains `expressResponseHelper` and pagination types that are **not in this source** (§5.3).
+- `Pagination { limit, offset }`, `PaginationResult` (adds `total`) and `PaginatedResult<T> { data, pagination }`.
+- `expressResponseHelper(req, res, next)`: middleware that adds `res.success(data)` (`{ status: 'success', data }`), `res.paginatedSuccess(data, pagination)` and `res.error(apiError)` (`{ status: 'failed', message, code }`). There is no `Express.Response` type augmentation, so callers cast `res`. First published in 2.8.0 and restored to the source in 2.9.0 (§5.3).
 
 ### 4.4 logger (`/logger` and subpaths)
 
@@ -296,7 +298,23 @@ The `SQSClient` and `SNSClient` instances are created when the module is importe
 - The first call connects through `Mongo()` and caches the `Db` in a module variable. This is the only connection caching in the library.
 - It inserts `{ ...data, event, createdAt }` into the `analytics` collection without awaiting; insert errors are only logged.
 
-### 4.12 validation (`/validation`)
+### 4.12 telemetry (`/telemetry`)
+
+- `startTelemetry({ serviceName, serviceVersion?, environment?, sampleRatio?, instrumentations? })` starts the OpenTelemetry Node SDK and exports traces (Cloud Trace) and metrics (Cloud Monitoring) to the Google Cloud Telemetry API, `telemetry.googleapis.com`, over OTLP gRPC. It returns `{ shutdown() }`, or `undefined` when telemetry is off.
+- Call it before importing anything it should instrument (http, express, graphql, mongodb, pg, knex, aws-sdk, ioredis ...), ideally from a bootstrap file that is the entry point's first import. Importing the module has no side effects.
+- It is off unless `GOOGLE_CLOUD_PROJECT` is set, and `OTEL_SDK_DISABLED=true` turns it off. Credentials come from Application Default Credentials: `GOOGLE_APPLICATION_CREDENTIALS` pointing at a service account key or a workload identity federation config. The service account needs `roles/telemetry.tracesWriter`, `roles/monitoring.metricWriter` and `roles/serviceusage.serviceUsageConsumer`.
+- Defaults: parent-based sampling of 10 % of new traces (`sampleRatio`, `OTEL_TRACES_SAMPLER_ARG`, or the standard `OTEL_TRACES_SAMPLER`), metrics every 60 s (`OTEL_METRIC_EXPORT_INTERVAL`), SDK warnings and errors on the `telemetry` log4js category (`OTEL_LOG_LEVEL`).
+- Resource: `service.name`, `service.namespace=stora`, `service.version`, `deployment.environment.name` (default `NODE_ENV`), `gcp.project_id` (required by the Telemetry API) and `service.instance.id = <hostname>-<NODE_APP_INSTANCE or pid>`. The instance id must be unique per PM2 worker, because Cloud Monitoring rejects points written to one time series by several processes.
+- Instrumentations come from `@opentelemetry/auto-instrumentations-node`, with these defaults (`instrumentations` replaces the settings of the instrumentations it names):
+  - `dns`, `net` and `fs` off.
+  - http: incoming `OPTIONS` requests ignored. Query parameters named `key`, `apiKey`, `api_key`, `apikey`, `access_token`, `accessToken`, `token`, `secret`, `client_secret`, `password`, `otp`, `signature`, `sign` (plus OpenTelemetry's own list) are recorded as `REDACTED` in `url.full` / `url.query`. Matching is exact and case-sensitive; other query parameters are recorded as sent.
+  - express: middleware layers ignored (routers and request handlers are kept).
+  - graphql: `depth: 2`, `mergeItems`, `ignoreTrivialResolveSpans`. Apollo Server wraps every resolver, so without the depth limit every field gets a span. Depth 2 keeps `Mutation.checkouts.createV3`-style operations.
+  - The GraphQL document is recorded (`graphql.source`), so values written inline in a query are visible. Variables, Mongo and SQL values are not recorded.
+- `OTEL_EXPORTER_OTLP_ENDPOINT` sends to another OTLP gRPC endpoint. An `http://` endpoint (a local OpenTelemetry Collector) gets no TLS and no Google credentials.
+- Google credentials are added with a custom gRPC metadata generator. `credentials.createFromGoogleCredential` from grpc-js cannot be used with google-auth-library 10: it copies `Object.keys()` of the returned headers, which is empty for a `Headers` object, so no `Authorization` header would be sent.
+
+### 4.13 validation (`/validation`)
 
 - Importing it registers three validators on the global validate.js instance:
   - `element`: validates each array element.
@@ -304,7 +322,7 @@ The `SQSClient` and `SNSClient` instances are created when the module is importe
   - `date`: checks the value is parseable by dayjs.
 - It exports the `Constraint<T>` type. Consumers import `validate` from `validate.js` themselves (ecommerce-core imports this module for its side effect in `src/index.ts`).
 
-### 4.13 xml (`/xml`, `/xml/types`)
+### 4.14 xml (`/xml`, `/xml/types`)
 
 - `XML<T>(def)` returns `{ parse(xml), format(data) }`, built on the strict `sax` parser.
   - Only elements declared in `def` are captured, and attributes are ignored.
@@ -313,13 +331,13 @@ The `SQSClient` and `SNSClient` instances are created when the module is importe
 - `/xml/types`: `XmlString()`, `XmlNumber()` (uses `parseInt`), `XmlDate(format)` (dayjs), `XmlBoolean(trueValue, falseValue)` and `XmlDef<T>`.
 - payment-api uses it for the Golomt bank gateway (`src/services/golomtcgw.ts`).
 
-### 4.14 random, hash, transliterate
+### 4.15 random, hash, transliterate
 
 - `/random` `generateRandom(length, onlyDigit?)`: A–Z and 0–9, or digits only, using `Math.random`. It is used for order and tracking numbers, spin-the-wheel codes (stora-api, stora-admin-api) and other generated codes.
 - `/hash` `hashUtils.hash(str)`: MD5 hex digest.
 - `/transliterate`: the default export `Transliterate(word)` converts Mongolian Cyrillic to Latin.
 
-### 4.15 Other files
+### 4.16 Other files
 
 - `src/index.ts`: the root module; it only prints a warning.
 - `src/test.ts`, `src/tests/*.ts`, `src/xml/test.ts`, `src/concurrency/test.ts`: manual scripts. They are compiled and **published** with the package.
@@ -369,8 +387,11 @@ Reconstructed from the `version` field in git history.
 | 2.6.0 | 2024-11-12 | Zoljargal Gantumur (PR #12) | log4js `pm2: true`, `disableClustering: true` |
 | 2.7.0 | 2024-11-12 | Zoljargal Gantumur (PR #13) | `analytics` module (last commit on `main`) |
 | 2.8.0 | on or before 2025-07-07 | unknown (not in git) | `expressResponseHelper` and pagination types (§5.3) |
+| 2.9.0 | 2026-11 | | 2.8.0 express additions restored to the source; `telemetry` module (OpenTelemetry to Google Cloud) |
 
 ### 5.3 The 2.8.0 drift
+
+**Resolved in 2.9.0**: the interfaces and `expressResponseHelper` were reconstructed in `src/express/index.ts` from the published build. `diff -r -x '*.js'` against the installed 2.8.0 shows no `.d.ts` differences apart from the new `telemetry` module and the missing `tests/concurency/compare` benchmark. The history below is kept for reference.
 
 #### What we know
 
@@ -487,7 +508,7 @@ Prioritized roughly by risk.
 
 | # | Issue | Where | Notes |
 |---|---|---|---|
-| 1 | Published 2.8.0 has no source in git; the next release from `main` would drop its exports | `src/express/index.ts`, `package.json` | §5.3. Restore the code, then release ≥ 2.8.1 |
+| 1 | ~~Published 2.8.0 has no source in git; the next release from `main` would drop its exports~~ | `src/express/index.ts`, `package.json` | Restored in 2.9.0: the `.d.ts` files match the published 2.8.0. Only the `tests/concurency/compare` benchmark script was not restored (§5.3) |
 | 2 | The repository is public | GitHub repository settings | Everything committed, including git history and test fixtures, is world-readable. Decide with the team whether it should be private, and keep credentials and real data out of commits and fixtures |
 | 3 | `test.xml` is a full bank payment file used as a test fixture | `test.xml`, `src/tests/xml_test.ts`, `src/xml/test.ts` | Replace it with a minimal synthetic fixture |
 | 4 | `Mongo()` ignores the caller's `options` (overwritten with `{ monitorCommands: true }`) | `src/database/mongo.ts:25` | TLS, pool size, timeouts etc. passed by consumers have no effect. Fixing it changes behaviour for every consumer, so release it as a minor and test |
