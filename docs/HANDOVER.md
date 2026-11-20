@@ -325,6 +325,131 @@ Behaviour:
   - The GraphQL document is recorded (`graphql.source`) with inline values replaced by `*`. Variables, Mongo and SQL values are not recorded.
 - To stop server spans for incoming HTTP requests (stora-web, where Next.js makes its own), use `{ '@opentelemetry/instrumentation-http': { disableIncomingRequestInstrumentation: true } }`. Not `ignoreIncomingRequestHook: () => true`: an ignored request runs with all tracing suppressed, so nothing inside it is traced.
 
+#### Telemetry usage guide for backend services
+
+For Node backends (Express, Apollo, Koa). stora-api is the reference; stora-web (Next.js) has its own guide in its `docs/HANDOVER.md` §4.10.
+
+**1. Add it to a service**
+
+```bash
+pnpm add @storatech/stora-utils@^2.9.0 @opentelemetry/api@~1.9.1 @opentelemetry/sdk-node@^0.223.1 \
+  @opentelemetry/otlp-transformer@^0.223.1 @opentelemetry/auto-instrumentations-node@^0.81.2 \
+  @smithy/signature-v4@^5.7.5 @smithy/hash-node@^4.5.2 @aws-sdk/credential-provider-node@^3.972.97
+```
+
+Pin `@opentelemetry/api` to `~1.9.1` by hand afterwards if the package manager writes `^1.9.1` (1.10 breaks `sdk-node` 0.223). The service also needs `log4js`, which every backend already has. Then make this the first import of the entry file, right after the one that loads `.env`:
+
+```ts
+import 'dotenv/config'
+import '@storatech/stora-utils/telemetry/register' // before the other imports, so that their modules get traced
+```
+
+Anything imported above it (express, mongodb, axios …) is not traced. It does nothing until the server's `.env` has:
+
+```bash
+OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=https://xray.ap-southeast-1.amazonaws.com/v1/traces
+OTEL_TRACES_SAMPLER_ARG=0.1                                   # optional, share of new traces kept
+OTEL_RESOURCE_ATTRIBUTES=deployment.environment.name=dev      # on dev servers (default is NODE_ENV)
+```
+
+The service's AWS identity (the keys or instance role it uses for SQS/SNS) needs `xray:PutTraceSegments` (managed policy `AWSXrayWriteOnlyAccess`). Once per AWS account and region, CloudWatch Transaction Search must be on (CloudWatch → Application Signals → Transaction Search → Enable; `aws xray get-trace-segment-destination` then shows `CloudWatchLogs` / `ACTIVE`). After a reload the log shows `Telemetry started: <service> to https://xray…`.
+
+**2. What you get without writing code**
+
+One trace per sampled request, with spans for: the incoming HTTP request, Express routers and handlers, GraphQL parse/validate and resolvers to depth 2, MongoDB, Postgres/knex, Redis, SQS/SNS, axios and `fetch`, OpenAI. Outgoing calls carry `traceparent`, so a service that is also traced continues the same trace. Don't wrap these calls in `span()` yourself.
+
+**3. Tag the customer (and session)**
+
+Every span gets `session.id` from the incoming `baggage` header automatically. `customer.id` must come from the service's own verified login, never from a header. In Express, after the cookie parser and before the routes:
+
+```ts
+import { CUSTOMER_ID, getSessionId, SESSION_ID, withSpanAttributes } from '@storatech/stora-utils/telemetry'
+
+app.use((req, _res, next) => {
+  const token = authService.extractToken(req.headers.authorization?.replace(/Bearer\s+/i, '')) // verified JWT
+  withSpanAttributes({ [CUSTOMER_ID]: token?.customerId, [SESSION_ID]: getSessionId() ?? req.cookies?.sessionId }, next)
+})
+```
+
+In Koa: `app.use(async (ctx, next) => await withSpanAttributes({ [CUSTOMER_ID]: ctx.state.user?.customerId }, next))`. Internal services that know the customer from their data (an order, a package) can do the same around the work for it: `withSpanAttributes({ [CUSTOMER_ID]: order.customerId }, async () => { ... })`. `customer.id` is never sent to other services, so each one sets its own.
+
+**4. Time a business step**
+
+```ts
+import { span } from '@storatech/stora-utils/telemetry'
+
+const prices = await span('checkout.price', async () => await repriceItems(items), { 'item.count': items.length })
+
+await span('order.place', async (s) => {
+  const result = await ecommerceCore.placeOrder(order)
+  s.setAttribute('order.id', String(order._id)) // attributes can be added while the step runs
+  return result
+})
+```
+
+- The step is a child of whatever span is current (the request, or an outer `span()`), so nested calls give a breakdown: `checkout.createV3` → `checkout.price` → the HTTP call to ecommerce-core.
+- A thrown error marks the span as failed (with the message and stack) and is rethrown unchanged. Return values pass through.
+- Without telemetry (local, tests) it just runs the function.
+- Names: `<domain>.<step>`, lower case, dots, a fixed set (`checkout.price`, `payment.invoice.create`, `ebarimt.issue`). Never put IDs or values in the name; they go in attributes, otherwise every call is a different "step" in the statistics.
+- Attributes: IDs (`order.id`, `invoice.id`), counts, statuses, platform. **No** phone numbers, e-mails, addresses, names, tokens, passwords, card or bank data. `customer.id` is already on the span.
+- Wrap steps that matter for latency or failures (a group of calls, a slow computation, a third-party call worth naming). Not every function.
+
+**5. Queue consumers and background jobs**
+
+There is no incoming request, so the first `span()` starts a new trace, kept at the sampling rate (10 %). Wrap each message's handler, and tag the customer when the message has one:
+
+```ts
+await queue.startConsume(async (message) => {
+  await span('order.paid.consume', async () => {
+    await withSpanAttributes({ [CUSTOMER_ID]: message.customerId }, async () => await onOrderPaid(message))
+  })
+})
+```
+
+Not linked yet: the trace of the request that published the message (SNS/SQS carry `traceparent` in the message attributes, but `MessageQueue` does not read it). Each SQS long poll also shows up as its own short `ReceiveMessage` trace.
+
+**6. Find the data** (AWS console, same account and region)
+
+- **One customer:** CloudWatch → Application Signals → Transaction Search. Visual editor → Select filters → `customer.id` Equals `<customerId>` (or `session.id`). Choose a trace ID in the list to see the whole request as a waterfall. All ingested spans are searchable there; X-Ray's own trace list only shows the indexed 1 % by default.
+- **How long each step takes:** Transaction Search → Visualize as Group Analysis, or Time series with P99, filtered by span name. Or CloudWatch Logs Insights on the `aws/spans` log group:
+
+```
+filter name like /^checkout\./
+| stats count(*) as calls, pct(durationNano, 50) / 1000000 as p50_ms, pct(durationNano, 95) / 1000000 as p95_ms by name
+| sort p95_ms desc
+```
+
+```
+filter `attributes.customer.id` = "<customerId>"
+| fields @timestamp, name, durationNano / 1000000 as ms, traceId
+| sort @timestamp desc
+```
+
+  AWS documents `durationNano` and `attributes.<key>` in its own examples. The other field names (`name`, `traceId`) follow the OpenTelemetry span format: open one record in `aws/spans` to check them if a query returns nothing. New spans can take a few minutes to become searchable (10 minutes right after enabling Transaction Search).
+
+**7. Try it locally**
+
+```bash
+docker run --rm -p 16686:16686 -p 4318:4318 jaegertracing/all-in-one
+OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://localhost:4318/v1/traces OTEL_TRACES_SAMPLER_ARG=1 pnpm start
+```
+
+Open http://localhost:16686, pick the service and look at the traces. Plain `http://` endpoints are sent unsigned, so no AWS credentials are needed.
+
+**8. Troubleshooting**
+
+| Symptom | Cause |
+|---|---|
+| Log says `Telemetry is off` | `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT` not set in the process (PM2 reads `.env` only on start/reload) |
+| `HTTP 400 … CloudWatch Logs as a Trace Segment Destination` | Transaction Search is not on in that account and region |
+| `HTTP 403 The security token included in the request is invalid` / `AccessDenied` | Wrong AWS credentials, or no `xray:PutTraceSegments` |
+| Requests are traced but Mongo/axios/… calls are missing | Those modules were imported before `telemetry/register` |
+| A step is missing | Not sampled (the request was not in the 10 %), or the code ran outside `span()`'s function (fire-and-forget promise started after it returned) |
+| No `customer.id` on spans | The middleware from step 3 runs after the routes, or the token did not verify |
+| Peer dependency warnings about `@opentelemetry/api` | 1.10 got installed: pin `~1.9.1` (`sdk-node` 0.223 supports `<1.10.0`) |
+
+Turn it off with `OTEL_SDK_DISABLED=true` (or unset the endpoint) and reload. Lower `OTEL_TRACES_SAMPLER_ARG` to cut cost: spans are billed as CloudWatch span ingestion (about $0.35/GB in us-east-1, after a 3-month free trial of up to 100 GB per account).
+
 ### 4.13 validation (`/validation`)
 
 - Importing it registers three validators on the global validate.js instance:
