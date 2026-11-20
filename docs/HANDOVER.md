@@ -82,6 +82,7 @@ Every third-party package is a **devDependency**. The published package declares
 | `redis ^4.1.0` (node-redis v4 API) | redis |
 | `validate.js ^0.13.1`, `dayjs ^1.10.5` | validation; `dayjs` also by `xml/types` |
 | `sax ^1.2.1` | xml |
+| `@opentelemetry/api ~1.9.1` (`sdk-node` 0.223 requires `<1.10.0`), `@opentelemetry/sdk-node ^0.223.1`, `@opentelemetry/otlp-transformer ^0.223.1`, `@opentelemetry/auto-instrumentations-node ^0.81.2`, `@smithy/signature-v4 ^5.7.5`, `@smithy/hash-node ^4.5.2`, `@aws-sdk/credential-provider-node ^3.972.97` (`@smithy/types`, `@opentelemetry/instrumentation-express` type-only) | telemetry (`span.ts` needs only `@opentelemetry/api`). Stay on the OpenTelemetry 2.x SDK line (`sdk-node` 0.2xx, `auto-instrumentations-node` 0.81.x): 3.x needs Node ≥ 22.15, and the services run Node 22.5 |
 | `express ^4.17.2`, `koa ^2.13.1`, `axios ^0.21.1` | types only (`express`, `logger/express`, `logger/koa`, `logger/axios`); nothing is required at runtime |
 | Node built-ins `async_hooks`, `events`, `crypto` | logger/database (AsyncLocalStorage), concurrency/event, hash |
 
@@ -177,7 +178,8 @@ Each module lives in `src/<name>/` and is imported as `@storatech/stora-utils/<n
 If the `Accept` header resolves to HTML (`req.accepts(['html', 'json'])`), the body is the plain `error.message` instead of JSON. That includes unknown errors (see §7).
 
 - `expressNotFoundHandler`: responds 404 with `{ errorCode: 996, error: 'not found' }`.
-- Published 2.8.0 also contains `expressResponseHelper` and pagination types that are **not in this source** (§5.3).
+- `Pagination { limit, offset }`, `PaginationResult` (adds `total`) and `PaginatedResult<T> { data, pagination }`.
+- `expressResponseHelper(req, res, next)`: middleware that adds `res.success(data)` (`{ status: 'success', data }`), `res.paginatedSuccess(data, pagination)` and `res.error(apiError)` (`{ status: 'failed', message, code }`). There is no `Express.Response` type augmentation, so callers cast `res`. First published in 2.8.0 and restored to the source in 2.9.0 (§5.3).
 
 ### 4.4 logger (`/logger` and subpaths)
 
@@ -296,7 +298,159 @@ The `SQSClient` and `SNSClient` instances are created when the module is importe
 - The first call connects through `Mongo()` and caches the `Db` in a module variable. This is the only connection caching in the library.
 - It inserts `{ ...data, event, createdAt }` into the `analytics` collection without awaiting; insert errors are only logged.
 
-### 4.12 validation (`/validation`)
+### 4.12 telemetry (`/telemetry`)
+
+OpenTelemetry traces (no metrics) over OTLP/HTTP, to AWS X-Ray by default. Three entry points:
+
+- `/telemetry/register`: one-line start for Node services. `import '@storatech/stora-utils/telemetry/register'` as the entry file's first import (after `dotenv/config`). Importing it is meant to have side effects: it calls `configureLogger()`, `startTelemetry()` with the defaults, and on `SIGINT`/`SIGTERM` exports the last spans and exits (at most 3 s; `process.on`, because Apollo stops on the same signal and raises it again).
+- `/telemetry`: `startTelemetry(options?)` for apps that need options (stora-web calls it from Next.js `instrumentation.ts`), plus the helpers below. It returns `{ shutdown() }`, or `undefined` when telemetry is off. Call it before importing anything it should instrument (http, express, graphql, mongodb, pg, knex, aws-sdk, ioredis ...).
+- `/telemetry/span`: helpers for application code, needing only `@opentelemetry/api`. They just run the function when telemetry is off.
+  - `span(name, fn, attributes?)`: times one step as a child span, ends it when `fn` settles, records a thrown error and rethrows it.
+  - `withSpanAttributes(attributes, fn)`: puts attributes on the current span and on every span started inside `fn` (empty values skipped). `session.id` also goes into the baggage.
+  - `getSessionId()`: the request's `session.id` from the baggage.
+  - `SESSION_ID` (`session.id`) and `CUSTOMER_ID` (`customer.id`) attribute names.
+
+Behaviour:
+
+- Off unless `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT` is set; `OTEL_SDK_DISABLED=true` turns it off. `https://xray.<region>.amazonaws.com/v1/traces` is signed with SigV4 (service `xray`) using the AWS SDK default credentials (env keys, `AWS_PROFILE`, instance role), which need `xray:PutTraceSegments`; the account needs CloudWatch Transaction Search, or X-Ray answers `HTTP 400 The OTLP API is supported with CloudWatch Logs as a Trace Segment Destination`. Any other URL (a local collector, `http://localhost:4318/v1/traces`) gets unsigned requests.
+- Exporter (`otlp-exporter.ts`): protobuf, gzip, 10 s timeout, 3 attempts on network errors and HTTP 429/502/503/504. Its own requests (and credential lookups) run with tracing suppressed. Rejected spans in a partial success are logged.
+- IDs: the propagator is W3C `traceparent` plus W3C baggage, filtered. Incoming baggage keeps only `inboundBaggage` (default `['session.id']`); outgoing requests, which include outside APIs, carry only `session.id`. A span processor copies `session.id` and `customer.id` from the baggage, and the `withSpanAttributes` values, onto every span. Accept `customer.id` from incoming baggage only behind a hop that overwrites it (stora-web's middleware); public APIs set it from the verified token with `withSpanAttributes`.
+- Defaults: parent-based sampling of 10 % of new traces (`sampleRatio`, `OTEL_TRACES_SAMPLER_ARG`, or the standard `OTEL_TRACES_SAMPLER`); SDK warnings and errors on the `telemetry` log4js category (`OTEL_LOG_LEVEL`). `metricReaders: []` and `logRecordProcessors: []` are passed on purpose: without them `sdk-node` starts its own OTLP metric and log exporters to `localhost:4318`.
+- Resource: `service.name` (option, `OTEL_SERVICE_NAME`, or the `name` in the app's package.json without its scope), `service.namespace=stora`, `service.version` (package.json), `deployment.environment.name` (default `NODE_ENV`) and `service.instance.id = <hostname>-<NODE_APP_INSTANCE or pid>`.
+- Instrumentations come from `@opentelemetry/auto-instrumentations-node`, with these defaults (the `instrumentations` option is merged into the defaults of each instrumentation it names):
+  - `dns`, `net` and `fs` off.
+  - http: incoming `OPTIONS` requests ignored. Query parameters named `key`, `apiKey`, `api_key`, `apikey`, `access_token`, `accessToken`, `token`, `secret`, `client_secret`, `password`, `otp`, `signature`, `sign` (plus OpenTelemetry's own list) are recorded as `REDACTED` in `url.full` / `url.query`. Matching is exact and case-sensitive; other query parameters are recorded as sent.
+  - express: middleware layers ignored (routers and request handlers are kept).
+  - graphql: `depth: 2`, `mergeItems`, `ignoreTrivialResolveSpans`. Apollo Server wraps every resolver, so without the depth limit every field gets a span. Depth 2 keeps `Mutation.checkouts.createV3`-style operations.
+  - The GraphQL document is recorded (`graphql.source`) with inline values replaced by `*`. Variables, Mongo and SQL values are not recorded.
+- To stop server spans for incoming HTTP requests (stora-web, where Next.js makes its own), use `{ '@opentelemetry/instrumentation-http': { disableIncomingRequestInstrumentation: true } }`. Not `ignoreIncomingRequestHook: () => true`: an ignored request runs with all tracing suppressed, so nothing inside it is traced.
+
+#### Telemetry usage guide for backend services
+
+For Node backends (Express, Apollo, Koa). stora-api is the reference; stora-web (Next.js) has its own guide in its `docs/HANDOVER.md` §4.10.
+
+**1. Add it to a service**
+
+```bash
+pnpm add @storatech/stora-utils@^2.9.0 @opentelemetry/api@~1.9.1 @opentelemetry/sdk-node@^0.223.1 \
+  @opentelemetry/otlp-transformer@^0.223.1 @opentelemetry/auto-instrumentations-node@^0.81.2 \
+  @smithy/signature-v4@^5.7.5 @smithy/hash-node@^4.5.2 @aws-sdk/credential-provider-node@^3.972.97
+```
+
+Pin `@opentelemetry/api` to `~1.9.1` by hand afterwards if the package manager writes `^1.9.1` (1.10 breaks `sdk-node` 0.223). The service also needs `log4js`, which every backend already has. Then make this the first import of the entry file, right after the one that loads `.env`:
+
+```ts
+import 'dotenv/config'
+import '@storatech/stora-utils/telemetry/register' // before the other imports, so that their modules get traced
+```
+
+Anything imported above it (express, mongodb, axios …) is not traced. It does nothing until the server's `.env` has:
+
+```bash
+OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=https://xray.ap-southeast-1.amazonaws.com/v1/traces
+OTEL_TRACES_SAMPLER_ARG=0.1                                   # optional, share of new traces kept
+OTEL_RESOURCE_ATTRIBUTES=deployment.environment.name=dev      # on dev servers (default is NODE_ENV)
+```
+
+The service's AWS identity (the keys or instance role it uses for SQS/SNS) needs `xray:PutTraceSegments` (managed policy `AWSXrayWriteOnlyAccess`). Once per AWS account and region, CloudWatch Transaction Search must be on (CloudWatch → Application Signals → Transaction Search → Enable; `aws xray get-trace-segment-destination` then shows `CloudWatchLogs` / `ACTIVE`). After a reload the log shows `Telemetry started: <service> to https://xray…`.
+
+**2. What you get without writing code**
+
+One trace per sampled request, with spans for: the incoming HTTP request, Express routers and handlers, GraphQL parse/validate and resolvers to depth 2, MongoDB, Postgres/knex, Redis, SQS/SNS, axios and `fetch`, OpenAI. Outgoing calls carry `traceparent`, so a service that is also traced continues the same trace. Don't wrap these calls in `span()` yourself.
+
+**3. Tag the customer (and session)**
+
+Every span gets `session.id` from the incoming `baggage` header automatically. `customer.id` must come from the service's own verified login, never from a header. In Express, after the cookie parser and before the routes:
+
+```ts
+import { CUSTOMER_ID, getSessionId, SESSION_ID, withSpanAttributes } from '@storatech/stora-utils/telemetry'
+
+app.use((req, _res, next) => {
+  const token = authService.extractToken(req.headers.authorization?.replace(/Bearer\s+/i, '')) // verified JWT
+  withSpanAttributes({ [CUSTOMER_ID]: token?.customerId, [SESSION_ID]: getSessionId() ?? req.cookies?.sessionId }, next)
+})
+```
+
+In Koa: `app.use(async (ctx, next) => await withSpanAttributes({ [CUSTOMER_ID]: ctx.state.user?.customerId }, next))`. Internal services that know the customer from their data (an order, a package) can do the same around the work for it: `withSpanAttributes({ [CUSTOMER_ID]: order.customerId }, async () => { ... })`. `customer.id` is never sent to other services, so each one sets its own.
+
+**4. Time a business step**
+
+```ts
+import { span } from '@storatech/stora-utils/telemetry'
+
+const prices = await span('checkout.price', async () => await repriceItems(items), { 'item.count': items.length })
+
+await span('order.place', async (s) => {
+  const result = await ecommerceCore.placeOrder(order)
+  s.setAttribute('order.id', String(order._id)) // attributes can be added while the step runs
+  return result
+})
+```
+
+- The step is a child of whatever span is current (the request, or an outer `span()`), so nested calls give a breakdown: `checkout.createV3` → `checkout.price` → the HTTP call to ecommerce-core.
+- A thrown error marks the span as failed (with the message and stack) and is rethrown unchanged. Return values pass through.
+- Without telemetry (local, tests) it just runs the function.
+- Names: `<domain>.<step>`, lower case, dots, a fixed set (`checkout.price`, `payment.invoice.create`, `ebarimt.issue`). Never put IDs or values in the name; they go in attributes, otherwise every call is a different "step" in the statistics.
+- Attributes: IDs (`order.id`, `invoice.id`), counts, statuses, platform. **No** phone numbers, e-mails, addresses, names, tokens, passwords, card or bank data. `customer.id` is already on the span.
+- Wrap steps that matter for latency or failures (a group of calls, a slow computation, a third-party call worth naming). Not every function.
+
+**5. Queue consumers and background jobs**
+
+There is no incoming request, so the first `span()` starts a new trace, kept at the sampling rate (10 %). Wrap each message's handler, and tag the customer when the message has one:
+
+```ts
+await queue.startConsume(async (message) => {
+  await span('order.paid.consume', async () => {
+    await withSpanAttributes({ [CUSTOMER_ID]: message.customerId }, async () => await onOrderPaid(message))
+  })
+})
+```
+
+Not linked yet: the trace of the request that published the message (SNS/SQS carry `traceparent` in the message attributes, but `MessageQueue` does not read it). Each SQS long poll also shows up as its own short `ReceiveMessage` trace.
+
+**6. Find the data** (AWS console, same account and region)
+
+- **One customer:** CloudWatch → Application Signals → Transaction Search. Visual editor → Select filters → `customer.id` Equals `<customerId>` (or `session.id`). Choose a trace ID in the list to see the whole request as a waterfall. All ingested spans are searchable there; X-Ray's own trace list only shows the indexed 1 % by default.
+- **How long each step takes:** Transaction Search → Visualize as Group Analysis, or Time series with P99, filtered by span name. Or CloudWatch Logs Insights on the `aws/spans` log group:
+
+```
+filter name like /^checkout\./
+| stats count(*) as calls, pct(durationNano, 50) / 1000000 as p50_ms, pct(durationNano, 95) / 1000000 as p95_ms by name
+| sort p95_ms desc
+```
+
+```
+filter `attributes.customer.id` = "<customerId>"
+| fields @timestamp, name, durationNano / 1000000 as ms, traceId
+| sort @timestamp desc
+```
+
+  AWS documents `durationNano` and `attributes.<key>` in its own examples. The other field names (`name`, `traceId`) follow the OpenTelemetry span format: open one record in `aws/spans` to check them if a query returns nothing. New spans can take a few minutes to become searchable (10 minutes right after enabling Transaction Search).
+
+**7. Try it locally**
+
+```bash
+docker run --rm -p 16686:16686 -p 4318:4318 jaegertracing/all-in-one
+OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://localhost:4318/v1/traces OTEL_TRACES_SAMPLER_ARG=1 pnpm start
+```
+
+Open http://localhost:16686, pick the service and look at the traces. Plain `http://` endpoints are sent unsigned, so no AWS credentials are needed.
+
+**8. Troubleshooting**
+
+| Symptom | Cause |
+|---|---|
+| Log says `Telemetry is off` | `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT` not set in the process (PM2 reads `.env` only on start/reload) |
+| `HTTP 400 … CloudWatch Logs as a Trace Segment Destination` | Transaction Search is not on in that account and region |
+| `HTTP 403 The security token included in the request is invalid` / `AccessDenied` | Wrong AWS credentials, or no `xray:PutTraceSegments` |
+| Requests are traced but Mongo/axios/… calls are missing | Those modules were imported before `telemetry/register` |
+| A step is missing | Not sampled (the request was not in the 10 %), or the code ran outside `span()`'s function (fire-and-forget promise started after it returned) |
+| No `customer.id` on spans | The middleware from step 3 runs after the routes, or the token did not verify |
+| Peer dependency warnings about `@opentelemetry/api` | 1.10 got installed: pin `~1.9.1` (`sdk-node` 0.223 supports `<1.10.0`) |
+
+Turn it off with `OTEL_SDK_DISABLED=true` (or unset the endpoint) and reload. Lower `OTEL_TRACES_SAMPLER_ARG` to cut cost: spans are billed as CloudWatch span ingestion (about $0.35/GB in us-east-1, after a 3-month free trial of up to 100 GB per account).
+
+### 4.13 validation (`/validation`)
 
 - Importing it registers three validators on the global validate.js instance:
   - `element`: validates each array element.
@@ -304,7 +458,7 @@ The `SQSClient` and `SNSClient` instances are created when the module is importe
   - `date`: checks the value is parseable by dayjs.
 - It exports the `Constraint<T>` type. Consumers import `validate` from `validate.js` themselves (ecommerce-core imports this module for its side effect in `src/index.ts`).
 
-### 4.13 xml (`/xml`, `/xml/types`)
+### 4.14 xml (`/xml`, `/xml/types`)
 
 - `XML<T>(def)` returns `{ parse(xml), format(data) }`, built on the strict `sax` parser.
   - Only elements declared in `def` are captured, and attributes are ignored.
@@ -313,13 +467,13 @@ The `SQSClient` and `SNSClient` instances are created when the module is importe
 - `/xml/types`: `XmlString()`, `XmlNumber()` (uses `parseInt`), `XmlDate(format)` (dayjs), `XmlBoolean(trueValue, falseValue)` and `XmlDef<T>`.
 - payment-api uses it for the Golomt bank gateway (`src/services/golomtcgw.ts`).
 
-### 4.14 random, hash, transliterate
+### 4.15 random, hash, transliterate
 
 - `/random` `generateRandom(length, onlyDigit?)`: A–Z and 0–9, or digits only, using `Math.random`. It is used for order and tracking numbers, spin-the-wheel codes (stora-api, stora-admin-api) and other generated codes.
 - `/hash` `hashUtils.hash(str)`: MD5 hex digest.
 - `/transliterate`: the default export `Transliterate(word)` converts Mongolian Cyrillic to Latin.
 
-### 4.15 Other files
+### 4.16 Other files
 
 - `src/index.ts`: the root module; it only prints a warning.
 - `src/test.ts`, `src/tests/*.ts`, `src/xml/test.ts`, `src/concurrency/test.ts`: manual scripts. They are compiled and **published** with the package.
@@ -369,8 +523,11 @@ Reconstructed from the `version` field in git history.
 | 2.6.0 | 2024-11-12 | Zoljargal Gantumur (PR #12) | log4js `pm2: true`, `disableClustering: true` |
 | 2.7.0 | 2024-11-12 | Zoljargal Gantumur (PR #13) | `analytics` module (last commit on `main`) |
 | 2.8.0 | on or before 2025-07-07 | unknown (not in git) | `expressResponseHelper` and pagination types (§5.3) |
+| 2.9.0 | 2026-11 | | 2.8.0 express additions restored to the source; `telemetry` module: OpenTelemetry traces over OTLP/HTTP to AWS X-Ray, `session.id`/`customer.id` on every span, `span()` step timing |
 
 ### 5.3 The 2.8.0 drift
+
+**Resolved in 2.9.0**: the interfaces and `expressResponseHelper` were reconstructed in `src/express/index.ts` from the published build. `diff -r -x '*.js'` against the installed 2.8.0 shows no `.d.ts` differences apart from the new `telemetry` module and the missing `tests/concurency/compare` benchmark. The history below is kept for reference.
 
 #### What we know
 
@@ -487,7 +644,7 @@ Prioritized roughly by risk.
 
 | # | Issue | Where | Notes |
 |---|---|---|---|
-| 1 | Published 2.8.0 has no source in git; the next release from `main` would drop its exports | `src/express/index.ts`, `package.json` | §5.3. Restore the code, then release ≥ 2.8.1 |
+| 1 | ~~Published 2.8.0 has no source in git; the next release from `main` would drop its exports~~ | `src/express/index.ts`, `package.json` | Restored in 2.9.0: the `.d.ts` files match the published 2.8.0. Only the `tests/concurency/compare` benchmark script was not restored (§5.3) |
 | 2 | The repository is public | GitHub repository settings | Everything committed, including git history and test fixtures, is world-readable. Decide with the team whether it should be private, and keep credentials and real data out of commits and fixtures |
 | 3 | `test.xml` is a full bank payment file used as a test fixture | `test.xml`, `src/tests/xml_test.ts`, `src/xml/test.ts` | Replace it with a minimal synthetic fixture |
 | 4 | `Mongo()` ignores the caller's `options` (overwritten with `{ monitorCommands: true }`) | `src/database/mongo.ts:25` | TLS, pool size, timeouts etc. passed by consumers have no effect. Fixing it changes behaviour for every consumer, so release it as a minor and test |

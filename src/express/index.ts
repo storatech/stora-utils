@@ -62,6 +62,20 @@ export class ApiException extends Error {
   }
 }
 
+export interface Pagination {
+  limit: number
+  offset: number
+}
+
+export interface PaginationResult extends Pagination {
+  total: number
+}
+
+export interface PaginatedResult<T> {
+  data: T[]
+  pagination: PaginationResult
+}
+
 const getErrorHtml = async (error: Error, template: string = 'error'): Promise<string> => {
   return error.message
 }
@@ -113,5 +127,42 @@ export const expressNotFoundHandler = async (req: ApiRequest, res: ApiResponse, 
       errorCode: ApiErrorCode.BAD_REQUEST,
       error: 'not found'
     })
+  }
+}
+
+interface ResponseHelpers {
+  paginatedSuccess: (data: any, pagination: PaginationResult) => void
+  success: (data: any) => void
+  error: (error: ApiError) => void
+}
+
+// Adds res.success, res.paginatedSuccess and res.error (restored from the published 2.8.0)
+export const expressResponseHelper = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const helpers = res as Response & ResponseHelpers
+  helpers.paginatedSuccess = (data, pagination) => {
+    res.setHeader('Content-Type', 'application/json')
+    res.send({
+      status: 'success',
+      data,
+      pagination
+    })
+  }
+  helpers.success = (data) => {
+    res.setHeader('Content-Type', 'application/json')
+    res.send({
+      status: 'success',
+      data
+    })
+  }
+  helpers.error = (error) => {
+    res.setHeader('Content-Type', 'application/json')
+    res.send({
+      status: 'failed',
+      message: error.error,
+      code: error.errorCode
+    })
+  }
+  if (next !== null) {
+    next()
   }
 }
