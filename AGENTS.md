@@ -38,7 +38,7 @@ cd ../stora-api && pnpm add ../stora-utils/dist/storatech-stora-utils-<version>.
 - `src/event/` → `/event`: `Topic<T>()` in-process EventEmitter pub/sub with timeouts
 - `src/file-storage/` → `/file-storage`: `S3FileStorage({ bucket, cdnPath })`
 - `src/analytics/` → `/analytics`: `sendAnalyticsEvent(event, data)` into a Mongo `analytics` collection
-- `src/telemetry/` → `/telemetry`: `startTelemetry(options)` OpenTelemetry traces and metrics to Google Cloud (off without `GOOGLE_CLOUD_PROJECT`)
+- `src/telemetry/` → `/telemetry`: `startTelemetry(options)`, `span`, `withSpanAttributes`: OpenTelemetry traces over OTLP/HTTP to AWS X-Ray (off without `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT`); `/telemetry/register` one-line start (meant to have side effects); `/telemetry/span` helpers needing only `@opentelemetry/api`
 - `src/validation.ts` → `/validation`: registers extra validate.js validators on import, exports the `Constraint<T>` type
 - `src/xml/` → `/xml`, `/xml/types`: typed sax-based XML parse and format
 - `src/random/` → `/random` · `src/hash/` → `/hash` (MD5) · `src/transliterate/` → `/transliterate` (Mongolian Cyrillic to Latin)

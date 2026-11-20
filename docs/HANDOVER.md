@@ -82,7 +82,7 @@ Every third-party package is a **devDependency**. The published package declares
 | `redis ^4.1.0` (node-redis v4 API) | redis |
 | `validate.js ^0.13.1`, `dayjs ^1.10.5` | validation; `dayjs` also by `xml/types` |
 | `sax ^1.2.1` | xml |
-| `@opentelemetry/api ~1.9.1` (`sdk-node` 0.223 requires `<1.10.0`), `@opentelemetry/sdk-node ^0.223.1`, `@opentelemetry/sdk-trace-base ^2.12.1`, `@opentelemetry/auto-instrumentations-node ^0.81.2`, `@opentelemetry/exporter-trace-otlp-grpc ^0.223.1`, `@opentelemetry/exporter-metrics-otlp-grpc ^0.223.1`, `@grpc/grpc-js ^1.14.7`, `google-auth-library ^10.9.1` | telemetry. Stay on the OpenTelemetry 2.x SDK line (`sdk-node` 0.2xx, `auto-instrumentations-node` 0.81.x): 3.x needs Node ≥ 22.15, and the services run Node 22.5 |
+| `@opentelemetry/api ~1.9.1` (`sdk-node` 0.223 requires `<1.10.0`), `@opentelemetry/sdk-node ^0.223.1`, `@opentelemetry/otlp-transformer ^0.223.1`, `@opentelemetry/auto-instrumentations-node ^0.81.2`, `@smithy/signature-v4 ^5.7.5`, `@smithy/hash-node ^4.5.2`, `@aws-sdk/credential-provider-node ^3.972.97` (`@smithy/types`, `@opentelemetry/instrumentation-express` type-only) | telemetry (`span.ts` needs only `@opentelemetry/api`). Stay on the OpenTelemetry 2.x SDK line (`sdk-node` 0.2xx, `auto-instrumentations-node` 0.81.x): 3.x needs Node ≥ 22.15, and the services run Node 22.5 |
 | `express ^4.17.2`, `koa ^2.13.1`, `axios ^0.21.1` | types only (`express`, `logger/express`, `logger/koa`, `logger/axios`); nothing is required at runtime |
 | Node built-ins `async_hooks`, `events`, `crypto` | logger/database (AsyncLocalStorage), concurrency/event, hash |
 
@@ -300,19 +300,30 @@ The `SQSClient` and `SNSClient` instances are created when the module is importe
 
 ### 4.12 telemetry (`/telemetry`)
 
-- `startTelemetry({ serviceName, serviceVersion?, environment?, sampleRatio?, instrumentations? })` starts the OpenTelemetry Node SDK and exports traces (Cloud Trace) and metrics (Cloud Monitoring) to the Google Cloud Telemetry API, `telemetry.googleapis.com`, over OTLP gRPC. It returns `{ shutdown() }`, or `undefined` when telemetry is off.
-- Call it before importing anything it should instrument (http, express, graphql, mongodb, pg, knex, aws-sdk, ioredis ...), ideally from a bootstrap file that is the entry point's first import. Importing the module has no side effects.
-- It is off unless `GOOGLE_CLOUD_PROJECT` is set, and `OTEL_SDK_DISABLED=true` turns it off. Credentials come from Application Default Credentials: `GOOGLE_APPLICATION_CREDENTIALS` pointing at a service account key or a workload identity federation config. The service account needs `roles/telemetry.tracesWriter`, `roles/monitoring.metricWriter` and `roles/serviceusage.serviceUsageConsumer`.
-- Defaults: parent-based sampling of 10 % of new traces (`sampleRatio`, `OTEL_TRACES_SAMPLER_ARG`, or the standard `OTEL_TRACES_SAMPLER`), metrics every 60 s (`OTEL_METRIC_EXPORT_INTERVAL`), SDK warnings and errors on the `telemetry` log4js category (`OTEL_LOG_LEVEL`).
-- Resource: `service.name`, `service.namespace=stora`, `service.version`, `deployment.environment.name` (default `NODE_ENV`), `gcp.project_id` (required by the Telemetry API) and `service.instance.id = <hostname>-<NODE_APP_INSTANCE or pid>`. The instance id must be unique per PM2 worker, because Cloud Monitoring rejects points written to one time series by several processes.
-- Instrumentations come from `@opentelemetry/auto-instrumentations-node`, with these defaults (`instrumentations` replaces the settings of the instrumentations it names):
+OpenTelemetry traces (no metrics) over OTLP/HTTP, to AWS X-Ray by default. Three entry points:
+
+- `/telemetry/register`: one-line start for Node services. `import '@storatech/stora-utils/telemetry/register'` as the entry file's first import (after `dotenv/config`). Importing it is meant to have side effects: it calls `configureLogger()`, `startTelemetry()` with the defaults, and on `SIGINT`/`SIGTERM` exports the last spans and exits (at most 3 s; `process.on`, because Apollo stops on the same signal and raises it again).
+- `/telemetry`: `startTelemetry(options?)` for apps that need options (stora-web calls it from Next.js `instrumentation.ts`), plus the helpers below. It returns `{ shutdown() }`, or `undefined` when telemetry is off. Call it before importing anything it should instrument (http, express, graphql, mongodb, pg, knex, aws-sdk, ioredis ...).
+- `/telemetry/span`: helpers for application code, needing only `@opentelemetry/api`. They just run the function when telemetry is off.
+  - `span(name, fn, attributes?)`: times one step as a child span, ends it when `fn` settles, records a thrown error and rethrows it.
+  - `withSpanAttributes(attributes, fn)`: puts attributes on the current span and on every span started inside `fn` (empty values skipped). `session.id` also goes into the baggage.
+  - `getSessionId()`: the request's `session.id` from the baggage.
+  - `SESSION_ID` (`session.id`) and `CUSTOMER_ID` (`customer.id`) attribute names.
+
+Behaviour:
+
+- Off unless `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT` is set; `OTEL_SDK_DISABLED=true` turns it off. `https://xray.<region>.amazonaws.com/v1/traces` is signed with SigV4 (service `xray`) using the AWS SDK default credentials (env keys, `AWS_PROFILE`, instance role), which need `xray:PutTraceSegments`; the account needs CloudWatch Transaction Search, or X-Ray answers `HTTP 400 The OTLP API is supported with CloudWatch Logs as a Trace Segment Destination`. Any other URL (a local collector, `http://localhost:4318/v1/traces`) gets unsigned requests.
+- Exporter (`otlp-exporter.ts`): protobuf, gzip, 10 s timeout, 3 attempts on network errors and HTTP 429/502/503/504. Its own requests (and credential lookups) run with tracing suppressed. Rejected spans in a partial success are logged.
+- IDs: the propagator is W3C `traceparent` plus W3C baggage, filtered. Incoming baggage keeps only `inboundBaggage` (default `['session.id']`); outgoing requests, which include outside APIs, carry only `session.id`. A span processor copies `session.id` and `customer.id` from the baggage, and the `withSpanAttributes` values, onto every span. Accept `customer.id` from incoming baggage only behind a hop that overwrites it (stora-web's middleware); public APIs set it from the verified token with `withSpanAttributes`.
+- Defaults: parent-based sampling of 10 % of new traces (`sampleRatio`, `OTEL_TRACES_SAMPLER_ARG`, or the standard `OTEL_TRACES_SAMPLER`); SDK warnings and errors on the `telemetry` log4js category (`OTEL_LOG_LEVEL`). `metricReaders: []` and `logRecordProcessors: []` are passed on purpose: without them `sdk-node` starts its own OTLP metric and log exporters to `localhost:4318`.
+- Resource: `service.name` (option, `OTEL_SERVICE_NAME`, or the `name` in the app's package.json without its scope), `service.namespace=stora`, `service.version` (package.json), `deployment.environment.name` (default `NODE_ENV`) and `service.instance.id = <hostname>-<NODE_APP_INSTANCE or pid>`.
+- Instrumentations come from `@opentelemetry/auto-instrumentations-node`, with these defaults (the `instrumentations` option is merged into the defaults of each instrumentation it names):
   - `dns`, `net` and `fs` off.
   - http: incoming `OPTIONS` requests ignored. Query parameters named `key`, `apiKey`, `api_key`, `apikey`, `access_token`, `accessToken`, `token`, `secret`, `client_secret`, `password`, `otp`, `signature`, `sign` (plus OpenTelemetry's own list) are recorded as `REDACTED` in `url.full` / `url.query`. Matching is exact and case-sensitive; other query parameters are recorded as sent.
   - express: middleware layers ignored (routers and request handlers are kept).
   - graphql: `depth: 2`, `mergeItems`, `ignoreTrivialResolveSpans`. Apollo Server wraps every resolver, so without the depth limit every field gets a span. Depth 2 keeps `Mutation.checkouts.createV3`-style operations.
-  - The GraphQL document is recorded (`graphql.source`), so values written inline in a query are visible. Variables, Mongo and SQL values are not recorded.
-- `OTEL_EXPORTER_OTLP_ENDPOINT` sends to another OTLP gRPC endpoint. An `http://` endpoint (a local OpenTelemetry Collector) gets no TLS and no Google credentials.
-- Google credentials are added with a custom gRPC metadata generator. `credentials.createFromGoogleCredential` from grpc-js cannot be used with google-auth-library 10: it copies `Object.keys()` of the returned headers, which is empty for a `Headers` object, so no `Authorization` header would be sent.
+  - The GraphQL document is recorded (`graphql.source`) with inline values replaced by `*`. Variables, Mongo and SQL values are not recorded.
+- To stop server spans for incoming HTTP requests (stora-web, where Next.js makes its own), use `{ '@opentelemetry/instrumentation-http': { disableIncomingRequestInstrumentation: true } }`. Not `ignoreIncomingRequestHook: () => true`: an ignored request runs with all tracing suppressed, so nothing inside it is traced.
 
 ### 4.13 validation (`/validation`)
 
@@ -387,7 +398,7 @@ Reconstructed from the `version` field in git history.
 | 2.6.0 | 2024-11-12 | Zoljargal Gantumur (PR #12) | log4js `pm2: true`, `disableClustering: true` |
 | 2.7.0 | 2024-11-12 | Zoljargal Gantumur (PR #13) | `analytics` module (last commit on `main`) |
 | 2.8.0 | on or before 2025-07-07 | unknown (not in git) | `expressResponseHelper` and pagination types (§5.3) |
-| 2.9.0 | 2026-11 | | 2.8.0 express additions restored to the source; `telemetry` module (OpenTelemetry to Google Cloud) |
+| 2.9.0 | 2026-11 | | 2.8.0 express additions restored to the source; `telemetry` module: OpenTelemetry traces over OTLP/HTTP to AWS X-Ray, `session.id`/`customer.id` on every span, `span()` step timing |
 
 ### 5.3 The 2.8.0 drift
 
